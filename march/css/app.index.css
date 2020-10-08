@@ -630,11 +630,6 @@ button {
         transform: rotate(180deg);
     }
 
-    .app[data-device=pc] {
-        width: 360px;
-        height: 720px;
-    }
-
     .app[v-cloak] {
         display: none;
     }
