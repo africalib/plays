@@ -29,7 +29,7 @@ button {
         height: 100%;
         position: relative;
         font-size: 0;
-        padding: 5rem 0;
+        padding: 7.5% 0;
         overflow: hidden;
     }
 
@@ -320,7 +320,7 @@ button {
         position: absolute;
         width: 100%;
         left: 0;
-        height: 5rem;
+        height: 7.5%;
     }
 
         .app .app-area .area-player .units {
