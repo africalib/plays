@@ -43,7 +43,7 @@ button {
 .app .app-area .area-wrapper .each-area {
     background: #eee;
     display: inline-block;
-    width: calc(100%/10);
+    width: calc(100%/9);
     outline: 0.1rem solid #ddd;
     height: calc(100%/16);
     position: relative;
@@ -274,13 +274,6 @@ button {
     background: #546f18;
 }
 
-.app .app-area .area-wrapper .each-area[data-status=ride] .unit[data-player=white] {
-    background: #24b6ff;
-}
-
-.app .app-area .area-wrapper .each-area[data-status=ride] .unit[data-player=black] {
-    background: #5f9ea0;
-}
 
 .app .app-area .area-wrapper .each-area .show-up {
     position: absolute;
@@ -326,7 +319,7 @@ button {
 }
 
 .app .app-area .area-player .units {
-    width: 70%;
+    width: calc(100%/3*2);
     position: absolute;
     white-space: nowrap;
     overflow: auto;
@@ -336,7 +329,7 @@ button {
 
 .app .app-area .area-player .each-unit {
     display: inline-block;
-    width: calc(100%/7);
+    width: calc(100%/6);
     cursor: pointer;
     height: 100%;
     position: relative;
@@ -382,7 +375,7 @@ button {
     font-size: 1.2rem;
     padding: 0.4rem;
     height: 100%;
-    width: 30%;
+    width: calc(100%/3);
 }
 
 .app .app-area .area-player .status table {
@@ -570,36 +563,6 @@ button {
 .app .modal-area .info-part table th {
     text-align: right;
     font-weight: 600;
-}
-
-.app .modal-area .ride-part {
-    color: #fff;
-}
-
-.app .modal-area .ride-part div {
-    margin: 0 0.5rem 1rem 0.5rem;
-    font-size: 1.2rem;
-}
-
-.app .modal-area .ride-part span {
-    cursor: pointer;
-    display: inline-block;
-    width: 42px;
-    padding: 10px;
-    border-radius: 50px;
-    margin: 5px;
-}
-
-.app .modal-area[data-player=white] .ride-part span {
-    background: #fff;
-}
-
-.app .modal-area[data-player=black] .ride-part span {
-    background: #000;
-}
-
-.app .modal-area .ride-part span img[data-rotate='90'] {
-    transform: rotate(90deg);
 }
 
 .app .modal-area .close-btn {
