@@ -461,6 +461,8 @@ let app = new Vue({
                             t.status.paused = false;
                             t.label.message = 'ready';
 
+                            t.start();
+
                             if (global.first === global.player)
                                 t.pass(global.first);
 
@@ -507,9 +509,6 @@ let app = new Vue({
                                 t.setActiveDefault();
                                 t.setGrabbedDefault();
                             });
-
-                            t.start();
-                            t.setTurn('black');
                             break;
 
                         case 'disconnect':
@@ -520,17 +519,17 @@ let app = new Vue({
                             break;
 
                         default:
-                            if (typeof t[res.name] === 'function') {
-                                if (!isNaN(Number(res.val1)))
-                                    res.val1 = Number(res.val1);
+                            if (typeof t[res.value.name] === 'function') {
+                                if (!isNaN(Number(res.value.val1)))
+                                    res.value.val1 = Number(res.value.val1);
 
-                                if (!isNaN(Number(res.val2)))
-                                    res.val2 = Number(res.val2);
+                                if (!isNaN(Number(res.value.val2)))
+                                    res.value.val2 = Number(res.value.val2);
 
-                                if (res.val2)
-                                    t[res.name](res.val1, res.val2, true);
+                                if (res.value.val2)
+                                    t[res.value.name](res.value.val1, res.value.val2, true);
                                 else
-                                    t[res.name](res.val1, true);
+                                    t[res.value.name](res.value.val1, true);
                             }
                             break;
                     }
@@ -614,6 +613,7 @@ let app = new Vue({
             location.reload();
         },
         request: function (name, val1, val2) {
+            console.log(name, val1, val2);
             socket.emit('request', { type: 'send', name: name, player: this.getPlayer(), val1: val1, val2: val2 });
         },
         pass: function (player, requested) {
@@ -769,7 +769,6 @@ let app = new Vue({
                 return;
             }
 
-            // 내 유닛 선택
             if (t.getIsUnitInArea(idx) && targetArea.unit.player === t.status.turn) {
                 if (targetArea.status === 'ride' && targetArea.unit.ridable && activeArea.unit.name) {
                     if (targetArea.unit.rided.length < targetArea.unit.maxRideCount) {
@@ -943,6 +942,9 @@ let app = new Vue({
                     aniType: null,
                     afterAnimateFunc: null
                 };
+
+                if (!activeArea)
+                    return;
 
                 if (activeArea.hnum === targetArea.hnum) {
                     obj.gap = targetArea.idx - t.active.idx;
@@ -1881,6 +1883,9 @@ let app = new Vue({
             this.setTimer(player);
         },
         setAutoRotate: function () {
+            if (this.active.idx === undefined || this.active.idx === null)
+                return;
+
             let autoRotates = [{
                 area: this.areas[this.active.idx - this.base.columNum],
                 direction: this.areas[this.active.idx].unit === 'black' ? 12 : 6
@@ -1986,7 +1991,6 @@ let app = new Vue({
         t.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
 
         $.getJSON(baseUrl + '/rooms', function (res) {
-            console.log(res);
             t.room.list = res;
         });
     }
