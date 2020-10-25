@@ -613,7 +613,6 @@ let app = new Vue({
             location.reload();
         },
         request: function (name, val1, val2) {
-            console.log(name, val1, val2);
             socket.emit('request', { type: 'send', name: name, player: this.getPlayer(), val1: val1, val2: val2 });
         },
         pass: function (player, requested) {
