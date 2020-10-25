@@ -1,8 +1,15 @@
-﻿const socket = io.connect('http://127.0.0.1:8080/');
+﻿const baseUrl = 'http://127.0.0.1:8080';
+let socket;
 
 let app = new Vue({
     el: '#app',
     data: {
+        home: {
+            active: true
+        },
+        room: {
+            list: []
+        },
         base: {
             maxCrop: 30,
             time: 120,
@@ -423,6 +430,186 @@ let app = new Vue({
         autoRotateArr: []
     },
     methods: {
+        enter: function (name) {
+            var t = this;
+            socket = io.connect(baseUrl);
+
+            socket.on('connect', function () {
+                socket.emit('enter', name ? name : '');
+            });
+
+            socket.on('update', function (res) {
+                if (res && Object.keys(res).length) {
+                    switch (res.name) {
+                        case 'connect':
+                            if (!t.global.player) {
+                                t.global.player = res.player;
+                                t.global.first = res.turn;
+                                t.label.player = t.global.first;
+
+                                if (t.global.player === 'black')
+                                    t.setRandomShelter();
+
+                                t.home.active = false;
+                            }
+                            break;
+
+                        case 'start':
+                            let mc = new Hammer(document.querySelector('body'));
+
+                            t.status.started = true;
+                            t.status.paused = false;
+                            t.label.message = 'ready';
+
+                            if (global.first === global.player)
+                                t.pass(global.first);
+
+                            t.status[global.first === 'black' ? 'white' : 'black']['crop'] += 5;
+
+                            $('.area-player .units').each(function () {
+                                $(this).animate({
+                                    'scrollLeft': $(this).width() * ($(this).parent('.area-player').data('player') === 'black' ? -1 : 1)
+                                }, 1200);
+                            });
+
+                            mc.on('press', function (e) {
+                                let eachArea = $(e.target).closest('.each-area');
+                                let eachUnit = $(e.target).closest('.each-unit');
+
+                                if (eachArea.length && eachArea.data('idx')) {
+                                    let idx = eachArea.data('idx');
+                                    t.modal.idx = idx;
+
+                                    if (t.areas[idx] && t.getIsShelterInArea(idx)) {
+                                        if (t.getPlayer() === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
+                                            t.modal.info = t.areas[idx].unit;
+                                            t.modal.type = 'unit';
+                                        }
+                                        else {
+                                            t.modal.info = t.areas[idx].shelter;
+                                            t.modal.type = 'shelter';
+                                        }
+                                    }
+                                    else if (t.areas[idx] && t.areas[idx].unit) {
+                                        t.modal.info = t.areas[idx].unit;
+                                        t.modal.type = 'unit';
+                                    }
+                                    else
+                                        return;
+                                }
+                                else if (eachUnit.length) {
+                                    t.modal.type = 'unit';
+                                    t.modal.info = t.base.units[eachUnit.data('name')];
+                                    t.modal.info.player = eachUnit.closest('.area-player').data('player');
+                                }
+
+                                t.setAreaDefault();
+                                t.setActiveDefault();
+                                t.setGrabbedDefault();
+                            });
+
+                            t.start();
+                            t.setTurn('black');
+                            break;
+
+                        case 'disconnect':
+                            if (t.status.started) {
+                                alert('상대방이 경기에서 나갔습니다.');
+                                window.location.reload();
+                            }
+                            break;
+
+                        default:
+                            if (typeof t[res.name] === 'function') {
+                                if (!isNaN(Number(res.val1)))
+                                    res.val1 = Number(res.val1);
+
+                                if (!isNaN(Number(res.val2)))
+                                    res.val2 = Number(res.val2);
+
+                                if (res.val2)
+                                    t[res.name](res.val1, res.val2, true);
+                                else
+                                    t[res.name](res.val1, true);
+                            }
+                            break;
+                    }
+                }
+                else {
+                    alert('error');
+                }
+            });
+        },
+        start: function () {
+            this.status['white'].maxCrop = this.base.maxCrop;
+            this.status['white'].maxUnit = this.base.maxUnit;
+            this.status['black'].maxCrop = this.base.maxCrop;
+            this.status['black'].maxUnit = this.base.maxUnit;
+
+            this.label.message = "let's march";
+
+            for (let i in this.base.units)
+                this.base.units[i].buffed = appLib.renew(this.base.buffed);
+
+            for (let i = 0; i < 160; i += 1) {
+                let each = appLib.renew(this.base.area);
+                let remain = i % this.base.columNum;
+                let hnum = this.getVerticalNum(i);
+
+                each.idx = i;
+                each.hidx = i;
+                each.vidx = hnum + (remain * this.base.rowNum);
+                each.vnum = this.getVerticalNum(each.vidx, true);
+                each.hnum = hnum;
+
+                if (i % 10 === 9)
+                    each.type = 'sea';
+
+                if (i < this.base.nature.start) {
+                    each.owner = 'white';
+                    each.ownOnly = true;
+                }
+                else if (i > this.base.nature.end) {
+                    each.owner = 'black';
+                    each.ownOnly = true;
+                }
+
+                this.areas.push(each);
+
+                if (i >= 33 && i <= 35)
+                    this.setUnit('white', 'shield', i, true);
+                else if (i >= 123 && i <= 125)
+                    this.setUnit('black', 'shield', i, true);
+                else if (i === 24)
+                    this.setUnit('white', 'king', i, true);
+                else if (i === 23 || i === 25)
+                    this.setUnit('white', 'horse', i, true);
+                else if (i === 133 || i === 135)
+                    this.setUnit('black', 'horse', i, true);
+                else if (i === 134)
+                    this.setUnit('black', 'king', i, true);
+            }
+
+            setTimeout(function () {
+                $('#app').fadeIn();
+                $('.area-player[data-player=black] .units').scrollLeft($(this).width());
+            }, 500);
+
+            if (navigator.platform !== 'Win32') {
+                $(document).on('contextmenu', function (e) {
+                    e.preventDefault();
+                });
+            }
+
+            window.onbeforeunload = function () {
+                if (this.home.active)
+                    return;
+                else if (this.status.finished)
+                    return;
+                else
+                    return true;
+            };
+        },
         goHome: function () {
             location.reload();
         },
@@ -1794,175 +1981,13 @@ let app = new Vue({
         }
     },
     created: function () {
-        this.global = global;
-        this.status['white'].maxCrop = this.base.maxCrop;
-        this.status['white'].maxUnit = this.base.maxUnit;
-        this.status['black'].maxCrop = this.base.maxCrop;
-        this.status['black'].maxUnit = this.base.maxUnit;
-
-        this.label.message = "let's march";
-        this.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
-
-        for (let i in this.base.units)
-            this.base.units[i].buffed = appLib.renew(this.base.buffed);
-
-        for (let i = 0; i < 160; i += 1) {
-            let each = appLib.renew(this.base.area);
-            let remain = i % this.base.columNum;
-            let hnum = this.getVerticalNum(i);
-
-            each.idx = i;
-            each.hidx = i;
-            each.vidx = hnum + (remain * this.base.rowNum);
-            each.vnum = this.getVerticalNum(each.vidx, true);
-            each.hnum = hnum;
-
-            if (i % 10 === 9)
-                each.type = 'sea';
-
-            if (i < this.base.nature.start) {
-                each.owner = 'white';
-                each.ownOnly = true;
-            }
-            else if (i > this.base.nature.end) {
-                each.owner = 'black';
-                each.ownOnly = true;
-            }
-
-            this.areas.push(each);
-
-            if (i >= 33 && i <= 35)
-                this.setUnit('white', 'shield', i, true);
-            else if (i >= 123 && i <= 125)
-                this.setUnit('black', 'shield', i, true);
-            else if (i === 24)
-                this.setUnit('white', 'king', i, true);
-            else if (i === 23 || i === 25)
-                this.setUnit('white', 'horse', i, true);
-            else if (i === 133 || i === 135)
-                this.setUnit('black', 'horse', i, true);
-            else if (i === 134)
-                this.setUnit('black', 'king', i, true);
-        }
-
-        setTimeout(function () {
-            $('#app').fadeIn();
-            $('.area-player[data-player=black] .units').scrollLeft($(this).width());
-        }, 500);
-
-        if (navigator.platform !== 'Win32') {
-            $(document).on('contextmenu', function (e) {
-                e.preventDefault();
-            });
-        }
-
-        window.onbeforeunload = function () {
-            if (this.status.finished)
-                return;
-            else
-                return true;
-        };
-    },
-    mounted: function () {
         var t = this;
+        t.global = window.global;
+        t.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
 
-        socket.on('connect', function () {
-            socket.emit('enter');
-        });
-
-        socket.on('update', function (res) {
-            if (res && Object.keys(res).length) {
-                switch (res.name) {
-                    case 'connect':
-                        if (!t.global.player) {
-                            t.global.player = res.player;
-                            t.global.first = res.turn;
-                            t.label.player = t.global.first;
-
-                            if (t.global.player === 'black')
-                                t.setRandomShelter();
-                        }
-                        break;
-
-                    case 'start':
-                        let mc = new Hammer(document.querySelector('body'));
-
-                        t.status.started = true;
-                        t.status.paused = false;
-                        t.label.message = 'ready';
-
-                        if (global.first === global.player)
-                            t.pass(global.first);
-
-                        t.status[global.first === 'black' ? 'white' : 'black']['crop'] += 5;
-
-                        $('.area-player .units').each(function () {
-                            $(this).animate({
-                                'scrollLeft': $(this).width() * ($(this).parent('.area-player').data('player') === 'black' ? -1 : 1)
-                            }, 1200);
-                        });
-
-                        mc.on('press', function (e) {
-                            let eachArea = $(e.target).closest('.each-area');
-                            let eachUnit = $(e.target).closest('.each-unit');
-
-                            if (eachArea.length && eachArea.data('idx')) {
-                                let idx = eachArea.data('idx');
-                                t.modal.idx = idx;
-
-                                if (t.areas[idx] && t.getIsShelterInArea(idx)) {
-                                    if (t.getPlayer() === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
-                                        t.modal.info = t.areas[idx].unit;
-                                        t.modal.type = 'unit';
-                                    }
-                                    else {
-                                        t.modal.info = t.areas[idx].shelter;
-                                        t.modal.type = 'shelter';
-                                    }
-                                }
-                                else if (t.areas[idx] && t.areas[idx].unit) {
-                                    t.modal.info = t.areas[idx].unit;
-                                    t.modal.type = 'unit';
-                                }
-                                else
-                                    return;
-                            }
-                            else if (eachUnit.length) {
-                                t.modal.type = 'unit';
-                                t.modal.info = t.base.units[eachUnit.data('name')];
-                                t.modal.info.player = eachUnit.closest('.area-player').data('player');
-                            }
-
-                            t.setAreaDefault();
-                            t.setActiveDefault();
-                            t.setGrabbedDefault();
-                        });
-                        break;
-
-                    case 'disconnect':
-                        if (t.status.started)
-                            alert('상대방이 경기에서 나갔습니다.');
-                        break;
-
-                    default:
-                        if (typeof t[res.name] === 'function') {
-                            if (!isNaN(Number(res.val1)))
-                                res.val1 = Number(res.val1);
-
-                            if (!isNaN(Number(res.val2)))
-                                res.val2 = Number(res.val2);
-
-                            if (res.val2)
-                                t[res.name](res.val1, res.val2, true);
-                            else
-                                t[res.name](res.val1, true);
-                        }
-                        break;
-                }
-            }
-            else {
-                alert('error');
-            }
+        $.getJSON(baseUrl + '/rooms', function (res) {
+            console.log(res);
+            t.room.list = res;
         });
     }
 });

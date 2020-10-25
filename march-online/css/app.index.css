@@ -17,12 +17,36 @@ button {
     display: none;
 }
 
+.gravity-center {
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
 .app {
     width: 100%;
     height: 100%;
     margin: 0 auto;
 
     /* display: none; */
+}
+
+.app > .rooms .add-btn {
+    position: fixed;
+    right: 10px;
+    bottom: 10px;
+    background: #07c;
+    color: #fff;
+    border: 0;
+    border-radius: 50%;
+    font-size: 37px;
+    width: 66px;
+    height: 66px;
+    padding: 0;
+    line-height: 50px;
 }
 
 .app .app-area {
