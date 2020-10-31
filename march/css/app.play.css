@@ -67,7 +67,7 @@ button {
 .app .app-area .area-wrapper .each-area {
     background: #eee;
     display: inline-block;
-    width: calc(100%/10);
+    width: calc(100%/9);
     outline: 0.1rem solid #ddd;
     height: calc(100%/16);
     position: relative;

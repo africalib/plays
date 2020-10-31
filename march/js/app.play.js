@@ -8,12 +8,12 @@ let app = new Vue({
             maxCrop: 30,
             time: 120,
             fieldCount: 10,
-            columNum: 10,
+            columnNum: 9,
             rowNum: 16,
             maxUnit: 300,
             nature: {
-                start: 50,
-                end: 109
+                start: 45,
+                end: 98
             },
             area: {
                 info: {},
@@ -71,9 +71,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: null,
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
                     destory: 0,
                     rotate: 0,
                     style: {}
@@ -94,8 +91,8 @@ let app = new Vue({
                     maxDistance: 1,
                     through: false,
                     multiple: false,
-                    hp: 7,
-                    maxHp: 7,
+                    hp: 5,
+                    maxHp: 5,
                     crop: 3,
                     power: 1,
                     restorePower: 1,
@@ -106,9 +103,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: null,
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
                     destory: 0,
                     rotate: 0,
                     style: {}
@@ -122,7 +116,7 @@ let app = new Vue({
                     maxExp: 4,
                     move: 2,
                     maxMove: 4,
-                    attack: 4,
+                    attack: 5,
                     accel: false,
                     defense: 0,
                     distance: 5,
@@ -141,9 +135,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: 'arrow',
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
                     destory: 0,
                     rotate: 0,
                     style: {}
@@ -176,9 +167,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: 'spear',
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
                     destory: 0,
                     rotate: 0,
                     style: {}
@@ -211,9 +199,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: null,
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
                     destory: 0,
                     rotate: 90,
                     style: {}
@@ -246,9 +231,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: null,
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
                     destory: 0,
                     rotate: 90,
                     style: {}
@@ -281,44 +263,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: 'ball',
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
-                    destory: 0,
-                    rotate: 90,
-                    style: {}
-                },
-                ship: {
-                    name: 'ship',
-                    type: 'sea',
-                    level: 1,
-                    maxLevel: 9,
-                    exp: 0,
-                    maxExp: 13,
-                    move: 5,
-                    maxMove: 10,
-                    attack: 1,
-                    accel: false,
-                    defense: 0,
-                    distance: 1,
-                    maxDistance: 1,
-                    through: false,
-                    multiple: false,
-                    hp: 20,
-                    maxHp: 20,
-                    crop: 13,
-                    power: 1,
-                    restorePower: 1,
-                    maxPower: 5,
-                    farm: 0,
-                    restoreHp: 1,
-                    buff: false,
-                    buffed: null,
-                    status: null,
-                    weapon: null,
-                    rided: [],
-                    ridable: true,
-                    maxRideCount: 12,
                     destory: 0,
                     rotate: 90,
                     style: {}
@@ -351,9 +295,6 @@ let app = new Vue({
                     buffed: null,
                     status: null,
                     weapon: null,
-                    rided: [],
-                    ridable: false,
-                    maxRideCount: 0,
                     destory: 0,
                     rotate: 0,
                     style: {}
@@ -391,7 +332,6 @@ let app = new Vue({
             paused: true,
             touchable: true,
             passable: true,
-            droppable: true,
             white: {
                 crop: 0,
                 incomeCrop: 10,
@@ -436,9 +376,9 @@ let app = new Vue({
             for (let i in this.base.units)
                 this.base.units[i].buffed = appLib.renew(this.base.buffed);
 
-            for (let i = 0; i < 160; i += 1) {
+            for (let i = 0; i < 150; i += 1) {
                 let each = appLib.renew(this.base.area);
-                let remain = i % this.base.columNum;
+                let remain = i % this.base.columnNum;
                 let hnum = this.getVerticalNum(i);
 
                 each.idx = i;
@@ -446,9 +386,6 @@ let app = new Vue({
                 each.vidx = hnum + (remain * this.base.rowNum);
                 each.vnum = this.getVerticalNum(each.vidx, true);
                 each.hnum = hnum;
-
-                if (i % 10 === 9)
-                    each.type = 'sea';
 
                 if (i < this.base.nature.start) {
                     each.owner = 'white';
@@ -461,17 +398,17 @@ let app = new Vue({
 
                 this.areas.push(each);
 
-                if (i >= 33 && i <= 35)
+                if (i >= 21 && i <= 23)
                     this.setUnit('white', 'shield', i, true);
-                else if (i >= 123 && i <= 125)
+                else if (i >= 120 && i <= 122)
                     this.setUnit('black', 'shield', i, true);
-                else if (i === 24)
+                else if (i === 13)
                     this.setUnit('white', 'king', i, true);
-                else if (i === 23 || i === 25)
+                else if (i === 12 || i === 14)
                     this.setUnit('white', 'horse', i, true);
-                else if (i === 133 || i === 135)
+                else if (i === 129 || i === 131)
                     this.setUnit('black', 'horse', i, true);
-                else if (i === 134)
+                else if (i === 130)
                     this.setUnit('black', 'king', i, true);
             }
 
@@ -555,7 +492,6 @@ let app = new Vue({
                         case 'farm': return '농사';
                         case 'direction': return '방향';
                         case 'destory': return '파괴';
-                        case 'ride': return '타고 있는 유닛';
                         case 'accel': return '가속 공격';
                         case 'through': return '스루 공격';
                         case 'true': return '예';
@@ -576,63 +512,6 @@ let app = new Vue({
             }
 
             return '';
-        },
-        setDrop: function (rideIdx, ridedIdx, requested) {
-            let t = this;
-            if (t.getIsUnitInArea(rideIdx)) {
-                let rideArea = t.areas[rideIdx];
-                let rideUnit = rideArea.unit;
-
-                if (rideUnit.ridable && rideUnit.rided.length) {
-                    let dropIdx = null;
-
-                    for (let i = 1; i < t.base.columNum; i += 1) {
-                        if (t.getIsUnitInArea(rideIdx - i) && !t.getHasUnit(rideIdx - i)) {
-                            appLib.bandMessage(t.getPlayer(), '유닛을 내릴 수 없습니다.', t.messageTime, !global.online);
-                            return;
-                        }
-                        else if (!t.getIsUnitInArea(rideIdx - i)) {
-                            dropIdx = rideIdx - i;
-                            break;
-                        }
-                    }
-
-                    if (dropIdx != null) {
-                        t.status.droppable = false;
-                        t.active.idx = dropIdx;
-                        t.areas[dropIdx].unit = appLib.renew(rideUnit.rided[ridedIdx]);
-                        t.areas[dropIdx].unit.direction = t.getDirection(dropIdx, rideIdx);
-                        rideUnit.rided.splice(ridedIdx, 1);
-                        rideUnit.attack = t.base.units[rideUnit.name].attack;
-                        rideUnit.distance = t.base.units[rideUnit.name].distance;
-
-                        for (let i in rideUnit.rided) {
-                            if (rideUnit.attack < rideUnit.rided[i].attack)
-                                rideUnit.attack = rideUnit.rided[i].attack;
-
-                            if (rideUnit.distance < rideUnit.rided[i].distance) {
-                                rideUnit.distance = rideUnit.rided[i].distance;
-                                rideUnit.weapon = rideUnit.rided[i].weapon;
-                            }
-                        }
-
-                        t.setAnimate(rideIdx, dropIdx, false, function () {
-                            t.status.droppable = true;
-                            t.setCounterAttack();
-                            t.setAutoRotate();
-                            t.setAreaDefault();
-                            t.setActiveDefault();
-                            t.setGrabbedDefault();
-                        });
-
-                        if (!requested && global.online)
-                            t.post('setDrop', rideIdx, ridedIdx);
-                    }
-                    else {
-                        appLib.bandMessage(this.getPlayer(), '더 이상 유닛을 내릴 수 없습니다.', t.messageTime, !global.online);
-                    }
-                }
-            }
         },
         setAreas: function (val) {
             this.areas = JSON.parse(val);
@@ -665,34 +544,6 @@ let app = new Vue({
             activeArea = t.areas[t.active.idx];
 
             if (t.getIsUnitInArea(idx) && targetArea.unit.player === t.status.turn) {
-                if (targetArea.status === 'ride' && targetArea.unit.ridable && activeArea.unit.name) {
-                    if (targetArea.unit.rided.length < targetArea.unit.maxRideCount) {
-                        activeArea.unit.direction = t.getDirection(idx, t.active.idx);
-                        activeArea.unit.power -= idx - t.active.idx === 1 ? 0.5 : 1;
-                        targetArea.unit.rided.push(appLib.renew(activeArea.unit));
-
-                        t.setAnimate(t.active.idx, idx, 'ride', function () {
-                            if (activeArea.unit.attack > targetArea.unit.attack)
-                                targetArea.unit.attack = activeArea.unit.attack;
-
-                            if (activeArea.unit.distance > targetArea.unit.distance) {
-                                targetArea.unit.distance = activeArea.unit.distance;
-                                targetArea.unit.weapon = activeArea.unit.weapon;
-                            }
-
-                            activeArea.unit = {};
-                        });
-                    }
-                    else {
-                        appLib.bandMessage(t.getPlayer(), '더 이상 유닛이 탈 수 없습니다.', t.messageTime, !global.online);
-                    }
-
-                    t.setAreaDefault();
-                    t.setActiveDefault();
-                    t.setGrabbedDefault();
-                    return;
-                }
-
                 if (t.active.idx === idx || !targetArea.unit.power) {
                     targetArea.unit.direction = Number(targetArea.unit.direction) + 3;
 
@@ -725,8 +576,8 @@ let app = new Vue({
 
                     for (let i = 0; i < movePoint; i += 1) {
                         let num = {
-                            up: (i + 1) * -10 + idx,
-                            down: (i + 1) * 10 + idx,
+                            up: (i + 1) * - t.base.columnNum + idx,
+                            down: (i + 1) * t.base.columnNum + idx,
                             left: idx - i - 1,
                             right: idx + i + 1
                         };
@@ -737,13 +588,13 @@ let app = new Vue({
                             switch (j) {
                                 case 0:
                                     each.direction = 'up';
-                                    each.idx = (i + 1) * -(t.base.columNum) + idx;
+                                    each.idx = (i + 1) * -(t.base.columnNum) + idx;
                                     each.cond = getEachCond(each.direction, each.idx);
                                     break;
 
                                 case 1:
                                     each.direction = 'down';
-                                    each.idx = (i + 1) * t.base.columNum + idx;
+                                    each.idx = (i + 1) * t.base.columnNum + idx;
                                     each.cond = getEachCond(each.direction, each.idx);
                                     break;
 
@@ -769,12 +620,10 @@ let app = new Vue({
                                 let eachUnit = eachArea.unit;
                                 t.areas[num[each.direction]].player = t.status.turn;
 
-                                if (attackable && ((t.getIsShelterInArea(each.idx) && !t.getHasShelter(each.idx)) || (t.getIsUnitInArea(each.idx) && !t.getHasUnit(each.idx) && (activeArea.unit.type === eachUnit.type ? true : activeArea.unit.type === 'sea' ? i === 0 : true))) && targetArea.unit.distance === 1)
+                                if (attackable && ((t.getIsShelterInArea(each.idx) && !t.getHasShelter(each.idx)) || (t.getIsUnitInArea(each.idx) && !t.getHasUnit(each.idx))) && targetArea.unit.distance === 1)
                                     t.areas[num[each.direction]].status = 'attack';
                                 else if (activeArea.unit.type === eachArea.type && !t.getIsUnitInArea(each.idx) && (!t.getIsShelterInArea(each.idx) || t.getHasShelter(each.idx)))
                                     t.areas[num[each.direction]].status = 'move';
-                                else if (t.getHasUnit(each.idx) && eachUnit.ridable && !activeArea.unit.ridable)
-                                    t.areas[num[each.direction]].status = 'ride';
                             }
                             else {
                                 accessable[each.direction] = false;
@@ -806,8 +655,8 @@ let app = new Vue({
                         else if (attackable) {
                             for (let i = 0; i < targetArea.unit.distance + targetArea.unit.buffed['distance']; i += 1) {
                                 let num = {
-                                    up: (i + 1) * -(t.base.columNum) + idx,
-                                    down: (i + 1) * t.base.columNum + idx,
+                                    up: (i + 1) * -(t.base.columnNum) + idx,
+                                    down: (i + 1) * t.base.columnNum + idx,
                                     right: idx + i + 1,
                                     left: idx - i - 1
                                 };
@@ -857,11 +706,11 @@ let app = new Vue({
                     obj.gap = targetArea.idx - t.active.idx;
 
                     if (obj.gap > 0) {
-                        for (let i = t.active.idx; i <= obj.gap + t.active.idx; i += t.base.columNum)
+                        for (let i = t.active.idx; i <= obj.gap + t.active.idx; i += t.base.columnNum)
                             obj.loopArr.push(i);
                     }
                     else {
-                        for (let i = t.active.idx; i >= obj.gap + t.active.idx; i -= t.base.columNum)
+                        for (let i = t.active.idx; i >= obj.gap + t.active.idx; i -= t.base.columnNum)
                             obj.loopArr.push(i);
                     }
                 }
@@ -1014,13 +863,6 @@ let app = new Vue({
                     if (this.areas[i].unit.player === player) {
                         if (this.areas[i].unit.name === name)
                             fieldCount += 1;
-
-                        if (this.areas[i].unit.rided.length) {
-                            for (let j in this.areas[i].unit.rided) {
-                                if (this.areas[i].unit.rided[j].name === name)
-                                    fieldCount += 1;
-                            }
-                        }
                     }
                 }
 
@@ -1078,7 +920,7 @@ let app = new Vue({
             return false;
         },
         getVerticalNum: function (val, isRowNum) {
-            return Math.floor(val / (isRowNum ? this.base.rowNum : this.base.columNum));
+            return Math.floor(val / (isRowNum ? this.base.rowNum : this.base.columnNum));
         },
         getIsShelterInArea: function (idx) {
             return this.areas[idx] && this.areas[idx].shelter && this.areas[idx].shelter.name;
@@ -1139,14 +981,14 @@ let app = new Vue({
                 if (unit.buff) {
                     i = Number(i);
 
-                    if (this.areas[i - this.base.columNum - 1] && this.areas[i - this.base.columNum - 1].vnum + 1 === area.vnum)
-                        buffArr.push({ player: unit.player, idx: i - this.base.columNum - 1 });
+                    if (this.areas[i - this.base.columnNum - 1] && this.areas[i - this.base.columnNum - 1].vnum + 1 === area.vnum)
+                        buffArr.push({ player: unit.player, idx: i - this.base.columnNum - 1 });
 
-                    if (this.areas[i - this.base.columNum] && this.areas[i - this.base.columNum].vnum === area.vnum)
-                        buffArr.push({ player: unit.player, idx: i - this.base.columNum });
+                    if (this.areas[i - this.base.columnNum] && this.areas[i - this.base.columnNum].vnum === area.vnum)
+                        buffArr.push({ player: unit.player, idx: i - this.base.columnNum });
 
-                    if (this.areas[i - this.base.columNum + 1] && this.areas[i - this.base.columNum + 1].vnum - 1 === area.vnum)
-                        buffArr.push({ player: unit.player, idx: i - this.base.columNum + 1 });
+                    if (this.areas[i - this.base.columnNum + 1] && this.areas[i - this.base.columnNum + 1].vnum - 1 === area.vnum)
+                        buffArr.push({ player: unit.player, idx: i - this.base.columnNum + 1 });
 
                     if (this.areas[i - 1] && this.areas[i - 1].hnum === area.hnum)
                         buffArr.push({ player: unit.player, idx: i - 1 });
@@ -1154,14 +996,14 @@ let app = new Vue({
                     if (this.areas[i + 1] && this.areas[i + 1].hnum === area.hnum)
                         buffArr.push({ player: unit.player, idx: i + 1 });
 
-                    if (this.areas[i + this.base.columNum - 1] && this.areas[i + this.base.columNum - 1].vnum + 1 === area.vnum)
-                        buffArr.push({ player: unit.player, idx: i + this.base.columNum - 1 });
+                    if (this.areas[i + this.base.columnNum - 1] && this.areas[i + this.base.columnNum - 1].vnum + 1 === area.vnum)
+                        buffArr.push({ player: unit.player, idx: i + this.base.columnNum - 1 });
 
-                    if (this.areas[i + this.base.columNum] && this.areas[i + this.base.columNum].vnum === area.vnum)
-                        buffArr.push({ player: unit.player, idx: i + this.base.columNum });
+                    if (this.areas[i + this.base.columnNum] && this.areas[i + this.base.columnNum].vnum === area.vnum)
+                        buffArr.push({ player: unit.player, idx: i + this.base.columnNum });
 
-                    if (this.areas[i + this.base.columNum + 1] && this.areas[i + this.base.columNum + 1].vnum - 1 === area.vnum)
-                        buffArr.push({ player: unit.player, idx: i + this.base.columNum + 1 });
+                    if (this.areas[i + this.base.columnNum + 1] && this.areas[i + this.base.columnNum + 1].vnum - 1 === area.vnum)
+                        buffArr.push({ player: unit.player, idx: i + this.base.columnNum + 1 });
                 }
             }
 
@@ -1181,10 +1023,6 @@ let app = new Vue({
                         unit = t.areas[endIdx].weapon;
                         break;
 
-                    case 'ride':
-                        unit = t.areas[startIdx].unit;
-                        break;
-
                     default:
                         unit = t.areas[endIdx].unit;
                         break;
@@ -1194,41 +1032,24 @@ let app = new Vue({
                 unit.status = 'move';
                 t.$set(unit, 'style', { top: 0, left: 0 });
 
-                if (type === 'ride') {
-                    setTimeout(function () {
-                        unit.style.left = (endIdx - startIdx) * $startArea.width() + 'px'
+                if (startArea.vnum === endArea.vnum)
+                    unit.style.top = (startArea.vidx - endArea.vidx) * $startArea.height() + 'px';
+                else if (startArea.hnum === endArea.hnum)
+                    unit.style.left = (startIdx - endIdx) * $startArea.width() + 'px';
 
-                        setTimeout(function () {
-                            unit.status = null;
-                            unit.style = {};
-                            t.status.touchable = true;
-
-                            if (typeof func === 'function')
-                                func();
-                        }, t.transTime);
-                    });
-                    return;
-                }
-                else {
-                    if (startArea.vnum === endArea.vnum)
-                        unit.style.top = (startArea.vidx - endArea.vidx) * $startArea.height() + 'px';
-                    else if (startArea.hnum === endArea.hnum)
-                        unit.style.left = (startIdx - endIdx) * $startArea.width() + 'px';
+                setTimeout(function () {
+                    unit.style.top = 0;
+                    unit.style.left = 0;
 
                     setTimeout(function () {
-                        unit.style.top = 0;
-                        unit.style.left = 0;
+                        unit.status = null;
+                        unit.style = {};
+                        t.status.touchable = true;
 
-                        setTimeout(function () {
-                            unit.status = null;
-                            unit.style = {};
-                            t.status.touchable = true;
-
-                            if (typeof func === 'function')
-                                func();
-                        }, t.transTime - 100);
-                    }, 100);
-                }
+                        if (typeof func === 'function')
+                            func();
+                    }, t.transTime - 100);
+                }, 100);
             }
             else if (typeof func === 'function') {
                 func();
@@ -1237,8 +1058,8 @@ let app = new Vue({
         setOwner: function (idx, isRunned) {
             if (this.getIsUnitInArea(idx) && this.areas[idx].unit.name === 'king') {
                 let kingUnit = this.areas[idx].unit;
-                let startIdx = (Math.floor(idx / this.base.columNum) * this.base.columNum) + (this.base.columNum * (kingUnit.player === 'black' ? -1 : 1));
-                let endIdx = startIdx + this.base.columNum - 1;
+                let startIdx = (Math.floor(idx / this.base.columnNum) * this.base.columnNum) + (this.base.columnNum * (kingUnit.player === 'black' ? -1 : 1));
+                let endIdx = startIdx + this.base.columnNum - 1;
                 let anotherKingIdx = null;
 
                 for (let i in this.areas) {
@@ -1323,11 +1144,11 @@ let app = new Vue({
 
                         switch (eachUnit.direction) {
                             case 12:
-                                targetIdx = idx - (t.base.columNum * (j + 1));
+                                targetIdx = idx - (t.base.columnNum * (j + 1));
                                 lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
                                 break;
                             case 6:
-                                targetIdx = idx + (t.base.columNum * (j + 1));
+                                targetIdx = idx + (t.base.columnNum * (j + 1));
                                 lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
                                 break;
                             case 3:
@@ -1364,10 +1185,10 @@ let app = new Vue({
                                     for (let x = 0; x < eachUnit.distance + eachUnit.buffed['distance']; x += 1) {
                                         switch (eachUnit.direction) {
                                             case 12:
-                                                attackArr.push(idx - (t.base.columNum * (x + 1)));
+                                                attackArr.push(idx - (t.base.columnNum * (x + 1)));
                                                 break;
                                             case 6:
-                                                attackArr.push(idx + (t.base.columNum * (x + 1)));
+                                                attackArr.push(idx + (t.base.columnNum * (x + 1)));
                                                 break;
                                             case 3:
                                                 attackArr.push(idx + x + 1);
@@ -1742,19 +1563,6 @@ let app = new Vue({
                             if (eachUnit.hp > eachUnit.maxHp)
                                 eachUnit.hp = eachUnit.maxHp;
                         }
-
-                        if (eachUnit.rided.length) {
-                            for (let i in eachUnit.rided) {
-                                eachUnit.rided[i].hp += eachUnit.rided[i].restoreHp;
-                                eachUnit.rided[i].power += eachUnit.rided[i].restorePower;
-
-                                if (eachUnit.rided[i].hp > eachUnit.rided[i].maxHp)
-                                    eachUnit.rided[i].hp = eachUnit.rided[i].maxHp;
-
-                                if (eachUnit.rided[i].power > eachUnit.rided[i].maxPower)
-                                    eachUnit.rided[i].power = eachUnit.rided[i].maxPower;
-                            }
-                        }
                     }
                 }
             }
@@ -1782,13 +1590,13 @@ let app = new Vue({
                 return;
 
             let autoRotates = [{
-                area: this.areas[this.active.idx - this.base.columNum],
+                area: this.areas[this.active.idx - this.base.columnNum],
                 direction: this.areas[this.active.idx].unit === 'black' ? 12 : 6
             }, {
                 area: this.areas[this.active.idx + 1],
                 direction: 9
             }, {
-                area: this.areas[this.active.idx + this.base.columNum],
+                area: this.areas[this.active.idx + this.base.columnNum],
                 direction: this.areas[this.active.idx].unit === 'black' ? 6 : 12
             }, {
                 area: this.areas[this.active.idx - 1],
@@ -1850,16 +1658,6 @@ let app = new Vue({
 
                             if (king.white && king.black)
                                 break;
-                        }
-                        else if (unit.rided.length) {
-                            for (let j in unit.rided) {
-                                if (unit.rided[j].name === 'king') {
-                                    king[unit.player] += 1;
-
-                                    if (king.white && king.black)
-                                        break;
-                                }
-                            }
                         }
                     }
                 }
