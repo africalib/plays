@@ -424,10 +424,7 @@ let app = new Vue({
             }
 
             window.onbeforeunload = function () {
-                if (this.status.finished)
-                    return;
-                else
-                    return true;
+                return true;
             };
         },
         goHome: function () {
