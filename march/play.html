@@ -8,7 +8,7 @@
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/app.common.css" rel="stylesheet" />
     <link href="css/app.play.css?2" rel="stylesheet" />
-    <script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script>
+    <script src="http://africalib.cafe24app.com/socket.io/socket.io.js"></script>
     <script>
         var global = {
             online: '1' === '1',
@@ -28,7 +28,7 @@
                     v-bind:key="idx" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner" v-bind:data-type="a.type"
                     v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
                     v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
-                    v-on:click="status.touchable && touch(idx)">
+                    v-on:click="getTouchable(idx) && touch(idx)">
                     <div class="unit" v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
                         v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
                         v-bind:data-status="a.unit.status" v-if="a.unit.name" v-bind:style="a.unit.style">
@@ -63,7 +63,8 @@
                 <div class="units">
                     <div class="each-unit" v-bind:data-name="u.name"
                         v-bind:class="{ 'active' : status.turn === 'white' && u.name === grabbed.name }"
-                        v-for="u in getReversed(base.units)" v-on:click="grab('white', u.name)" v-if="u.crop">
+                        v-for="u in getReversed(base.units)"
+                        v-on:click="getPlayer() === 'white' && grab('white', u.name)" v-if="u.crop">
                         <div>{{ u.name }}<br />({{ u.crop }})</div>
                         <img v-bind:src="'img/white/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
                     </div>
@@ -78,9 +79,8 @@
                                 <td>{{ status.white.crop }} / {{ status.white.maxCrop }}</td>
                                 <td class="button" rowspan="3">
                                     <button type="button" v-on:click="status.passable && pass('black')"
-                                        v-if="!status.finished && status.turn === 'white'">pass</button>
-                                    <button type="button" v-on:click="pause('white')"
-                                        v-if="!status.finished && status.turn !== 'white'">pause</button>
+                                        v-if="!status.finished"
+                                        v-bind:disabled="getPlayer() !== 'white' || status.turn !== 'white'">pass</button>
                                     <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                                 </td>
                             </tr>
@@ -104,7 +104,8 @@
                 <div class="units">
                     <div class="each-unit" v-bind:data-name="u.name"
                         v-bind:class="{ 'active' : status.turn === 'black' && u.name === grabbed.name }"
-                        v-for="u in base.units" v-on:click="grab('black', u.name)" v-if="u.crop">
+                        v-for="u in base.units" v-on:click="getPlayer() === 'black' && grab('black', u.name)"
+                        v-if="u.crop">
                         <div>{{ u.name }}<br />({{ u.crop }})</div>
                         <img v-bind:src="'img/black/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
                     </div>
@@ -119,9 +120,7 @@
                                 <td>{{ status.black.crop }} / {{ status.black.maxCrop }}</td>
                                 <td class="button" rowspan="3">
                                     <button type="button" v-on:click="status.passable && pass('white')"
-                                        v-if="!status.finished && status.turn === 'black'">pass</button>
-                                    <button type="button" v-on:click="pause('black')"
-                                        v-if="!status.finished && status.turn !== 'black'">pause</button>
+                                        v-if="!status.finished" v-bind:disabled="getPlayer() !== 'black' || status.turn !== 'black'">pass</button>
                                     <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                                 </td>
                             </tr>

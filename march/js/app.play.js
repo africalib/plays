@@ -1,4 +1,4 @@
-﻿const baseUrl = 'http://127.0.0.1:8080';
+﻿const baseUrl = 'http://africalib.cafe24app.com';
 let socket;
 
 let app = new Vue({
@@ -442,6 +442,18 @@ let app = new Vue({
 
             this.setTurn(player);
         },
+        getTouchable: function (idx) {
+            if (this.status.touchable) {
+                var area = this.areas[idx];
+
+                if (area && area.unit && Object.keys(area.unit).length && area.status !== 'attack')
+                    return area.unit.player === this.getPlayer();
+
+                return true;
+            }
+
+            return false;
+        },
         getReversed: function (obj) {
             let newObject = {};
             let keys = [];
@@ -526,14 +538,9 @@ let app = new Vue({
             if (!requested) {
                 if (t.status.touchable) {
                     t.status.touchable = false;
-
-                    clearTimeout(t.timer.touch);
-                    t.timer.touch = setTimeout(function () {
-                        t.status.touchable = true;
-                    }, 250);
-
                     t.request('touch', idx);
                 }
+
                 return;
             }
 
@@ -614,7 +621,6 @@ let app = new Vue({
                             let eachArea = t.areas[each.idx];
 
                             if (each.cond && eachArea) {
-                                let eachUnit = eachArea.unit;
                                 t.areas[num[each.direction]].player = t.status.turn;
 
                                 if (attackable && ((t.getIsShelterInArea(each.idx) && !t.getHasShelter(each.idx)) || (t.getIsUnitInArea(each.idx) && !t.getHasUnit(each.idx))) && targetArea.unit.distance === 1)
@@ -1042,11 +1048,11 @@ let app = new Vue({
                         unit.status = null;
                         unit.style = {};
                         t.status.touchable = true;
-
-                        if (typeof func === 'function')
-                            func();
                     }, t.transTime - 100);
                 }, 100);
+
+                if (typeof func === 'function')
+                    func();
             }
             else if (typeof func === 'function') {
                 func();
@@ -1770,6 +1776,16 @@ let app = new Vue({
 
                     default:
                         if (typeof t[res.value.name] === 'function') {
+                            switch (res.value.name) {
+                                case 'touch':
+                                    // clearTimeout(t.timer.touch);
+                                    // t.timer.touch = setTimeout(function () {
+                                    //     t.status.touchable = true;
+                                    // }, 250);
+                                    t.status.touchable = true;
+                                    break;
+                            }
+
                             if (!isNaN(Number(res.value.val1)))
                                 res.value.val1 = Number(res.value.val1);
 
