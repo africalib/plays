@@ -1669,7 +1669,7 @@ let app = new Vue({
                     let player = global.online ? global.player : winner;
 
                     this.setLabel(player, winner + ' player won', 0);
-                    appLib.bandMessage(player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 통해 새로고침이 가능합니다.', 0, !global.online);
+                    appLib.bandMessage(player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0, !global.online);
                     clearInterval(this.interval['timer']);
 
                     for (let i in this.areas)
