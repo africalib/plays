@@ -428,7 +428,7 @@ let app = new Vue({
             };
         },
         goHome: function () {
-            location.reload();
+            location.href = 'index.html';
         },
         request: function (name, val1, val2) {
             socket.emit('request', { type: 'send', name: name, player: this.getPlayer(), val1: val1, val2: val2 });
