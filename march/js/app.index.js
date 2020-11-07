@@ -1,4 +1,4 @@
-﻿const baseUrl = 'http://africalib.shop:80';
+﻿const baseUrl = 'https://africalib.gabia.io';
 let socket;
 
 let app = new Vue({
