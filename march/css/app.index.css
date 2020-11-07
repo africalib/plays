@@ -14,7 +14,7 @@
 }
 
 .app > .title > img {
-    max-width: 300px;
+    width: 300px;
 }
 
 .app > .title > div {
