@@ -11,14 +11,20 @@ let app = new Vue({
     methods: {
         enter: function (name) {
             location.href = 'play.html' + (name ? '#/' + name : '');
+        },
+        refresh: function () {
+            var t = this;
+            $.getJSON(baseUrl + '/rooms', function (res) {
+                t.room.list = res;
+            });
         }
     },
     created: function () {
         var t = this;
-        t.global = window.global;
+        t.refresh();
 
-        $.getJSON(baseUrl + '/rooms', function (res) {
-            t.room.list = res;
-        });
+        setInterval(function () {
+            t.refresh();
+        }, 2500);
     }
 });

@@ -33,8 +33,8 @@ let app = new Vue({
             shelters: {
                 rock: {
                     name: 'rock',
-                    hp: 20,
-                    maxHp: 20
+                    hp: 100,
+                    maxHp: 100
                 },
                 tree: {
                     name: 'tree',
@@ -332,11 +332,11 @@ let app = new Vue({
             paused: true,
             touchable: true,
             passable: true,
+            time: 0,
             white: {
                 crop: 0,
                 incomeCrop: 10,
                 maxCrop: 0,
-                time: 0,
                 units: 0,
                 maxUnit: 0
             },
@@ -344,7 +344,6 @@ let app = new Vue({
                 crop: 0,
                 incomeCrop: 10,
                 maxCrop: 0,
-                time: 0,
                 units: 0,
                 maxUnit: 0
             }
@@ -431,7 +430,7 @@ let app = new Vue({
             location.href = 'index.html';
         },
         request: function (name, val1, val2) {
-            socket.emit('request', { type: 'send', name: name, player: this.getPlayer(), val1: val1, val2: val2 });
+            socket.emit('request', { type: 'send', name: name, player: global.player, val1: val1, val2: val2 });
         },
         pass: function (player, requested) {
             if (!requested) {
@@ -447,7 +446,7 @@ let app = new Vue({
                 var area = this.areas[idx];
 
                 if (area && area.unit && Object.keys(area.unit).length && area.status !== 'attack')
-                    return area.unit.player === this.getPlayer();
+                    return area.unit.player === global.player;
 
                 return true;
             }
@@ -468,14 +467,6 @@ let app = new Vue({
             }
 
             return newObject;
-        },
-        getPlayer: function () {
-            if (global.player)
-                return global.player;
-            else if (this.status.turn)
-                return this.status.turn;
-
-            return global.first;
         },
         getLang: function (lang, keyword) {
             switch (lang) {
@@ -833,7 +824,7 @@ let app = new Vue({
                 t.setGrabbedDefault();
             }
             else if (t.grabbed.name) {
-                appLib.bandMessage(t.getPlayer(), '해당 위치에 배치할 수 없습니다.', t.messageTime, !global.online);
+                appLib.bandMessage(global.player, '해당 위치에 배치할 수 없습니다.', t.messageTime, !global.online);
                 return;
             }
             else {
@@ -870,16 +861,16 @@ let app = new Vue({
                 }
 
                 if (fieldCount >= this.base.fieldCount) {
-                    appLib.bandMessage(this.getPlayer(), '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.messageTime, !global.online);
+                    appLib.bandMessage(global.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.messageTime, !global.online);
                     return;
                 }
 
                 if (this.status[player].crop < unit.crop) {
-                    appLib.bandMessage(this.getPlayer(), '농작물이 부족합니다.', this.messageTime, !global.online);
+                    appLib.bandMessage(global.player, '농작물이 부족합니다.', this.messageTime, !global.online);
                     return;
                 }
                 else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
-                    appLib.bandMessage(this.getPlayer(), '유닛을 더 이상 배치할 수 없습니다.', this.messageTime, !global.online);
+                    appLib.bandMessage(global.player, '유닛을 더 이상 배치할 수 없습니다.', this.messageTime, !global.online);
                     return;
                 }
 
@@ -917,7 +908,7 @@ let app = new Vue({
             if (this.getIsUnitInArea(i)) {
                 let eachArea = this.areas[i];
                 let eachUnit = eachArea.unit;
-                return eachArea.owner === eachUnit.player || (this.getIsShelterInArea(i) && eachArea.shelter.player === this.getPlayer());
+                return eachArea.owner === eachUnit.player || (this.getIsShelterInArea(i) && eachArea.shelter.player === global.player);
             }
 
             return false;
@@ -1319,7 +1310,7 @@ let app = new Vue({
         },
         setRandomShelter: function () {
             let t = this;
-            let shelterCount = 2;
+            let shelterCount = 1;
             let players = ['black', 'white'];
 
             for (x in players) {
@@ -1327,7 +1318,7 @@ let app = new Vue({
                 let shelterRandomArr = [];
 
                 for (let i in t.areas) {
-                    if (t.areas[i].type === 'land' && !t.getIsShelterInArea(i) && !t.getIsUnitInArea(i) && players[x] === 'black' ? i >= 80 && i <= 109 : i >= 50 && i <= 79)
+                    if (t.areas[i].type === 'land' && !t.getIsShelterInArea(i) && !t.getIsUnitInArea(i) && players[x] === 'black' ? i >= 81 && i <= 116 : i >= 27 && i <= 62)
                         shelterEmptyArr.push(i);
                 }
 
@@ -1339,7 +1330,7 @@ let app = new Vue({
                     }
 
                     for (let i = 0; i < shelterRandomArr.length; i += 1)
-                        t.setShelter(players[x], i % 2 ? 'rock' : 'tree', Number(shelterRandomArr[i]));
+                        t.setShelter(players[x], i % 2 ? 'tree' : 'rock', Number(shelterRandomArr[i]));
                 }
             }
         },
@@ -1476,7 +1467,7 @@ let app = new Vue({
                 area.unit = unit;
             }
             else {
-                appLib.bandMessage(this.getPlayer(), '오류가 있습니다.', this.messageTime, !global.online);
+                appLib.bandMessage(global.player, '오류가 있습니다.', this.messageTime, !global.online);
                 console.error('error');
             }
         },
@@ -1498,6 +1489,10 @@ let app = new Vue({
                     });
                 }, 2000);
             }
+        },
+        setLabelHide: function () {
+            if (this.status.started)
+                this.label.message = null;
         },
         setTurn: function (player) {
             let crop = 0;
@@ -1570,12 +1565,12 @@ let app = new Vue({
             }
 
             if (this.status.turn)
-                appLib.bandMessage(this.getPlayer(), this.getLang('ko', player) + ' 플레이어에게 턴을 넘겼습니다.', this.messageTime, !global.online);
+                appLib.bandMessage(global.player, this.getLang('ko', player) + ' 플레이어에게 턴을 넘겼습니다.', this.messageTime, !global.online);
 
             crop = parseFloat(crop).toFixed(2);
             this.status[player].crop = (parseFloat(this.status[player].crop) + parseFloat(this.status[player].incomeCrop) + parseFloat(crop)).toFixed(2);
             this.status[player].crop = Number(this.status[player].crop.toString());
-            this.status[player].time = this.base.time;
+            this.status.time = this.base.time;
 
             if (this.status[player].crop > this.status[player].maxCrop)
                 this.status[player].crop = this.status[player].maxCrop;
@@ -1585,7 +1580,7 @@ let app = new Vue({
             this.setAreaDefault();
             this.setActiveDefault();
             this.setGrabbedDefault();
-            this.setTimer(player);
+            this.setTimer();
         },
         setAutoRotate: function () {
             if (this.active.idx === undefined || this.active.idx === null)
@@ -1621,19 +1616,20 @@ let app = new Vue({
                 this.autoRotateArr = [];
             }
         },
-        setTimer: function (player) {
+        setTimer: function () {
             let t = this;
             clearInterval(t.interval['timer']);
 
             t.interval['timer'] = setInterval(function () {
-                if (t.status[player].time > 0) {
-                    t.status[player].time -= 1;
+                if (t.status.time > 0) {
+                    t.status.time -= 1;
                 }
                 else {
-                    let nextPlayer = player === 'white' ? 'black' : 'white';
-                    appLib.bandMessage(t.getPlayer(), '유효 시간이 지났습니다.', t.messageTime, !global.online);
-                    t.setTurn(nextPlayer);
+                    appLib.bandMessage(global.player, '유효 시간이 지났습니다.', t.messageTime, !global.online);
                     t.setModalClose();
+
+                    if (global.player === t.status.turn)
+                        t.pass(t.status.turn === 'white' ? 'black' : 'white');
                 }
             }, 1000);
         },
@@ -1676,6 +1672,7 @@ let app = new Vue({
                         this.areas[i].owner = winner;
 
                     this.status.finished = true;
+                    window.onbeforeunload = null;
                 }
             }
         }
@@ -1707,9 +1704,6 @@ let app = new Vue({
                             t.global.player = res.player;
                             t.global.first = res.turn;
                             t.label.player = t.global.first;
-
-                            if (t.global.player === 'black')
-                                t.setRandomShelter();
                         }
                         break;
 
@@ -1721,6 +1715,9 @@ let app = new Vue({
                         t.label.message = 'ready';
 
                         t.start();
+
+                        if (t.global.player === 'black')
+                            t.setRandomShelter();
 
                         if (global.first === global.player)
                             t.pass(global.first);
@@ -1742,7 +1739,7 @@ let app = new Vue({
                                 t.modal.idx = idx;
 
                                 if (t.areas[idx] && t.getIsShelterInArea(idx)) {
-                                    if (t.getPlayer() === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
+                                    if (global.player === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
                                         t.modal.info = t.areas[idx].unit;
                                         t.modal.type = 'unit';
                                     }
@@ -1771,9 +1768,10 @@ let app = new Vue({
                         break;
 
                     case 'disconnect':
-                        if (t.status.started) {
+                        if (t.status.started && !t.status.finished) {
                             t.status.finished = true;
                             alert('상대방이 경기에서 나갔습니다.');
+                            window.onbeforeunload = null;
                             window.location.href = 'index.html';
                         }
                         break;

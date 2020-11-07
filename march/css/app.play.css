@@ -54,7 +54,6 @@ button {
     height: 100%;
     position: relative;
     font-size: 0;
-    padding: 5rem 0;
     overflow: hidden;
 }
 
@@ -191,11 +190,19 @@ button {
     background: #fff;
 }
 
-.app[data-line=online][data-player=white] .app-area .area-wrapper .each-area .unit[data-player=white] + .shelter[data-player=white] {
+.app[data-started=Y][data-player=black] .app-area {
+    padding: 0 0 5rem 0;
+}
+
+.app[data-started=Y][data-player=white] .app-area {
+    padding: 5rem 0 0  0;
+}
+
+.app[data-player=white] .app-area .area-wrapper .each-area .unit[data-player=white] + .shelter[data-player=white] {
     background: rgba(255, 255, 255, 0.7);
 }
 
-.app[data-line=online][data-player=black] .app-area .area-wrapper .each-area .unit[data-player=black] + .shelter[data-player=black] {
+.app[data-player=black] .app-area .area-wrapper .each-area .unit[data-player=black] + .shelter[data-player=black] {
     background: rgba(0, 0, 0, 0.25);
 }
 
@@ -637,7 +644,7 @@ button {
     transform: rotate(180deg);
 }
 
-.app[data-line=online][data-player=white] {
+.app[data-started=Y][data-player=white] {
     transform: rotate(180deg);
 }
 

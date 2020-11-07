@@ -8,14 +8,6 @@
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/app.common.css" rel="stylesheet" />
     <link href="css/app.index.css?2" rel="stylesheet" />
-    <script>
-        var global = {
-            online: '1' === '1',
-            id: '',
-            first: '0',
-            player: ''
-        };
-    </script>
 </head>
 <body>
     </script>
@@ -52,7 +44,7 @@
                 </h4>
             </div>
             <div class="refresh">
-                <a href="index.html">새로고침</a>
+                <a class="pointer" v-on:click="refresh()">새로고침</a>
             </div>
             <button type="button" class="add-btn" v-on:click="enter()">+</button>
         </div>
