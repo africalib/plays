@@ -1377,7 +1377,6 @@ let app = new Vue({
                     if (!eachUnit.ridable)
                         eachUnit.attack += 1;
 
-                    eachUnit.hp += 1;
                     eachUnit.maxHp += 1;
                     eachUnit.power += 1;
                     eachUnit.maxPower += 1;
