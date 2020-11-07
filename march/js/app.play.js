@@ -1686,7 +1686,7 @@ let app = new Vue({
 
         t.global = window.global;
         t.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
-        socket = io.connect(baseUrl);
+        socket = io.connect(baseUrl, { transport : ['websocket'] });
 
         t.label.message = "Waiting for Player";
 
