@@ -1715,7 +1715,7 @@ let app = new Vue({
                     case 'connect':
                         if (!t.my.player) {
                             t.my.player = res.player;
-                            t.my.roomUrl = window.location.href.replace('play.html', '') + res.room;
+                            t.my.roomUrl = window.location.href + '#/' + res.room;
                             t.label.player = res.turn;
                         }
                         break;
