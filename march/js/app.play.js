@@ -5,7 +5,7 @@ let app = new Vue({
     el: '#app',
     data: {
         base: {
-            maxCrop: 30,
+            maxCrop: 50,
             time: 120,
             fieldCount: 100,
             columnNum: 9,
@@ -1381,7 +1381,7 @@ let app = new Vue({
 
                     if (eachUnit.name === 'king') {
                         this.status[eachUnit.player].incomeCrop += 10;
-                        this.status[eachUnit.player].maxCrop += 10;
+                        this.status[eachUnit.player].maxCrop += 50;
                         this.status[eachUnit.player].maxUnit += 100;
                     }
 
@@ -1550,18 +1550,8 @@ let app = new Vue({
                         }
 
                         // 추가 농작물
-                        if (eachUnit.farm) {
-                            let each = 0;
-
-                            if (player === eachArea.owner) {
-                                if (player === 'white')
-                                    each = eachArea.hnum + 1;
-                                else if (player === 'black')
-                                    each = eachArea.hnum - ((eachArea.hnum - Math.round(this.base.rowNum / 2)) * 2);
-                            }
-
-                            crop += (eachUnit.farm + eachUnit.buffed['farm']) * (each * 0.1);
-                        }
+                        if (eachUnit.farm) 
+                            crop += eachUnit.farm + eachUnit.buffed['farm'];
 
                         // 추가 체력
                         if (eachUnit.restoreHp && eachUnit.hp < eachUnit.maxHp) {
