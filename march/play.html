@@ -4,7 +4,6 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>March of the King</title>
-    <meta property="og:image" content="img/common/home.cavalry.png">
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/app.common.css" rel="stylesheet" />
@@ -12,9 +11,9 @@
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
 </head>
 <body>
-    </script>
     <div id="app" class="app" v-bind:data-device="device" v-bind:data-started="status.started ? 'Y' : 'N'"
         v-bind:data-player="my.player" v-cloak>
+        <img src="img/common/home.cavalry.png" class="hide" />
         <div class="area-top">
             <span>
                 <i class="fa fa-flag" aria-hidden="true"></i>
