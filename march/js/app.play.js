@@ -375,8 +375,6 @@ let app = new Vue({
             this.status['black'].maxCrop = this.base.maxCrop;
             this.status['black'].maxUnit = this.base.maxUnit;
 
-            this.label.message = "let's march";
-
             for (let i in this.base.units)
                 this.base.units[i].buffed = appLib.renew(this.base.buffed);
 
@@ -1725,13 +1723,19 @@ let app = new Vue({
 
                         t.status.started = true;
                         t.status.paused = false;
-                        t.label.message = 'ready';
 
                         t.start();
+                        t.setLabel("you are " + t.my.player + " player", 2500);
+
+                        setTimeout(function () {
+                            t.setLabel("let's March", 2500);
+                        }, 2500);
 
                         if (t.my.player === 'black') {
-                            t.setRandomShelter();
-                            t.pass('black');
+                            setTimeout(function () {
+                                t.setRandomShelter();
+                                t.pass('black');
+                            }, 5000);
                         }
 
                         t.status['white']['crop'] += 5;
