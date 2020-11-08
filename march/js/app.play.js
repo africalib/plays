@@ -10,7 +10,7 @@ let app = new Vue({
             fieldCount: 100,
             columnNum: 9,
             rowNum: 16,
-            maxUnit: 300,
+            maxUnit: 500,
             nature: {
                 start: 45,
                 end: 98
@@ -65,7 +65,7 @@ let app = new Vue({
                     power: 1,
                     restorePower: 1,
                     maxPower: 1,
-                    farm: 1,
+                    farm: 0.5,
                     restoreHp: 1,
                     buff: false,
                     buffed: null,
@@ -1098,7 +1098,7 @@ let app = new Vue({
                         eachUnit.buffed['defense'] = 1;
 
                         if (eachUnit.farm > 0)
-                            eachUnit.buffed['farm'] = 1;
+                            eachUnit.buffed['farm'] = 0.5;
 
                         if (eachUnit.move > 1)
                             eachUnit.buffed['move'] = 1;
@@ -1353,7 +1353,7 @@ let app = new Vue({
                     eachUnit.maxExp += 1;
 
                     if (eachUnit.farm)
-                        eachUnit.farm += 1;
+                        eachUnit.farm += 0.5;
 
                     if (eachUnit.move > 1) {
                         eachUnit.move += 1;
