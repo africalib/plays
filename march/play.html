@@ -41,7 +41,7 @@
                             </div>
                         </div>
                         <div class="hp" v-if="a.unit.hp && a.unit.maxHp">
-                            <div class="remain" v-bind:style="{ width : (a.unit.hp / a.unit.maxHp * 100) + '%' }"></div>
+                            <div class="remain" v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }"></div>
                         </div>
                         <div class="level" v-if="a.unit.level">{{ a.unit.level }}</div>
                     </div>
@@ -49,7 +49,7 @@
                         v-if="a.shelter.name">
                         <img v-bind:src="'img/' + a.shelter.player + '/' + a.shelter.name + '.png'" />
                         <div class="hp" v-if="a.shelter.hp && a.shelter.maxHp">
-                            <div class="remain" v-bind:style="{ width : (a.shelter.hp / a.shelter.maxHp * 100) + '%' }">
+                            <div class="remain" v-bind:style="{ width : a.shelter.hp ? (a.shelter.hp / a.shelter.maxHp * 100) + '%' : 0 }">
                             </div>
                         </div>
                     </div>

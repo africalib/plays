@@ -29,6 +29,7 @@
 
 .app > .rooms p i {
     display: inline-block;
+    font-style: normal;
     vertical-align: top;
 }
 

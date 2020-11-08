@@ -1273,12 +1273,12 @@ let app = new Vue({
                     isAlive = targetArea.unit.hp > 0;
 
                     if (activeArea.unit.hp <= 0) {
-                        activeArea.unit.hp = 0;
+                        activeArea.unit.hp = -100;
                         targetArea.unit.exp += activeArea.unit.crop + activeArea.unit.level;
                     }
 
                     if (targetArea.unit.hp <= 0) {
-                        targetArea.unit.hp = 0;
+                        targetArea.unit.hp = -100;
                         activeArea.unit.exp += targetArea.unit.crop + targetArea.unit.level;
                         activeArea.unit.destory += 1;
 
@@ -1368,6 +1368,7 @@ let app = new Vue({
                     if (!eachUnit.ridable)
                         eachUnit.attack += 1;
 
+                    eachUnit.hp += 1;
                     eachUnit.maxHp += 1;
                     eachUnit.power += 1;
                     eachUnit.maxPower += 1;
@@ -1375,7 +1376,7 @@ let app = new Vue({
                     eachUnit.restoreHp += 1;
 
                     if (eachUnit.name === 'king') {
-                        this.status[eachUnit.player].incomeCrop += 1;
+                        this.status[eachUnit.player].incomeCrop += 10;
                         this.status[eachUnit.player].maxCrop += 10;
                         this.status[eachUnit.player].maxUnit += 100;
                     }
@@ -1388,12 +1389,10 @@ let app = new Vue({
         },
         setCheckLevel: function () {
             for (let i in this.areas) {
-                if (this.getIsUnitInArea(i) && this.areas[i].unit.name === 'king') {
+                if (this.getIsUnitInArea(i) && this.areas[i].unit.name === 'king')
                     this.setLevel(i);
-                }
-                else if (this.getIsInShelterOrArea(i)) {
+                else if (this.getIsInShelterOrArea(i))
                     this.setLevel(i);
-                }
             }
         },
         setShowUp: function (act, idx, val, isImportant) {
