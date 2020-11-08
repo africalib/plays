@@ -1728,7 +1728,7 @@ let app = new Vue({
                         t.setLabel("you are " + t.my.player + " player", 2500);
 
                         setTimeout(function () {
-                            t.setLabel("let's March", 2500);
+                            t.setLabel("let's march", 2500);
                         }, 2500);
 
                         if (t.my.player === 'black') {
