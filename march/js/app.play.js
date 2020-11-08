@@ -507,10 +507,9 @@ let app = new Vue({
         getModalInfoProp: function (prop) {
             if (this.modal.info.buffed && this.modal.info.buffed[prop] !== undefined) {
                 if (this.modal.info.name) {
-                    let unitProp = this.modal.info[prop] + this.modal.info.buffed[prop];
-                    let defaultProp = this.base.units[this.modal.info.name][prop];
-                    let gap = unitProp - defaultProp;
-                    return unitProp + (gap ? ' (+' + gap + ' up)' : '');
+                    let buff = this.modal.info.buffed[prop];
+                    let unitProp = this.modal.info[prop] + buff;
+                    return unitProp + (buff ? ' (+' + buff + ' buff)' : '');
                 }
             }
 
@@ -1550,7 +1549,7 @@ let app = new Vue({
                         }
 
                         // 추가 농작물
-                        if (eachUnit.farm) 
+                        if (eachUnit.farm)
                             crop += eachUnit.farm + eachUnit.buffed['farm'];
 
                         // 추가 체력
