@@ -326,7 +326,7 @@ let app = new Vue({
             unit: null
         },
         status: {
-            turn: 'black',
+            turn: null,
             started: false,
             finished: false,
             paused: true,
@@ -350,7 +350,8 @@ let app = new Vue({
         },
         areas: [],
         my: {
-            player: null
+            player: null,
+            roomUrl: null
         },
         modal: {
             idx: null,
@@ -516,6 +517,13 @@ let app = new Vue({
             }
 
             return '';
+        },
+        copyRoomUrl: function () {
+            if (this.$refs.roomUrl) {
+                this.$refs.roomUrl.select();
+                this.$refs.roomUrl.setSelectionRange(0, 99999);
+                document.execCommand("copy");
+            }
         },
         setAreas: function (val) {
             this.areas = JSON.parse(val);
@@ -1707,6 +1715,7 @@ let app = new Vue({
                     case 'connect':
                         if (!t.my.player) {
                             t.my.player = res.player;
+                            t.my.roomUrl = window.location.href.replace('play.html', '') + res.room;
                             t.label.player = res.turn;
                         }
                         break;
