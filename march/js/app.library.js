@@ -47,7 +47,7 @@
         $(paramSeletor).val(thisValue);
     },
 
-    bandMessage: function (paramType, paramMessage, paramTimeout, paramReversed) {
+    bandMessage: function (paramType, paramMessage, paramTimeout) {
         $('#bandMessage').hide();
 
         switch (paramType) {
@@ -67,10 +67,10 @@
                 + '</div>');
         }
 
-        if (paramType === 'white' && paramReversed)
-            $('#bandMessage').addClass('reversed');
-        else
-            $('#bandMessage').removeClass('reversed');
+        // if (paramType === 'white')
+        //     $('#bandMessage').addClass('reversed');
+        // else
+        //     $('#bandMessage').removeClass('reversed');
 
         $('#bandMessage .message').text(paramMessage);
         $('#bandMessage').stop().fadeIn(0);

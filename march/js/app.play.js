@@ -7,7 +7,7 @@ let app = new Vue({
         base: {
             maxCrop: 30,
             time: 120,
-            fieldCount: 10,
+            fieldCount: 27,
             columnNum: 9,
             rowNum: 16,
             maxUnit: 300,
@@ -326,7 +326,7 @@ let app = new Vue({
             unit: null
         },
         status: {
-            turn: '',
+            turn: 'black',
             started: false,
             finished: false,
             paused: true,
@@ -349,17 +349,21 @@ let app = new Vue({
             }
         },
         areas: [],
-        global: null,
+        my: {
+            player: null
+        },
         modal: {
             idx: null,
             info: {},
             type: null
         },
+        time: {
+            message: 2000,
+            animate: 250,
+        },
         timer: {},
         interval: {},
         touchStart: 0,
-        messageTime: 2000,
-        transTime: 200,
         autoRotateArr: []
     },
     methods: {
@@ -430,7 +434,7 @@ let app = new Vue({
             location.href = 'index.html';
         },
         request: function (name, val1, val2) {
-            socket.emit('request', { type: 'send', name: name, player: global.player, val1: val1, val2: val2 });
+            socket.emit('request', { type: 'send', name: name, player: this.my.player, val1: val1, val2: val2 });
         },
         pass: function (player, requested) {
             if (!requested) {
@@ -446,7 +450,7 @@ let app = new Vue({
                 var area = this.areas[idx];
 
                 if (area && area.unit && Object.keys(area.unit).length && area.status !== 'attack')
-                    return area.unit.player === global.player;
+                    return area.unit.player === this.my.player;
 
                 return true;
             }
@@ -678,7 +682,7 @@ let app = new Vue({
                     startIdx: t.active.idx,
                     endIdx: 0,
                     aniType: null,
-                    afterAnimateFunc: null
+                    gap: null
                 };
 
                 if (!activeArea)
@@ -771,9 +775,6 @@ let app = new Vue({
                 else if (t.areas[t.active.idx].unit.distance > 1) {
                     obj.endIdx = idx;
                     obj.aniType = 'weapon';
-                    obj.afterAnimateFunc = function () {
-                        delete t.areas[obj.endIdx]['weapon'];
-                    }
 
                     t.$set(t.areas[obj.endIdx], 'weapon', {
                         name: activeArea.unit.weapon,
@@ -802,12 +803,9 @@ let app = new Vue({
                 t.setAreaDefault();
 
                 t.setAnimate(obj.startIdx, obj.endIdx, obj.aniType, function () {
-                    if (typeof obj.afterAnimateFunc === 'function')
-                        obj.afterAnimateFunc();
-
                     t.setOwner(t.active.idx);
                     t.setBuff();
-                    t.setCounterAttack();
+                    t.setCounterAttack(obj.gap !== null && Math.abs(obj.gap) > t.base.columnNum);
                     t.setCheckLevel();
                     t.setAutoRotate();
                     t.setActiveDefault();
@@ -824,7 +822,7 @@ let app = new Vue({
                 t.setGrabbedDefault();
             }
             else if (t.grabbed.name) {
-                appLib.bandMessage(global.player, '해당 위치에 배치할 수 없습니다.', t.messageTime, !global.online);
+                appLib.bandMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.time.message);
                 return;
             }
             else {
@@ -835,13 +833,6 @@ let app = new Vue({
         },
         closeModal: function () {
             this.setModalClose();
-        },
-        pause: function (player, requested) {
-            player = global.online ? global.player : player;
-            appLib.bandMessage(player, '플레이를 멈추었습니다. 재개하시려면 중간에 있는 라벨을 클릭해주세요.', 0, !global.online);
-            this.setLabel(player, 'pause', 0);
-            this.status.paused = true;
-            clearInterval(this.interval['timer']);
         },
         grab: function (player, name, requested) {
             if (this.status.turn === player) {
@@ -861,16 +852,16 @@ let app = new Vue({
                 }
 
                 if (fieldCount >= this.base.fieldCount) {
-                    appLib.bandMessage(global.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.messageTime, !global.online);
+                    appLib.bandMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
                     return;
                 }
 
                 if (this.status[player].crop < unit.crop) {
-                    appLib.bandMessage(global.player, '농작물이 부족합니다.', this.messageTime, !global.online);
+                    appLib.bandMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
                     return;
                 }
                 else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
-                    appLib.bandMessage(global.player, '유닛을 더 이상 배치할 수 없습니다.', this.messageTime, !global.online);
+                    appLib.bandMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
                     return;
                 }
 
@@ -908,7 +899,7 @@ let app = new Vue({
             if (this.getIsUnitInArea(i)) {
                 let eachArea = this.areas[i];
                 let eachUnit = eachArea.unit;
-                return eachArea.owner === eachUnit.player || (this.getIsShelterInArea(i) && eachArea.shelter.player === global.player);
+                return eachArea.owner === eachUnit.player || (this.getIsShelterInArea(i) && eachArea.shelter.player === this.my.player);
             }
 
             return false;
@@ -1039,7 +1030,10 @@ let app = new Vue({
                         unit.status = null;
                         unit.style = {};
                         t.status.touchable = true;
-                    }, t.transTime - 100);
+
+                        if (type === 'weapon')
+                            delete t.areas[endIdx]['weapon'];
+                    }, t.time.animate - 100);
                 }, 100);
 
                 if (typeof func === 'function')
@@ -1120,7 +1114,7 @@ let app = new Vue({
                 }
             }
         },
-        setCounterAttack: function () {
+        setCounterAttack: function (delay) {
             let t = this;
             let isBlackTurn = t.status.turn === 'black';
             let i = isBlackTurn ? t.areas.length : 0;
@@ -1141,14 +1135,17 @@ let app = new Vue({
                                 targetIdx = idx - (t.base.columnNum * (j + 1));
                                 lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
                                 break;
+
                             case 6:
                                 targetIdx = idx + (t.base.columnNum * (j + 1));
                                 lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
                                 break;
+
                             case 3:
                                 targetIdx = idx + j + 1;
                                 lineCond = t.areas[targetIdx] && eachArea.hnum === t.areas[targetIdx].hnum;
                                 break;
+
                             case 9:
                                 targetIdx = idx - (j + 1);
                                 lineCond = t.areas[targetIdx] && eachArea.hnum === t.areas[targetIdx].hnum;
@@ -1169,9 +1166,7 @@ let app = new Vue({
                                     style: {}
                                 });
 
-                                t.setAnimate(idx, targetIdx, 'weapon', function () {
-                                    delete t.areas[targetIdx]['weapon'];
-                                });
+                                t.setAnimate(idx, targetIdx, 'weapon');
 
                                 if (eachUnit.through) {
                                     let attackArr = [];
@@ -1181,12 +1176,15 @@ let app = new Vue({
                                             case 12:
                                                 attackArr.push(idx - (t.base.columnNum * (x + 1)));
                                                 break;
+
                                             case 6:
                                                 attackArr.push(idx + (t.base.columnNum * (x + 1)));
                                                 break;
+
                                             case 3:
                                                 attackArr.push(idx + x + 1);
                                                 break;
+
                                             case 9:
                                                 attackArr.push(idx - (x + 1));
                                                 break;
@@ -1203,7 +1201,7 @@ let app = new Vue({
                                 eachUnit.power -= 0.5;
                             }
                             else {
-                                t.setAttack(targetIdx, true, false);
+                                t.setAttack(targetIdx, true, delay);
                                 eachUnit.power -= 0.5;
                             }
 
@@ -1238,7 +1236,7 @@ let app = new Vue({
 
                     setTimeout(function () {
                         t.setShowUp('attack', targetIdx, demage, true);
-                    }, delay ? t.transTime : 0);
+                    }, delay ? t.time.animate : 0);
 
                     if (targetArea.shelter.hp <= 0)
                         activeArea.unit.destory += 1;
@@ -1291,7 +1289,7 @@ let app = new Vue({
 
                     setTimeout(function () {
                         t.setShowUp('attack', targetIdx, demage, true);
-                    }, delay ? t.transTime : 0);
+                    }, delay ? t.time.animate : 0);
                 }
 
                 setTimeout(function () {
@@ -1303,7 +1301,7 @@ let app = new Vue({
                     }
 
                     t.setFinished();
-                }, delay ? t.transTime : 0);
+                }, delay ? t.time.animate : 0);
             }
 
             return isAlive;
@@ -1398,19 +1396,30 @@ let app = new Vue({
         setShowUp: function (act, idx, val, isImportant) {
             let visible = val || isImportant;
 
-            if (act !== 'attack' && global.online && this.areas[idx] && this.areas[idx].unit && this.areas[idx].unit.name)
-                visible = visible && global.player === this.areas[idx].unit.player;
+            if (act === 'attack') {
+                let offset = $(this.$el).find('.each-area[data-idx=' + idx + ']').offset();
+
+                new mojs.Burst({
+                    count: 12,
+                    children: {
+                        shape: 'polygon',
+                        fill: '#ff4141'
+                    }
+                }).tune({ top: offset.top + 23, left: offset.left + 23 }).setSpeed(3).replay();
+            }
+            else if (this.areas[idx] && this.areas[idx].unit && this.areas[idx].unit.name) {
+                visible = visible && this.my.player === this.areas[idx].unit.player;
+            }
 
             if (visible) {
-                let player = global.online ? global.player : this.areas[idx].unit.player;
                 let $area = $('#app .each-area[data-hidx=' + idx + ']');
                 let $showUp = null;
                 let obj = { opacity: 0 };
                 $area.find('.show-up').remove();
-                $area.append('<div class="show-up" data-act="' + act + '" data-player="' + player + '">' + val + '</div>');
+                $area.append('<div class="show-up" data-act="' + act + '" data-player="' + this.my.player + '">' + val + '</div>');
                 $showUp = $area.find('.show-up');
 
-                if (player === 'white')
+                if (this.my.player === 'white')
                     obj.bottom = '-2.1rem';
                 else
                     obj.top = '-2.1rem';
@@ -1466,16 +1475,16 @@ let app = new Vue({
                 area.unit = unit;
             }
             else {
-                appLib.bandMessage(global.player, '오류가 있습니다.', this.messageTime, !global.online);
+                appLib.bandMessage(this.my.player, '오류가 있습니다.', this.time.message);
                 console.error('error');
             }
         },
-        setLabel: function (player, txt, time) {
+        setLabel: function (txt, time) {
             let t = this;
             clearTimeout(t.timer['label']);
             $('#labelArea').stop().fadeIn(0);
 
-            t.label.player = global.online ? global.player : player;
+            t.label.player = t.my.player;
             t.label.message = txt;
 
             if (time === 0) {
@@ -1498,7 +1507,7 @@ let app = new Vue({
             let buffArr = this.getBuff();
 
             this.status.turn = player;
-            this.setLabel(player, player + ' player turn');
+            this.setLabel(player + ' player turn');
 
             for (let i in this.areas) {
                 let eachArea = this.areas[i];
@@ -1564,7 +1573,7 @@ let app = new Vue({
             }
 
             if (this.status.turn)
-                appLib.bandMessage(global.player, this.getLang('ko', player) + ' 플레이어에게 턴을 넘겼습니다.', this.messageTime, !global.online);
+                appLib.bandMessage(this.my.player, this.getLang('ko', player) + ' 플레이어에게 턴을 넘겼습니다.', this.time.message);
 
             crop = parseFloat(crop).toFixed(2);
             this.status[player].crop = (parseFloat(this.status[player].crop) + parseFloat(this.status[player].incomeCrop) + parseFloat(crop)).toFixed(2);
@@ -1624,10 +1633,10 @@ let app = new Vue({
                     t.status.time -= 1;
                 }
                 else {
-                    appLib.bandMessage(global.player, '유효 시간이 지났습니다.', t.messageTime, !global.online);
+                    appLib.bandMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
                     t.setModalClose();
 
-                    if (global.player === t.status.turn)
+                    if (t.my.player === t.status.turn)
                         t.pass(t.status.turn === 'white' ? 'black' : 'white');
                 }
             }, 1000);
@@ -1661,10 +1670,8 @@ let app = new Vue({
 
                 if (!king.white || !king.black) {
                     let winner = !king.white ? 'black' : 'white';
-                    let player = global.online ? global.player : winner;
-
-                    this.setLabel(player, winner + ' player won', 0);
-                    appLib.bandMessage(player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0, !global.online);
+                    this.setLabel(winner + ' player won', 0);
+                    appLib.bandMessage(this.my.player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
                     clearInterval(this.interval['timer']);
 
                     for (let i in this.areas)
@@ -1680,7 +1687,6 @@ let app = new Vue({
         var t = this;
         var name = location.hash ? location.hash.replace('#/', '') : '';
 
-        t.global = window.global;
         t.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
         socket = io.connect(baseUrl, {
             rememberUpgrade: true,
@@ -1699,10 +1705,9 @@ let app = new Vue({
             if (res && Object.keys(res).length) {
                 switch (res.name) {
                     case 'connect':
-                        if (!t.global.player) {
-                            t.global.player = res.player;
-                            t.global.first = res.turn;
-                            t.label.player = t.global.first;
+                        if (!t.my.player) {
+                            t.my.player = res.player;
+                            t.label.player = res.turn;
                         }
                         break;
 
@@ -1715,13 +1720,12 @@ let app = new Vue({
 
                         t.start();
 
-                        if (t.global.player === 'black')
+                        if (t.my.player === 'black') {
                             t.setRandomShelter();
+                            t.pass('black');
+                        }
 
-                        if (global.first === global.player)
-                            t.pass(global.first);
-
-                        t.status[global.first === 'black' ? 'white' : 'black']['crop'] += 5;
+                        t.status['white']['crop'] += 5;
 
                         $('.area-player .units').each(function () {
                             $(this).animate({
@@ -1738,7 +1742,7 @@ let app = new Vue({
                                 t.modal.idx = idx;
 
                                 if (t.areas[idx] && t.getIsShelterInArea(idx)) {
-                                    if (global.player === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
+                                    if (t.my.player === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
                                         t.modal.info = t.areas[idx].unit;
                                         t.modal.type = 'unit';
                                     }

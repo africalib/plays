@@ -9,19 +9,21 @@
     <link href="css/app.common.css" rel="stylesheet" />
     <link href="css/app.play.css?3" rel="stylesheet" />
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
-    <script>
-        var global = {
-            online: '1' === '1',
-            id: '',
-            first: '0',
-            player: ''
-        };
-    </script>
 </head>
 <body>
     </script>
     <div id="app" class="app" v-bind:data-device="device" v-bind:data-started="status.started ? 'Y' : 'N'"
-        v-bind:data-player="global.player" v-cloak>
+        v-bind:data-player="my.player" v-cloak>
+        <div class="area-top">
+            <span>
+                <i class="fa fa-flag" aria-hidden="true"></i>
+                <span>{{ status.turn}}</span>
+            </span>
+            <span class="pull-right">
+                <i class="fa fa-clock-o" aria-hidden="true"></i>
+                <span>{{ status.time }} / {{ base.time }}</span>
+            </span>
+        </div>
         <div class="app-area">
             <div class="area-wrapper">
                 <div class="each-area" v-bind:class="{'active' : active.idx === a.idx }" v-for="(a, idx) in areas"
@@ -41,7 +43,8 @@
                             </div>
                         </div>
                         <div class="hp" v-if="a.unit.hp && a.unit.maxHp">
-                            <div class="remain" v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }"></div>
+                            <div class="remain"
+                                v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }"></div>
                         </div>
                         <div class="level" v-if="a.unit.level">{{ a.unit.level }}</div>
                     </div>
@@ -49,7 +52,8 @@
                         v-if="a.shelter.name">
                         <img v-bind:src="'img/' + a.shelter.player + '/' + a.shelter.name + '.png'" />
                         <div class="hp" v-if="a.shelter.hp && a.shelter.maxHp">
-                            <div class="remain" v-bind:style="{ width : a.shelter.hp ? (a.shelter.hp / a.shelter.maxHp * 100) + '%' : 0 }">
+                            <div class="remain"
+                                v-bind:style="{ width : a.shelter.hp ? (a.shelter.hp / a.shelter.maxHp * 100) + '%' : 0 }">
                             </div>
                         </div>
                     </div>
@@ -59,12 +63,12 @@
                     </div>
                 </div>
             </div>
-            <div class="area-player" data-player="white" v-if="status.started && global.player === 'white'">
+            <div class="area-player" data-player="white" v-if="status.started && my.player === 'white'">
                 <div class="units">
                     <div class="each-unit" v-bind:data-name="u.name"
                         v-bind:class="{ 'active' : status.turn === 'white' && u.name === grabbed.name }"
                         v-for="u in getReversed(base.units)"
-                        v-on:click="global.player === 'white' && grab('white', u.name)" v-if="u.crop">
+                        v-on:click="my.player === 'white' && grab('white', u.name)" v-if="u.crop">
                         <div>{{ u.name }}<br />({{ u.crop }})</div>
                         <img v-bind:src="'img/white/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
                     </div>
@@ -77,18 +81,12 @@
                                     <i class="fa fa-pagelines" aria-hidden="true"></i>
                                 </th>
                                 <td>{{ status.white.crop }} / {{ status.white.maxCrop }}</td>
-                                <td class="button" rowspan="3">
+                                <td class="button" rowspan="2">
                                     <button type="button" v-on:click="status.passable && pass('black')"
                                         v-if="!status.finished"
-                                        v-bind:disabled="global.player !== 'white' || status.turn !== 'white'">pass</button>
+                                        v-bind:disabled="my.player !== 'white' || status.turn !== 'white'">pass</button>
                                     <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                                 </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                </th>
-                                <td>{{ status.time }} / {{ base.time }}</td>
                             </tr>
                             <tr>
                                 <th>
@@ -100,11 +98,11 @@
                     </table>
                 </div>
             </div>
-            <div class="area-player" data-player="black" v-if="status.started && global.player === 'black'">
+            <div class="area-player" data-player="black" v-if="status.started && my.player === 'black'">
                 <div class="units">
                     <div class="each-unit" v-bind:data-name="u.name"
                         v-bind:class="{ 'active' : status.turn === 'black' && u.name === grabbed.name }"
-                        v-for="u in base.units" v-on:click="global.player === 'black' && grab('black', u.name)"
+                        v-for="u in base.units" v-on:click="my.player === 'black' && grab('black', u.name)"
                         v-if="u.crop">
                         <div>{{ u.name }}<br />({{ u.crop }})</div>
                         <img v-bind:src="'img/black/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
@@ -118,18 +116,12 @@
                                     <i class="fa fa-pagelines" aria-hidden="true"></i>
                                 </th>
                                 <td>{{ status.black.crop }} / {{ status.black.maxCrop }}</td>
-                                <td class="button" rowspan="3">
+                                <td class="button" rowspan="2">
                                     <button type="button" v-on:click="status.passable && pass('white')"
                                         v-if="!status.finished"
-                                        v-bind:disabled="global.player !== 'black' || status.turn !== 'black'">pass</button>
+                                        v-bind:disabled="my.player !== 'black' || status.turn !== 'black'">pass</button>
                                     <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                                 </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <i class="fa fa-clock-o" aria-hidden="true"></i>
-                                </th>
-                                <td>{{ status.time }} / {{ base.time }}</td>
                             </tr>
                             <tr>
                                 <th>
@@ -142,10 +134,11 @@
                 </div>
             </div>
             <div class="pause-area" v-if="status.paused"></div>
-            <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message" v-on:click="setLabelHide()">
+            <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
+                v-on:click="setLabelHide()">
                 <div>{{ label.message }}</div>
             </div>
-            <div class="modal-area" v-bind:data-player="modal.info.player" v-bind:data-turn="global.player"
+            <div class="modal-area" v-bind:data-player="modal.info.player" v-bind:data-turn="my.player"
                 v-if="modal.info.name">
                 <div class="img-part">
                     <span>
@@ -250,10 +243,11 @@
             </div>
         </div>
     </div>
+    <script src="js/mo.min.js"></script>
     <script src="js/hammer.min.js"></script>
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/vue.js"></script>
     <script src="js/app.library.js"></script>
-    <script src="js/app.play.js?3"></script>
+    <script src="js/app.play.js?4"></script>
 </body>
 </html>
