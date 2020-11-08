@@ -7,7 +7,7 @@ let app = new Vue({
         base: {
             maxCrop: 30,
             time: 120,
-            fieldCount: 27,
+            fieldCount: 100,
             columnNum: 9,
             rowNum: 16,
             maxUnit: 300,
