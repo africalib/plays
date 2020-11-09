@@ -28,16 +28,16 @@
                     </li>
                 </ul>
             </template>
-            <div class="no-data" v-else>
+            <div class="no-data" v-else-if="room.loaded">
                 <p>대기 중인 방이 없습니다.</p>
                 <p>
-                    <i v-on:click="enter()">+</i>
-                    <span>버튼을 눌러 방을 생성해주세요.</span>
+                    <span class="pointer" v-on:click="enter()">생성하기</span>
+                    <span>버튼을 눌러주세요.</span>
                 </p>
             </div>
             <div class="refresh">
                 <a class="pointer" v-on:click="enter()">생성하기</a>
-                <span>&nbsp;</span>
+                <span>&nbsp;&nbsp;&nbsp;</span>
                 <a class="pointer" v-on:click="refresh()">새로고침</a>
             </div>
         </div>

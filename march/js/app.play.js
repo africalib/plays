@@ -40,7 +40,7 @@ let app = new Vue({
                     name: 'tree',
                     hp: 20,
                     maxHp: 20
-                },
+                }
             },
             units: {
                 farmer: {
@@ -326,7 +326,7 @@ let app = new Vue({
             unit: null
         },
         status: {
-            turn: 'ready',
+            turn: null,
             started: false,
             finished: false,
             paused: true,
@@ -526,7 +526,7 @@ let app = new Vue({
         setAreas: function (val) {
             this.areas = JSON.parse(val);
         },
-        setShelter: function (player, name, idx, requested) {
+        setShelter: function (player, name, idx) {
             let shelter = appLib.renew(this.base.shelters[name]);
             shelter.player = player;
             this.areas[idx].shelter = shelter;
@@ -1696,7 +1696,7 @@ let app = new Vue({
         });
 
         t.interval['dot'] = setInterval(function () {
-            if (t.dots.length > 10)
+            if (t.dots.length > 20)
                 t.dots = '';
 
             t.dots += '.';

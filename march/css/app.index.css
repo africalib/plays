@@ -10,7 +10,7 @@
 .app > .title {
     padding: 25px 10px 50px 10px;
     text-align: center;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px dotted #ddd;
 }
 
 .app > .title > div {
@@ -22,7 +22,7 @@
 }
 
 .app > .rooms {
-    padding: 20px;
+    padding: 40px;
 }
 
 .app > .rooms > .title {
