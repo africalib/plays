@@ -572,11 +572,16 @@ button {
     padding: 0 2rem;
 }
 
-.app .url-area > .wrapper > .text {
+.app .url-area > .wrapper > .title {
     font-size: 25px;
     font-style: italic;
     display: inline-block;
     margin-top: 25px;
+}
+
+.app .url-area > .wrapper > .text {
+    font-size: 14px;
+    margin-top: 10px;
 }
 
 .app .url-area > .wrapper .input-group {
