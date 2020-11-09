@@ -589,13 +589,22 @@ button {
 }
 
 .app .url-area > .wrapper .input-group {
-    margin-top: 3.5rem;
+    margin-top: 35px;
 }
 
-.app .url-area > .wrapper .input-groupinput {
+.app .url-area > .wrapper .input-group input {
     outline: 0 !important;
     background: #fff;
-    box-shadow: 0;
+    box-shadow: none;
+}
+
+.app .url-area > .wrapper .input-group input:focus {
+    border-color: #ccc;
+}
+
+.app .url-area > .wrapper .room {
+    font-size: 14px;
+    margin: 10px 0;
 }
 
 .app .modal-area {

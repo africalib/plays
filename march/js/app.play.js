@@ -351,6 +351,7 @@ let app = new Vue({
         areas: [],
         my: {
             player: null,
+            room: null,
             roomUrl: null
         },
         modal: {
@@ -1501,7 +1502,7 @@ let app = new Vue({
                     $('#labelArea').stop().fadeOut(500, function () {
                         t.label.message = null;
                     });
-                }, 2000);
+                }, time ? time : 2500);
             }
         },
         setLabelHide: function () {
@@ -1515,9 +1516,9 @@ let app = new Vue({
             this.status.turn = player;
 
             if (player === this.my.player)
-                this.setLabel("it's your turn!");
+                this.setLabel("It's your turn!");
             else
-                this.setLabel(player + ' player turn');
+                this.setLabel("It's " + player + " player's turn");
 
             for (let i in this.areas) {
                 let eachArea = this.areas[i];
@@ -1669,7 +1670,7 @@ let app = new Vue({
                 }
 
                 if (!king.white || !king.black) {
-                    let winner = !king.white ? 'black' : 'white';
+                    let winner = !king.white ? 'Black' : 'White';
                     this.setLabel(winner + ' player won', 0);
                     appLib.bandMessage(this.my.player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
                     clearInterval(this.interval['timer']);
@@ -1712,6 +1713,7 @@ let app = new Vue({
                     case 'connect':
                         if (!t.my.player) {
                             t.my.player = res.player;
+                            t.my.room = res.room;
                             t.my.roomUrl = window.location.href + '#/' + res.room;
                             t.label.player = res.turn;
                         }
@@ -1725,17 +1727,17 @@ let app = new Vue({
                         clearInterval(t.interval['dot']);
 
                         t.start();
-                        t.setLabel("you are the " + t.my.player + " player", 2500);
+                        t.setLabel("You entered as a " + t.my.player + " player", 5000);
 
                         setTimeout(function () {
-                            t.setLabel("let's march", 2500);
-                        }, 2500);
+                            t.setLabel("Let's march", 2500);
+                        }, 5000);
 
                         if (t.my.player === 'black') {
                             setTimeout(function () {
                                 t.setRandomShelter();
                                 t.pass('black');
-                            }, 5000);
+                            }, 7500);
                         }
 
                         t.status['white']['crop'] += 5;
