@@ -14,8 +14,7 @@
 <body>
     <div id="app" class="app" v-bind:data-device="device" v-bind:data-started="status.started ? 'Y' : 'N'"
         v-bind:data-player="my.player" v-cloak>
-        <img src="img/common/home.cavalry.png" class="hide" />
-        <div class="area-top">
+        <div class="area-top" v-if="status.started">
             <span>
                 <i class="fa fa-flag" aria-hidden="true"></i>
                 <span>{{ status.turn }}</span>
@@ -134,22 +133,28 @@
                     </table>
                 </div>
             </div>
-            <div class="pause-area" v-if="status.paused"></div>
             <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
                 v-on:click="setLabelHide()">
                 <div>{{ label.message }}</div>
             </div>
             <div class="url-area" v-if="my.roomUrl && !status.started">
-                <div class="text">
-                    <span>Copy this url and</span>
-                    <b>Share!</b>
-                </div>
-                <div class="input-group">
-                    <input type="text" class="form-control" v-bind:value="my.roomUrl" ref="roomUrl" readonly />
-                    <div class="input-group-btn">
-                        <button class="btn btn-default" type="button" v-on:click="copyRoomUrl()">
-                            <i class="fa fa-clone" aria-hidden="true"></i>
-                        </button>
+                <img src="img/common/home.cavalry.png" />
+                <br />
+                <div class="wrapper">
+                    <div class="text">
+                        <p>
+                            <b>Waiting for Player</b>
+                        </p>
+                        <p>{{ dots }}</p>
+                        <span>Copy this url and Share!</span>
+                    </div>
+                    <div class="input-group">
+                        <input type="text" class="form-control" v-bind:value="my.roomUrl" ref="roomUrl" readonly />
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="button" v-on:click="copyRoomUrl()">
+                                <i class="fa fa-clone" aria-hidden="true"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>

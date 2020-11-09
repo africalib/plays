@@ -326,7 +326,7 @@ let app = new Vue({
             unit: null
         },
         status: {
-            turn: null,
+            turn: 'ready',
             started: false,
             finished: false,
             paused: true,
@@ -362,6 +362,7 @@ let app = new Vue({
             message: 2000,
             animate: 250,
         },
+        dots: '.',
         timer: {},
         interval: {},
         touchStart: 0,
@@ -1512,7 +1513,11 @@ let app = new Vue({
             let buffArr = this.getBuff();
 
             this.status.turn = player;
-            this.setLabel(player + ' player turn');
+
+            if (player === this.my.player)
+                this.setLabel("it's your turn!");
+            else
+                this.setLabel(player + ' player turn');
 
             for (let i in this.areas) {
                 let eachArea = this.areas[i];
@@ -1690,7 +1695,12 @@ let app = new Vue({
             rejectUnauthorized: false
         });
 
-        t.label.message = "Waiting for Player";
+        t.interval['dot'] = setInterval(function () {
+            if (t.dots.length > 10)
+                t.dots = '';
+
+            t.dots += '.';
+        }, 250);
 
         socket.on('connect', function () {
             socket.emit('enter', name ? name : '');
@@ -1712,9 +1722,10 @@ let app = new Vue({
 
                         t.status.started = true;
                         t.status.paused = false;
+                        clearInterval(t.interval['dot']);
 
                         t.start();
-                        t.setLabel("you are " + t.my.player + " player", 2500);
+                        t.setLabel("you are the " + t.my.player + " player", 2500);
 
                         setTimeout(function () {
                             t.setLabel("let's march", 2500);

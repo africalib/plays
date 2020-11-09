@@ -34,7 +34,6 @@ button {
     width: 100%;
     height: 100%;
     margin: 0 auto;
-    padding-top: 2.5rem;
 
     /* display: none; */
 }
@@ -194,6 +193,10 @@ button {
 .app .app-area .area-wrapper .each-area .unit[data-player=white],
 .app .app-area .area-wrapper .each-area .shelter[data-player=white] {
     background: #fff;
+}
+
+.app[data-started=Y] {
+    padding-top: 2.5rem;
 }
 
 .app[data-started=Y][data-player=black] .app-area {
@@ -529,7 +532,7 @@ button {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background: #000;
     top: 0;
     left: 0;
     text-align: center;
@@ -558,20 +561,29 @@ button {
 
 .app .url-area {
     position: absolute;
-    top: 15%;
+    top: 0;
     left: 0;
     width: 100%;
-    padding: 0 2.5rem;
+    padding: 25px 10px 50px 10px;
+    text-align: center;
 }
 
-.app .url-area > .text {
-    font-size: 2rem;
-    color: #fff;
-    padding: 0 0.5rem;
-    margin-bottom: 1rem;
+.app .url-area > .wrapper {
+    padding: 0 2rem;
 }
 
-.app .url-area input {
+.app .url-area > .wrapper > .text {
+    font-size: 25px;
+    font-style: italic;
+    display: inline-block;
+    margin-top: 25px;
+}
+
+.app .url-area > .wrapper .input-group {
+    margin-top: 3.5rem;
+}
+
+.app .url-area > .wrapper .input-groupinput {
     outline: 0 !important;
     background: #fff;
     box-shadow: 0;

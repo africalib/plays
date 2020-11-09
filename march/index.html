@@ -19,30 +19,21 @@
             <div>March of the King</div>
         </div>
         <div class="rooms">
-            <table class="table table-bordered" v-if="room.list && room.list.length">
-                <thead>
-                    <tr>
-                        <th>번호</th>
-                        <th>이름</th>
-                        <th>상태</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
-                        <td>{{ idx + 1 }}</td>
-                        <td>{{ r.name }}</td>
-                        <td>대기</td>
-                    </tr>
-                </tbody>
-            </table>
+            <template v-if="room.list && room.list.length">
+                <div class="title">대기 중인 방 목록</div>
+                <ul class="list-group">
+                    <li class="list-group-item" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
+                        <span>{{ r.name }}</span>
+                        <span class="label label-danger">대기</span>
+                    </li>
+                </ul>
+            </template>
             <div class="no-data" v-else>
-                <h4>
-                    <p>대기 중인 방이 없습니다.</p>
-                    <p>
-                        <i v-on:click="enter()">+</i>
-                        <span>버튼을 눌러 방을 생성해주세요.</span>
-                    </p>
-                </h4>
+                <p>대기 중인 방이 없습니다.</p>
+                <p>
+                    <i v-on:click="enter()">+</i>
+                    <span>버튼을 눌러 방을 생성해주세요.</span>
+                </p>
             </div>
             <div class="refresh">
                 <a class="pointer" v-on:click="refresh()">새로고침</a>
