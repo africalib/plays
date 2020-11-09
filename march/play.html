@@ -12,7 +12,7 @@
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <div id="app" class="app" v-bind:data-device="device" v-bind:data-started="status.started ? 'Y' : 'N'"
+    <div id="app" class="app" v-bind:data-device="my.device" v-bind:data-started="status.started ? 'Y' : 'N'"
         v-bind:data-player="my.player" v-cloak>
         <div class="area-top" v-if="status.started">
             <span>

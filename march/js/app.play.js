@@ -350,6 +350,7 @@ let app = new Vue({
         },
         areas: [],
         my: {
+            device: null,
             player: null,
             room: null,
             roomUrl: null
@@ -1687,142 +1688,159 @@ let app = new Vue({
     created: function () {
         var t = this;
         var name = location.hash ? location.hash.replace('#/', '') : '';
+        var run = function () {
+            t.my.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
 
-        t.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
-        socket = io.connect(baseUrl, {
-            rememberUpgrade: true,
-            transports: ['websocket'],
-            secure: true,
-            rejectUnauthorized: false
-        });
+            socket = io.connect(baseUrl, {
+                rememberUpgrade: true,
+                transports: ['websocket'],
+                secure: true,
+                rejectUnauthorized: false
+            });
 
-        t.interval['dot'] = setInterval(function () {
-            if (t.dots.length > 20)
-                t.dots = '';
+            t.interval['dot'] = setInterval(function () {
+                if (t.dots.length > 20)
+                    t.dots = '';
 
-            t.dots += '.';
-        }, 250);
+                t.dots += '.';
+            }, 250);
 
-        socket.on('connect', function () {
-            socket.emit('enter', name ? name : '');
-        });
+            socket.on('connect', function () {
+                socket.emit('enter', name ? name : '');
+            });
 
-        socket.on('update', function (res) {
-            if (res && Object.keys(res).length) {
-                switch (res.name) {
-                    case 'connect':
-                        if (!t.my.player) {
-                            t.my.player = res.player;
-                            t.my.room = res.room;
-                            t.my.roomUrl = window.location.href + '#/' + res.room;
-                            t.label.player = res.turn;
-                        }
-                        break;
+            socket.on('update', function (res) {
+                if (res && Object.keys(res).length) {
+                    switch (res.name) {
+                        case 'connect':
+                            if (!t.my.player) {
+                                t.my.player = res.player;
+                                t.my.room = res.room;
+                                t.my.roomUrl = window.location.href + '#/' + res.room;
+                                t.label.player = res.turn;
+                            }
+                            break;
 
-                    case 'start':
-                        let mc = new Hammer(document.querySelector('body'));
+                        case 'start':
+                            let mc = new Hammer(document.querySelector('body'));
 
-                        t.status.started = true;
-                        t.status.paused = false;
-                        clearInterval(t.interval['dot']);
+                            t.status.started = true;
+                            t.status.paused = false;
+                            clearInterval(t.interval['dot']);
 
-                        t.start();
-                        t.setLabel("You entered as a " + t.my.player + " player", 5000);
+                            t.start();
+                            t.setLabel("You entered as a " + t.my.player + " player", 5000);
 
-                        setTimeout(function () {
-                            t.setLabel("Let's march", 2500);
-                        }, 5000);
-
-                        if (t.my.player === 'black') {
                             setTimeout(function () {
-                                t.setRandomShelter();
-                                t.pass('black');
-                            }, 7500);
-                        }
+                                t.setLabel("Let's march", 2500);
+                            }, 5000);
 
-                        t.status['white']['crop'] += 5;
+                            if (t.my.player === 'black') {
+                                setTimeout(function () {
+                                    t.setRandomShelter();
+                                    t.pass('black');
+                                }, 7500);
+                            }
 
-                        $('.area-player .units').each(function () {
-                            $(this).animate({
-                                'scrollLeft': $(this).width() * ($(this).parent('.area-player').data('player') === 'black' ? -1 : 1)
-                            }, 1200);
-                        });
+                            t.status['white']['crop'] += 5;
 
-                        mc.on('press', function (e) {
-                            let eachArea = $(e.target).closest('.each-area');
-                            let eachUnit = $(e.target).closest('.each-unit');
+                            $('.area-player .units').each(function () {
+                                $(this).animate({
+                                    'scrollLeft': $(this).width() * ($(this).parent('.area-player').data('player') === 'black' ? -1 : 1)
+                                }, 1200);
+                            });
 
-                            if (eachArea.length && eachArea.data('idx')) {
-                                let idx = eachArea.data('idx');
-                                t.modal.idx = idx;
+                            mc.on('press', function (e) {
+                                let eachArea = $(e.target).closest('.each-area');
+                                let eachUnit = $(e.target).closest('.each-unit');
 
-                                if (t.areas[idx] && t.getIsShelterInArea(idx)) {
-                                    if (t.my.player === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
+                                if (eachArea.length && eachArea.data('idx')) {
+                                    let idx = eachArea.data('idx');
+                                    t.modal.idx = idx;
+
+                                    if (t.areas[idx] && t.getIsShelterInArea(idx)) {
+                                        if (t.my.player === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
+                                            t.modal.info = t.areas[idx].unit;
+                                            t.modal.type = 'unit';
+                                        }
+                                        else {
+                                            t.modal.info = t.areas[idx].shelter;
+                                            t.modal.type = 'shelter';
+                                        }
+                                    }
+                                    else if (t.areas[idx] && t.areas[idx].unit) {
                                         t.modal.info = t.areas[idx].unit;
                                         t.modal.type = 'unit';
                                     }
-                                    else {
-                                        t.modal.info = t.areas[idx].shelter;
-                                        t.modal.type = 'shelter';
-                                    }
+                                    else
+                                        return;
                                 }
-                                else if (t.areas[idx] && t.areas[idx].unit) {
-                                    t.modal.info = t.areas[idx].unit;
+                                else if (eachUnit.length) {
                                     t.modal.type = 'unit';
+                                    t.modal.info = t.base.units[eachUnit.data('name')];
+                                    t.modal.info.player = eachUnit.closest('.area-player').data('player');
                                 }
+
+                                t.setAreaDefault();
+                                t.setActiveDefault();
+                                t.setGrabbedDefault();
+                            });
+                            break;
+
+                        case 'disconnect':
+                            if (t.status.started && !t.status.finished) {
+                                t.status.finished = true;
+                                alert('상대방이 경기에서 나갔습니다.');
+                                window.onbeforeunload = null;
+                                window.location.href = 'index.html';
+                            }
+                            break;
+
+                        default:
+                            if (typeof t[res.value.name] === 'function') {
+                                switch (res.value.name) {
+                                    case 'touch':
+                                        // clearTimeout(t.timer.touch);
+                                        // t.timer.touch = setTimeout(function () {
+                                        //     t.status.touchable = true;
+                                        // }, 250);
+                                        t.status.touchable = true;
+                                        break;
+                                }
+
+                                if (!isNaN(Number(res.value.val1)))
+                                    res.value.val1 = Number(res.value.val1);
+
+                                if (!isNaN(Number(res.value.val2)))
+                                    res.value.val2 = Number(res.value.val2);
+
+                                if (res.value.val2)
+                                    t[res.value.name](res.value.val1, res.value.val2, true);
                                 else
-                                    return;
+                                    t[res.value.name](res.value.val1, true);
                             }
-                            else if (eachUnit.length) {
-                                t.modal.type = 'unit';
-                                t.modal.info = t.base.units[eachUnit.data('name')];
-                                t.modal.info.player = eachUnit.closest('.area-player').data('player');
-                            }
-
-                            t.setAreaDefault();
-                            t.setActiveDefault();
-                            t.setGrabbedDefault();
-                        });
-                        break;
-
-                    case 'disconnect':
-                        if (t.status.started && !t.status.finished) {
-                            t.status.finished = true;
-                            alert('상대방이 경기에서 나갔습니다.');
-                            window.onbeforeunload = null;
-                            window.location.href = 'index.html';
-                        }
-                        break;
-
-                    default:
-                        if (typeof t[res.value.name] === 'function') {
-                            switch (res.value.name) {
-                                case 'touch':
-                                    // clearTimeout(t.timer.touch);
-                                    // t.timer.touch = setTimeout(function () {
-                                    //     t.status.touchable = true;
-                                    // }, 250);
-                                    t.status.touchable = true;
-                                    break;
-                            }
-
-                            if (!isNaN(Number(res.value.val1)))
-                                res.value.val1 = Number(res.value.val1);
-
-                            if (!isNaN(Number(res.value.val2)))
-                                res.value.val2 = Number(res.value.val2);
-
-                            if (res.value.val2)
-                                t[res.value.name](res.value.val1, res.value.val2, true);
-                            else
-                                t[res.value.name](res.value.val1, true);
-                        }
-                        break;
+                            break;
+                    }
                 }
-            }
-            else {
-                alert('error');
-            }
-        });
+                else {
+                    alert('error');
+                }
+            });
+        }
+
+        if (name) {
+            $.get(baseUrl + '/valid?name=' + name, function (res) {
+                if (res === 'valid') {
+                    run();
+                }
+                else {
+                    alert('유효한 접속이 아닙니다.');
+                    location.href = 'index.html';
+                }
+            });
+        }
+        else {
+            run();
+        }
     }
 });
