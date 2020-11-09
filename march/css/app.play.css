@@ -5,11 +5,7 @@
 }
 
 body {
-    overflow: hidden !important;
-}
-
-body > div {
-    overflow: hidden !important;
+    overflow: hidden;
 }
 
 img {
