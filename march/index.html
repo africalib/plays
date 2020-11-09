@@ -24,7 +24,7 @@
                 <ul class="list-group">
                     <li class="list-group-item" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
                         <span>{{ r.name }}</span>
-                        <span class="label label-danger">대기</span>
+                        <span class="label label-danger">입장하기</span>
                     </li>
                 </ul>
             </template>
@@ -36,9 +36,10 @@
                 </p>
             </div>
             <div class="refresh">
+                <a class="pointer" v-on:click="enter()">생성하기</a>
+                <span>&nbsp;</span>
                 <a class="pointer" v-on:click="refresh()">새로고침</a>
             </div>
-            <button type="button" class="add-btn" v-on:click="enter()">+</button>
         </div>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
