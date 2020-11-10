@@ -1524,7 +1524,7 @@ let app = new Vue({
             this.status.turn = player;
 
             if (player === this.my.player)
-                this.setLabel("It's your turn");
+                this.setLabel("It's your turn!");
             else
                 this.setLabel("It's " + player + " player's turn");
 
