@@ -561,8 +561,7 @@ button {
     text-align: center;
     top: 50%;
     font-weight: 600;
-
-    /* font-style: italic; */
+    font-style: italic;
     margin-top: -34px;
     padding: 20px 0;
 }

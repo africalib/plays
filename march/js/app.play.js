@@ -361,7 +361,7 @@ let app = new Vue({
             type: null
         },
         time: {
-            message: 2000,
+            message: 2500,
             animate: 250,
         },
         dots: '.',
@@ -1640,6 +1640,11 @@ let app = new Vue({
             t.interval['timer'] = setInterval(function () {
                 if (t.status.time > 0) {
                     t.status.time -= 1;
+
+                    if (t.status.time === 30 && t.status.turn === t.my.player) {
+                        t.setLabel('Hurry up, time is running out');
+                        appLib.bandMessage(t.my.player, '유효 시간이 30초 남았습니다.', t.time.message);
+                    }
                 }
                 else {
                     appLib.bandMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
@@ -1697,6 +1702,7 @@ let app = new Vue({
         var name = location.hash ? location.hash.replace('#/', '') : '';
         var run = function () {
             t.my.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
+            t.status.time = t.base.time;
 
             socket = io.connect(baseUrl, {
                 rememberUpgrade: true,
