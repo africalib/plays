@@ -44,18 +44,18 @@ button {
     left: 0;
     background: #000;
     color: #fff;
-    font-size: 1.2rem;
+    font-size: 12px;
     width: 100%;
-    height: 2.5rem;
-    padding: 0.35rem 0.5rem;
+    height: 25px;
+    padding: 3.5px 5px;
 }
 
 .app .area-top i {
-    margin-right: 0.25rem;
+    margin-right: 2.5px;
 }
 
 .app .area-top i.fa-flag {
-    font-size: 1rem;
+    font-size: 10px;
 }
 
 .app .app-area {
@@ -76,7 +76,7 @@ button {
     background: #eee;
     display: inline-block;
     width: calc(100%/9);
-    outline: 0.1rem solid #ddd;
+    outline: 1px solid #ddd;
     height: calc(100%/16);
     position: relative;
     cursor: pointer;
@@ -108,21 +108,21 @@ button {
 
 .app .app-area .area-wrapper .each-area .unit img,
 .app .app-area .area-wrapper .each-area .shelter img {
-    padding: 0.7rem;
+    padding: 7px;
 }
 
 .app .app-area .area-wrapper .each-area .unit .power,
 .app .app-area .area-wrapper .each-area .unit .level {
     position: absolute;
-    padding: 0 0.2rem;
-    font-size: 1rem;
+    padding: 0 2px;
+    font-size: 10px;
 }
 
 .app .app-area .area-wrapper .each-area .unit .exp {
     position: absolute;
     height: 100%;
-    width: 0.5rem;
-    padding-bottom: 0.5rem;
+    width: 5px;
+    padding-bottom: 5px;
 }
 
 .app .app-area .area-wrapper .each-area .unit .exp .exp-wrapper {
@@ -146,7 +146,7 @@ button {
     position: absolute;
     left: 0;
     width: 100%;
-    height: 0.5rem;
+    height: 5px;
 }
 
 .app .app-area .area-wrapper .each-area .unit .hp .remain,
@@ -200,15 +200,15 @@ button {
 }
 
 .app[data-started=Y] {
-    padding-top: 2.5rem;
+    padding-top: 25px;
 }
 
 .app[data-started=Y][data-player=black] .app-area {
-    padding: 0 0 5rem 0;
+    padding: 0 0 50px 0;
 }
 
 .app[data-started=Y][data-player=white] .app-area {
-    padding: 5rem 0 0  0;
+    padding: 50px 0 0  0;
 }
 
 .app[data-player=white] .app-area .area-wrapper .each-area .unit[data-player=white] + .shelter[data-player=white] {
@@ -231,7 +231,7 @@ button {
 
 .app .app-area .area-wrapper .each-area .unit[data-player=white] .level {
     color: #000;
-    top: 0.5rem;
+    top: 5px;
     right: 0;
     background: rgba(255, 255, 255, 0.75);
     transform: rotate(180deg);
@@ -241,7 +241,7 @@ button {
     right: 0;
     top: 0;
     padding-bottom: 0;
-    padding-top: 0.5rem;
+    padding-top: 5px;
 }
 
 .app .app-area .area-wrapper .each-area .unit[data-player=white] .exp .status {
@@ -272,7 +272,7 @@ button {
 
 .app .app-area .area-wrapper .each-area .unit[data-player=black] .level {
     color: #fff;
-    bottom: 0.5rem;
+    bottom: 5px;
     left: 0px;
     background: rgba(0, 0, 0, 0.25);
 }
@@ -329,9 +329,9 @@ button {
 .app .app-area .area-wrapper .each-area .show-up {
     position: absolute;
     display: inline-block;
-    font-size: 0.9rem;
+    font-size: 9px;
     color: #fff;
-    padding: 0.1rem 0.3rem;
+    padding: 1px 3px;
     z-index: 2;
 }
 
@@ -366,7 +366,7 @@ button {
     position: absolute;
     width: 100%;
     left: 0;
-    height: 5rem;
+    height: 50px;
 }
 
 .app .app-area .area-player .units {
@@ -389,11 +389,11 @@ button {
 }
 
 .app .app-area .area-player[data-player=white] .each-unit {
-    padding: 2.4rem 0.8rem 0.6rem 0.8rem;
+    padding: 24px 8px 6px 8px;
 }
 
 .app .app-area .area-player[data-player=black] .each-unit {
-    padding: 0.6rem 0.8rem 2.4rem 0.8rem;
+    padding: 6px 8px 24px 8px;
 }
 
 .app .app-area .area-player .each-unit * {
@@ -414,7 +414,7 @@ button {
 
 .app .app-area .area-player .each-unit div {
     text-align: center;
-    font-size: 0.9rem;
+    font-size: 9px;
     line-height: 1;
     position: absolute;
     left: 0;
@@ -423,8 +423,8 @@ button {
 
 .app .app-area .area-player .status {
     display: inline-block;
-    font-size: 1.2rem;
-    padding: 0.6rem;
+    font-size: 12px;
+    padding: 6px;
     height: 100%;
     width: 30%;
 }
@@ -434,14 +434,14 @@ button {
 }
 
 .app .app-area .area-player .status table th {
-    font-size: 1rem;
-    padding-right: 0.5rem;
+    font-size: 10px;
+    padding-right: 5px;
     text-align: right;
 }
 
 .app .app-area .area-player .status table td {
     text-align: left;
-    font-size: 1rem;
+    font-size: 10px;
 }
 
 .app .app-area .area-player .status table td.button {
@@ -451,8 +451,8 @@ button {
 .app .app-area .area-player .status button {
     border: 0;
     float: right;
-    padding: 1.2rem 0;
-    font-size: 1rem;
+    padding: 12px 0;
+    font-size: 10px;
     width: 33px;
 }
 
@@ -468,7 +468,7 @@ button {
 }
 
 .app .app-area .area-player[data-player=white] .each-unit {
-    border-right: 0.1rem solid #ddd;
+    border-right: 1px solid #ddd;
 }
 
 .app .app-area .area-player[data-player=white] .each-unit:first-child {
@@ -485,7 +485,7 @@ button {
 
 .app .app-area .area-player[data-player=white] .each-unit div {
     transform: rotate(180deg);
-    top: 0.3rem;
+    top: 3px;
 }
 
 .app .app-area .area-player[data-player=white] .status {
@@ -510,7 +510,7 @@ button {
 }
 
 .app .app-area .area-player[data-player=black] .each-unit {
-    border-right: 0.1rem solid #ddd;
+    border-right: 1px solid #ddd;
 }
 
 .app .app-area .area-player[data-player=black] .each-unit.active {
@@ -519,7 +519,7 @@ button {
 
 .app .app-area .area-player[data-player=black] .each-unit div {
     color: #fff;
-    bottom: 0.3rem;
+    bottom: 3px;
 }
 
 .app .app-area .area-player[data-player=black] .status {
@@ -547,14 +547,14 @@ button {
     left: 0;
     width: 100%;
     background: rgba(0, 0, 0, 0.9);
-    font-size: 2.1rem;
+    font-size: 16px;
     color: #fff;
     text-align: center;
     top: 50%;
     font-weight: 600;
     font-style: italic;
-    margin-top: -3.4rem;
-    padding: 2rem 0;
+    margin-top: -34px;
+    padding: 20px 0;
 }
 
 .app .label-area[data-player=white] {
@@ -573,7 +573,7 @@ button {
 }
 
 .app .url-area > .wrapper {
-    padding: 0 2rem;
+    padding: 0 20px;
 }
 
 .app .url-area > .wrapper > .title {
@@ -650,7 +650,7 @@ button {
 }
 
 .app .modal-area .info-part table th, .app .modal-area .info-part table td {
-    font-size: 1.1rem;
+    font-size: 11px;
     color: #fff;
 }
 
@@ -664,8 +664,8 @@ button {
 }
 
 .app .modal-area .ride-part div {
-    margin: 0 0.5rem 1rem 0.5rem;
-    font-size: 1.2rem;
+    margin: 0 5px 10px 5px;
+    font-size: 12px;
 }
 
 .app .modal-area .ride-part span {
@@ -691,10 +691,10 @@ button {
 
 .app .modal-area .close-btn {
     position: absolute;
-    top: 0rem;
+    top: 0;
     color: #fff;
-    right: 1rem;
-    font-size: 5rem;
+    right: 10px;
+    font-size: 50px;
 }
 
 .app[data-started=Y][data-player=white] > .app-area {
@@ -711,21 +711,21 @@ button {
 
 @media (min-height: 1024px) {
     .app .app-area {
-        padding: 7rem 0;
+        padding: 7px 0;
     }
 
     .app .app-area .area-player {
-        height: 7rem;
+        height: 7px;
     }
 }
 
 @media (min-height: 1366px) {
     .app .app-area {
-        padding: 8.5rem 0;
+        padding: 85px 0;
     }
 
     .app .app-area .area-player {
-        height: 8.5rem;
+        height: 85px;
     }
 }
 

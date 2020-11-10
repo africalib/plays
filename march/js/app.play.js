@@ -1405,7 +1405,8 @@ let app = new Vue({
             let visible = val || isImportant;
 
             if (act === 'attack') {
-                let offset = $(this.$el).find('.each-area[data-idx=' + idx + ']').offset();
+                let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
+                let offset = $area.offset();
 
                 new mojs.Burst({
                     count: 12,
@@ -1413,7 +1414,7 @@ let app = new Vue({
                         shape: 'polygon',
                         fill: '#ff4141'
                     }
-                }).tune({ top: offset.top + 23, left: offset.left + 23 }).setSpeed(3).replay();
+                }).tune({ top: offset.top + $area.height() / 2, left: offset.left + $area.width() / 2 }).setSpeed(3).replay();
             }
             else if (this.areas[idx] && this.areas[idx].unit && this.areas[idx].unit.name) {
                 visible = visible && this.my.player === this.areas[idx].unit.player;
