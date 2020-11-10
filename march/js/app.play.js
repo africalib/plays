@@ -1167,6 +1167,9 @@ let app = new Vue({
                             t.active.idx = idx;
 
                             if (eachUnit.distance > 1) {
+                                if (eachUnit.hp < 0)
+                                    return;
+
                                 t.$set(t.areas[targetIdx], 'weapon', {
                                     name: eachUnit.weapon,
                                     direction: eachUnit.direction,
@@ -1413,6 +1416,9 @@ let app = new Vue({
                     children: {
                         shape: 'polygon',
                         fill: '#ff4141'
+                    },
+                    onComplete: function () {
+                        this.el.parentNode.removeChild(this.el);
                     }
                 }).tune({ top: offset.top + $area.height() / 2, left: offset.left + $area.width() / 2 }).setSpeed(3).replay();
             }
@@ -1730,7 +1736,7 @@ let app = new Vue({
                             clearInterval(t.interval['dot']);
 
                             t.start();
-                            t.setLabel("You entered as a " + t.my.player + " player", 5000);
+                            t.setLabel("You are the " + t.my.player + " player", 5000);
 
                             setTimeout(function () {
                                 t.setLabel("Let's march", 2500);
