@@ -272,7 +272,7 @@ let app = new Vue({
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
-                    maxExp: 15,
+                    maxExp: 20,
                     move: 5,
                     maxMove: 10,
                     attack: 5,
