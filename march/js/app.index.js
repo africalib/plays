@@ -1,5 +1,4 @@
-﻿const baseUrl = 'https://africalib.gabia.io';
-let socket;
+﻿let socket;
 
 let app = new Vue({
     el: '#app',
@@ -22,7 +21,7 @@ let app = new Vue({
             var t = this;
             t.room.loaded = false;
 
-            $.getJSON(baseUrl + '/rooms', function (res) {
+            $.getJSON(global.baseUrl + '/rooms', function (res) {
                 t.room.loaded = true;
                 t.room.list = res;
             });

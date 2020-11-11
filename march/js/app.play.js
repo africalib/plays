@@ -1,5 +1,4 @@
-﻿const baseUrl = 'https://africalib.gabia.io';
-let socket;
+﻿let socket;
 
 let app = new Vue({
     el: '#app',
@@ -1704,7 +1703,7 @@ let app = new Vue({
             t.my.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
             t.status.time = t.base.time;
 
-            socket = io.connect(baseUrl, {
+            socket = io.connect(global.baseUrl, {
                 rememberUpgrade: true,
                 transports: ['websocket'],
                 secure: true,
@@ -1802,6 +1801,7 @@ let app = new Vue({
 
                         case 'disconnect':
                             if (t.status.started && !t.status.finished) {
+                                socket.disconnect();
                                 t.status.finished = true;
                                 alert('상대방이 경기에서 나갔습니다.');
                                 window.onbeforeunload = null;
@@ -1842,7 +1842,7 @@ let app = new Vue({
         }
 
         if (name) {
-            $.get(baseUrl + '/valid?name=' + name, function (res) {
+            $.get(global.baseUrl + '/valid?name=' + name, function (res) {
                 if (res === 'valid') {
                     run();
                 }
