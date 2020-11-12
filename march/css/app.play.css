@@ -225,11 +225,11 @@ button {
 }
 
 .app[data-player=black] > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]) {
-    visibility: hidden;
+    display: none;
 }
 
 .app[data-player=white] > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=white]) {
-    visibility: visible;
+    display: none;
 }
 
 .app[data-started=Y] {
