@@ -8,6 +8,8 @@ html, body {
 
 body {
     overflow: hidden;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none; 
 }
 
 body > div[data-name="mojs-shape"]::-webkit-scrollbar {
@@ -567,7 +569,6 @@ button {
     width: 100%;
     background: rgba(0, 0, 0, 0.76);
     font-size: 16px;
-    font-family: initial;
     color: #fff;
     text-align: center;
     top: 50%;
