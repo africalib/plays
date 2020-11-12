@@ -1746,17 +1746,17 @@ let app = new Vue({
                             clearInterval(t.interval['dot']);
 
                             t.start();
-                            t.setLabel("You are the " + t.my.player + " player", 5000);
+                            t.setLabel("You are the " + t.my.player + " player", 3000);
 
                             setTimeout(function () {
-                                t.setLabel("Let's march", 2500);
-                            }, 5000);
+                                t.setLabel("Let's march", 2000);
+                            }, 3000);
 
                             if (t.my.player === 'black') {
                                 setTimeout(function () {
                                     t.setRandomShelter();
                                     t.pass('black');
-                                }, 7500);
+                                }, 5000);
                             }
 
                             t.status['white']['crop'] += 5;
