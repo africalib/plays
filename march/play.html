@@ -8,7 +8,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/app.common.css" rel="stylesheet" />
-    <link href="css/app.play.css?6" rel="stylesheet" />
+    <link href="css/app.play.css?8" rel="stylesheet" />
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -122,113 +122,113 @@
                     </div>
                 </div>
             </div>
-            <div class="modal-area" v-bind:data-player="modal.info.player" v-bind:data-turn="my.player"
-                v-if="modal.info.name">
-                <div class="img-part">
-                    <span>
-                        <img v-bind:src="'img/' + modal.info.player + '/' + modal.info.name + '.png'"
-                            v-bind:data-rotate="modal.info.rotate" />
-                    </span>
-                </div>
-                <div class="info-part">
-                    <table class="table" v-if="modal.type === 'shelter'">
-                        <tbody>
-                            <tr>
-                                <th>{{ getLang('ko', 'name') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.name }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'type') }}</th>
-                                <td>:</td>
-                                <td>shelter</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    </table>
-                    <table class="table" v-if="modal.type === 'unit'">
-                        <tbody>
-                            <tr>
-                                <th>{{ getLang('ko', 'name') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.name }}</td>
-                                <th>{{ getLang('ko', 'type') }}</th>
-                                <td>:</td>
-                                <td>unit</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'level') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.level }} / {{ modal.info.maxLevel }}</td>
-                                <th>{{ getLang('ko', 'exp') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.exp }} / {{ modal.info.maxExp }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'move') }}</th>
-                                <td>:</td>
-                                <td>{{ getModalInfoProp('move') }} / {{ modal.info.maxMove }}</td>
-                                <th>{{ getLang('ko', 'defense') }}</th>
-                                <td>:</td>
-                                <td>{{ getModalInfoProp('defense') }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'crop') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.crop }}</td>
-                                <th>{{ getLang('ko', 'farm') }}</th>
-                                <td>:</td>
-                                <td>{{ getModalInfoProp('farm') }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'direction') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.direction }}</td>
-                                <th>{{ getLang('ko', 'destory') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.destory }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'power') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.power }} / {{ getModalInfoProp('maxPower') }}</td>
-                                <th>{{ getLang('ko', 'restorePower') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.restorePower }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'hp') }}</th>
-                                <td>:</td>
-                                <td>{{ modal.info.hp }} / {{ getModalInfoProp('maxHp') }}</td>
-                                <th>{{ getLang('ko', 'restoreHp') }}</th>
-                                <td>:</td>
-                                <td>{{ getModalInfoProp('restoreHp') }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'attack') }}</th>
-                                <td>:</td>
-                                <td>{{ getModalInfoProp('attack') }}</td>
-                                <th>{{ getLang('ko', 'distance') }}</th>
-                                <td>:</td>
-                                <td>{{ getModalInfoProp('distance') }} / {{ modal.info.maxDistance }}</td>
-                            </tr>
-                            <tr>
-                                <th>{{ getLang('ko', 'accel') }}</th>
-                                <td>:</td>
-                                <td>{{ getLang('ko', modal.info.accel) }}</td>
-                                <th>{{ getLang('ko', 'through') }}</th>
-                                <td>:</td>
-                                <td>{{ getLang('ko', modal.info.through) }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <span class="close-btn" v-on:click="closeModal()">&times;</span>
-            </div>
         </div>
         <div class="bottom" v-if="status.started">
             <span>crop : {{ status[my.player].crop }} / {{ status[my.player].maxCrop }}</span>
             <span class="pull-right">units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
+        </div>
+        <div class="modal-area" v-bind:data-player="modal.info.player" v-bind:data-turn="my.player"
+            v-if="modal.info.name">
+            <div class="img-part">
+                <span>
+                    <img v-bind:src="'img/' + modal.info.player + '/' + modal.info.name + '.png'"
+                        v-bind:data-rotate="modal.info.rotate" />
+                </span>
+            </div>
+            <div class="info-part">
+                <table class="table" v-if="modal.type === 'shelter'">
+                    <tbody>
+                        <tr>
+                            <th>{{ getLang('ko', 'name') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.name }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'type') }}</th>
+                            <td>:</td>
+                            <td>shelter</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </table>
+                <table class="table" v-if="modal.type === 'unit'">
+                    <tbody>
+                        <tr>
+                            <th>{{ getLang('ko', 'name') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.name }}</td>
+                            <th>{{ getLang('ko', 'type') }}</th>
+                            <td>:</td>
+                            <td>unit</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'level') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.level }} / {{ modal.info.maxLevel }}</td>
+                            <th>{{ getLang('ko', 'exp') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.exp }} / {{ modal.info.maxExp }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'move') }}</th>
+                            <td>:</td>
+                            <td>{{ getModalInfoProp('move') }} / {{ modal.info.maxMove }}</td>
+                            <th>{{ getLang('ko', 'defense') }}</th>
+                            <td>:</td>
+                            <td>{{ getModalInfoProp('defense') }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'crop') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.crop }}</td>
+                            <th>{{ getLang('ko', 'farm') }}</th>
+                            <td>:</td>
+                            <td>{{ getModalInfoProp('farm') }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'direction') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.direction }}</td>
+                            <th>{{ getLang('ko', 'destory') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.destory }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'power') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.power }} / {{ getModalInfoProp('maxPower') }}</td>
+                            <th>{{ getLang('ko', 'restorePower') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.restorePower }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'hp') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.hp }} / {{ getModalInfoProp('maxHp') }}</td>
+                            <th>{{ getLang('ko', 'restoreHp') }}</th>
+                            <td>:</td>
+                            <td>{{ getModalInfoProp('restoreHp') }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'attack') }}</th>
+                            <td>:</td>
+                            <td>{{ getModalInfoProp('attack') }}</td>
+                            <th>{{ getLang('ko', 'distance') }}</th>
+                            <td>:</td>
+                            <td>{{ getModalInfoProp('distance') }} / {{ modal.info.maxDistance }}</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'accel') }}</th>
+                            <td>:</td>
+                            <td>{{ getLang('ko', modal.info.accel) }}</td>
+                            <th>{{ getLang('ko', 'through') }}</th>
+                            <td>:</td>
+                            <td>{{ getLang('ko', modal.info.through) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <span class="close-btn" v-on:click="closeModal()">&times;</span>
         </div>
     </div>
     <script src="js/mo.min.js"></script>
@@ -237,6 +237,6 @@
     <script src="js/vue.js"></script>
     <script src="js/app.global.js"></script>
     <script src="js/app.library.js"></script>
-    <script src="js/app.play.js?7"></script>
+    <script src="js/app.play.js?8"></script>
 </body>
 </html>

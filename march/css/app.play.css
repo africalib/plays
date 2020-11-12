@@ -51,7 +51,7 @@ button {
     position: absolute;
     top: 0;
     left: 0;
-    background: #000;
+    background: #2f2f2f;
     color: #fff;
     font-size: 10px;
     width: 100%;
@@ -494,12 +494,11 @@ button {
 .app > .area .area-player[data-player=white] .action button {
     background: #fff;
     color: #3a3a3a;
-
 }
 
 .app > .area .area-player[data-player=black] {
     bottom: 0;
-    background: #000;
+    background: #2f2f2f;
     border-top: 1px solid #ddd;
 }
 
@@ -526,7 +525,7 @@ button {
 }
 
 .app > .area .area-player[data-player=black] .action button {
-    background: #000;
+    background: none;
 }
 
 .app > .bottom {
@@ -541,7 +540,7 @@ button {
 }
 
 .app[data-player=black] > .bottom {
-    background: #000;
+    background: #2f2f2f;
     color: #fff;
 }
 
@@ -652,7 +651,7 @@ button {
 }
 
 .app .modal-area[data-player=black] .img-part span {
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.76);
 }
 
 .app .modal-area .img-part span img[data-rotate='90'] {
@@ -713,10 +712,6 @@ button {
 }
 
 .app[data-started=Y][data-player=white] > .area {
-    transform: rotate(180deg);
-}
-
-.app .modal-area[data-turn=white] {
     transform: rotate(180deg);
 }
 
