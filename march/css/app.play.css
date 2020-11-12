@@ -224,15 +224,11 @@ button {
     background: rgba(255, 255, 255, 0.85);
 }
 
-.app > .area .area-wrapper .each-area[data-shelter] .unit {
+.app[data-player=black] > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]) {
     visibility: hidden;
 }
 
-.app[data-player=black] > .area .area-wrapper .each-area[data-shelter] .unit[data-player=black] {
-    visibility: visible;
-}
-
-.app[data-player=white] > .area .area-wrapper .each-area[data-shelter] .unit[data-player=white] {
+.app[data-player=white] > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=white]) {
     visibility: visible;
 }
 
