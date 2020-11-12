@@ -33,12 +33,14 @@ let app = new Vue({
                 rock: {
                     name: 'rock',
                     hp: 100,
-                    maxHp: 100
+                    maxHp: 100,
+                    subHp: 0
                 },
                 tree: {
                     name: 'tree',
                     hp: 20,
-                    maxHp: 20
+                    maxHp: 20,
+                    subHp: 0
                 }
             },
             units: {
@@ -60,6 +62,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 1,
                     maxHp: 1,
+                    subHp: 0,
                     crop: 2,
                     power: 1,
                     restorePower: 1,
@@ -92,6 +95,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 5,
                     maxHp: 5,
+                    subHp: 0,
                     crop: 3,
                     power: 1,
                     restorePower: 1,
@@ -124,6 +128,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 5,
                     maxHp: 5,
+                    subHp: 0,
                     crop: 4,
                     power: 1,
                     restorePower: 1,
@@ -156,6 +161,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 15,
                     maxHp: 15,
+                    subHp: 0,
                     crop: 5,
                     power: 1,
                     restorePower: 1,
@@ -188,6 +194,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 10,
                     maxHp: 10,
+                    subHp: 0,
                     crop: 10,
                     power: 2,
                     restorePower: 2,
@@ -220,6 +227,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 20,
                     maxHp: 20,
+                    subHp: 0,
                     crop: 11,
                     power: 1.5,
                     restorePower: 1.5,
@@ -252,6 +260,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 5,
                     maxHp: 5,
+                    subHp: 0,
                     crop: 12,
                     power: 0.5,
                     restorePower: 0.5,
@@ -284,6 +293,7 @@ let app = new Vue({
                     multiple: false,
                     hp: 100,
                     maxHp: 100,
+                    subHp: 0,
                     crop: null,
                     power: 1,
                     restorePower: 1,
@@ -829,7 +839,8 @@ let app = new Vue({
                 t.setGrabbedDefault();
             }
             else if (t.grabbed.name) {
-                appLib.bandMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.time.message);
+                if (t.status.turn === t.my.player)
+                    appLib.bandMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.time.message);
                 return;
             }
             else {
@@ -859,16 +870,19 @@ let app = new Vue({
                 }
 
                 if (fieldCount >= this.base.fieldCount) {
-                    appLib.bandMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
+                    if (t.status.turn === t.my.player)
+                        appLib.bandMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
                     return;
                 }
 
                 if (this.status[player].crop < unit.crop) {
-                    appLib.bandMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
+                    if (this.status.turn === this.my.player)
+                        appLib.bandMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
                     return;
                 }
                 else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
-                    appLib.bandMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
+                    if (this.status.turn === this.my.player)
+                        appLib.bandMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
                     return;
                 }
 
@@ -1241,17 +1255,17 @@ let app = new Vue({
 
                 if (t.getIsShelterInArea(targetIdx)) {
                     demage += accelDemage;
-                    targetArea.shelter.hp -= demage;
-                    isAlive = targetArea.shelter.hp > 0 || t.getIsUnitInArea(targetIdx);
+                    targetArea.shelter.subHp += demage;
+                    isAlive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.getIsUnitInArea(targetIdx);
 
                     setTimeout(function () {
                         t.setShowUp('attack', targetIdx, demage, true);
                     }, delay ? t.time.animate : 0);
 
-                    if (targetArea.shelter.hp <= 0)
+                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
                         activeArea.unit.destory += 1;
 
-                    if (targetArea.shelter.hp <= 0 && activeArea.unit.distance < 2 && !t.getIsUnitInArea(targetIdx)) {
+                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0 && activeArea.unit.distance < 2 && !t.getIsUnitInArea(targetIdx)) {
                         targetArea.unit = appLib.renew(activeArea.unit);
                         activeArea.unit = {};
                         t.active.idx = targetIdx;
@@ -1262,30 +1276,27 @@ let app = new Vue({
                     let multi = activeDirection * targetArea.unit.direction;
                     let defense = 0;
 
-                    if (targetArea.unit.direction === activeDirection) {
+                    if (targetArea.unit.direction === activeDirection)
                         critical = 3;
-                    }
-                    else if (multi !== 27 && multi !== 72) {
+                    else if (multi !== 27 && multi !== 72)
                         critical = 1.5;
-                    }
-                    else {
+                    else
                         defense = targetArea.unit.defense + targetArea.unit.buffed['defense'];
-                    }
 
                     demage = demage * critical + accelDemage - defense;
 
                     if (demage < 0)
                         demage = 0;
 
-                    targetArea.unit.hp -= demage;
-                    isAlive = targetArea.unit.hp > 0;
+                    targetArea.unit.subHp += demage;
+                    isAlive = targetArea.unit.hp - targetArea.unit.subHp > 0;
 
-                    if (activeArea.unit.hp <= 0) {
+                    if (activeArea.unit.hp - activeArea.unit.subHp <= 0) {
                         activeArea.unit.hp = -100;
                         targetArea.unit.exp += activeArea.unit.crop + activeArea.unit.level;
                     }
 
-                    if (targetArea.unit.hp <= 0) {
+                    if (targetArea.unit.hp - targetArea.unit.subHp <= 0) {
                         targetArea.unit.hp = -100;
                         activeArea.unit.exp += targetArea.unit.crop + targetArea.unit.level;
                         activeArea.unit.destory += 1;
@@ -1304,10 +1315,21 @@ let app = new Vue({
 
                 setTimeout(function () {
                     for (let i in t.areas) {
-                        if (t.areas[i].unit && t.areas[i].unit.name && t.areas[i].unit.hp <= 0)
-                            t.areas[i].unit = {};
-                        else if (t.areas[i].shelter && t.areas[i].shelter.name && t.areas[i].shelter.hp <= 0)
-                            t.areas[i].shelter = {};
+                        if (t.areas[i].unit && t.areas[i].unit.name) {
+                            t.areas[i].unit.hp -= t.areas[i].unit.subHp;
+                            t.areas[i].unit.subHp = 0;
+
+                            if (t.areas[i].unit.hp <= 0)
+                                t.areas[i].unit = {};
+                        }
+
+                        if (t.areas[i].shelter && t.areas[i].shelter.name) {
+                            t.areas[i].shelter.hp -= t.areas[i].shelter.subHp;
+                            t.areas[i].shelter.subHp = 0;
+
+                            if (t.areas[i].shelter.hp <= 0)
+                                t.areas[i].shelter = {};
+                        }
                     }
 
                     t.setFinished();
@@ -1428,7 +1450,7 @@ let app = new Vue({
             if (visible) {
                 let $area = $('#app .each-area[data-hidx=' + idx + ']');
                 let $showUp = null;
-                let obj = { opacity: 0 };
+                let obj = { opacity: 0.5 };
                 $area.find('.show-up').remove();
                 $area.append('<div class="show-up" data-act="' + act + '" data-player="' + this.my.player + '">' + val + '</div>');
                 $showUp = $area.find('.show-up');
@@ -1580,9 +1602,6 @@ let app = new Vue({
                 }
             }
 
-            if (this.status.turn)
-                appLib.bandMessage(this.my.player, this.getLang('ko', player) + ' 플레이어에게 턴을 넘겼습니다.', this.time.message);
-
             crop = parseFloat(crop).toFixed(2);
             this.status[player].crop = (parseFloat(this.status[player].crop) + parseFloat(this.status[player].incomeCrop) + parseFloat(crop)).toFixed(2);
             this.status[player].crop = Number(this.status[player].crop.toString());
@@ -1646,7 +1665,9 @@ let app = new Vue({
                     }
                 }
                 else {
-                    appLib.bandMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
+                    if (t.status.turn === t.my.player)
+                        appLib.bandMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
+
                     t.setModalClose();
 
                     if (t.my.player === t.status.turn)
@@ -1683,6 +1704,7 @@ let app = new Vue({
 
                 if (!king.white || !king.black) {
                     let winner = !king.white ? 'Black' : 'White';
+                    socket.disconnect();
                     this.setLabel(winner + ' player won', 0);
                     appLib.bandMessage(this.my.player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
                     clearInterval(this.interval['timer']);
