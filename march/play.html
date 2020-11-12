@@ -98,7 +98,7 @@
                 <div class="units">
                     <div class="each-unit" v-bind:data-name="u.name"
                         v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
-                        v-for="u in base.units" v-on:click="grab(my.player, u.name)" v-if="u.crop">
+                        v-for="u in base.units" v-bind:key="u.name" v-on:click="grab(my.player, u.name)" v-if="u.crop">
                         <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
                         <img v-bind:src="'img/' + my.player + '/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
                     </div>
