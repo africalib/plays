@@ -8,7 +8,7 @@
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/app.common.css" rel="stylesheet" />
-    <link href="css/app.play.css?15" rel="stylesheet" />
+    <link href="css/app.play.css?16" rel="stylesheet" />
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -38,12 +38,12 @@
                         <div class="power">{{ a.unit.power }}</div>
                         <div class="exp" v-if="a.unit.level">
                             <div class="exp-wrapper">
-                                <div class="status progress-bar progress-bar-striped active"
+                                <div class="status progress-bar progress-bar-striped"
                                     v-bind:style="{ height : ((a.unit.exp) / a.unit.maxExp * 100) + '%' }"></div>
                             </div>
                         </div>
                         <div class="hp" v-if="a.unit.hp && a.unit.maxHp">
-                            <div class="remain progress-bar progress-bar-striped active"
+                            <div class="remain progress-bar progress-bar-striped"
                                 v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }"></div>
                         </div>
                         <div class="level" v-if="a.unit.level">{{ a.unit.level }}</div>
@@ -52,7 +52,7 @@
                         v-if="a.shelter.name">
                         <img v-bind:src="'img/' + a.shelter.player + '/' + a.shelter.name + '.png'" />
                         <div class="hp" v-if="a.shelter.hp && a.shelter.maxHp">
-                            <div class="remain progress-bar progress-bar-striped active"
+                            <div class="remain progress-bar progress-bar-striped"
                                 v-bind:style="{ width : a.shelter.hp ? (a.shelter.hp / a.shelter.maxHp * 100) + '%' : 0 }">
                             </div>
                         </div>
@@ -221,6 +221,6 @@
     <script src="js/vue.js"></script>
     <script src="js/app.global.js"></script>
     <script src="js/app.library.js"></script>
-    <script src="js/app.play.js?15"></script>
+    <script src="js/app.play.js?16"></script>
 </body>
 </html>
