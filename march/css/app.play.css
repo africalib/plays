@@ -8,8 +8,11 @@ html, body {
 
 body {
     overflow: hidden;
-    -webkit-touch-callout: none;
-    -webkit-user-select: none; 
+}
+
+body * {
+    -webkit-touch-callout: none !important;
+    -webkit-user-select: none !important;
 }
 
 body > div[data-name="mojs-shape"]::-webkit-scrollbar {
@@ -110,6 +113,7 @@ button {
 
 .app > .area .area-wrapper .each-area .hp .remain {
     background-color: #d82916;
+
     /* -webkit-transition: none;
     -o-transition: none;
     transition: none; */
