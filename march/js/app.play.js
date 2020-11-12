@@ -1688,7 +1688,6 @@ let app = new Vue({
 
                 if (!king.white || !king.black) {
                     let winner = !king.white ? 'Black' : 'White';
-                    socket.disconnect();
                     this.setLabel(winner + ' player won', 0);
                     appLib.bandMessage(this.my.player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
                     clearInterval(this.interval['timer']);
