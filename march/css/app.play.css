@@ -226,6 +226,7 @@ button {
 .app > .area .area-wrapper .each-area .unit[data-player=white],
 .app > .area .area-wrapper .each-area .shelter[data-player=white] {
     background: rgba(255, 255, 255, 0.85);
+    background:red;
 }
 
 .app[data-started=Y] {
