@@ -14,18 +14,16 @@
 <body>
     <div id="app" class="app" v-bind:data-device="my.device" v-bind:data-started="status.started ? 'Y' : 'N'"
         v-bind:data-player="my.player" v-cloak>
-        <div class="area-top" v-if="status.started">
+        <div class="top" v-if="status.started">
             <span>
-                <i class="fa fa-flag" aria-hidden="true"></i>
                 <span v-if="status.turn">{{ status.turn }} turn</span>
                 <span v-else>ready</span>
             </span>
             <span class="pull-right">
-                <i class="fa fa-clock-o" aria-hidden="true"></i>
                 <span>{{ status.time }} / {{ base.time }}</span>
             </span>
         </div>
-        <div class="app-area">
+        <div class="area">
             <div class="area-wrapper">
                 <div class="each-area" v-bind:class="{'active' : active.idx === a.idx }" v-for="(a, idx) in areas"
                     v-bind:key="idx" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner" v-bind:data-type="a.type"
@@ -39,12 +37,12 @@
                         <div class="power">{{ a.unit.power }}</div>
                         <div class="exp" v-if="a.unit.level">
                             <div class="exp-wrapper">
-                                <div class="status"
+                                <div class="status progress-bar progress-bar-striped active"
                                     v-bind:style="{ height : ((a.unit.exp) / a.unit.maxExp * 100) + '%' }"></div>
                             </div>
                         </div>
                         <div class="hp" v-if="a.unit.hp && a.unit.maxHp">
-                            <div class="remain"
+                            <div class="remain progress-bar progress-bar-striped active"
                                 v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }"></div>
                         </div>
                         <div class="level" v-if="a.unit.level">{{ a.unit.level }}</div>
@@ -53,7 +51,7 @@
                         v-if="a.shelter.name">
                         <img v-bind:src="'img/' + a.shelter.player + '/' + a.shelter.name + '.png'" />
                         <div class="hp" v-if="a.shelter.hp && a.shelter.maxHp">
-                            <div class="remain"
+                            <div class="remain progress-bar progress-bar-striped active"
                                 v-bind:style="{ width : a.shelter.hp ? (a.shelter.hp / a.shelter.maxHp * 100) + '%' : 0 }">
                             </div>
                         </div>
@@ -70,33 +68,14 @@
                         v-bind:class="{ 'active' : status.turn === 'white' && u.name === grabbed.name }"
                         v-for="u in getReversed(base.units)" v-on:click="my.player === 'white' && grab('white', u.name)"
                         v-if="u.crop">
-                        <div>{{ u.name }}<br />({{ u.crop }})</div>
+                        <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
                         <img v-bind:src="'img/white/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
                     </div>
                 </div>
-                <div class="status">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>
-                                    <i class="fa fa-pagelines" aria-hidden="true"></i>
-                                </th>
-                                <td>{{ status.white.crop }} / {{ status.white.maxCrop }}</td>
-                                <td class="button" rowspan="2">
-                                    <button type="button" v-on:click="status.passable && pass('black')"
-                                        v-if="!status.finished"
-                                        v-bind:disabled="my.player !== 'white' || status.turn !== 'white'">pass</button>
-                                    <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                </th>
-                                <td>{{ status.white.units }} / {{ status.white.maxUnit }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="action">
+                    <button type="button" v-on:click="status.passable && pass('black')" v-if="!status.finished"
+                        v-bind:disabled="my.player !== 'white' || status.turn !== 'white'">pass</button>
+                    <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                 </div>
             </div>
             <div class="area-player" data-player="black" v-if="status.started && my.player === 'black'">
@@ -105,33 +84,16 @@
                         v-bind:class="{ 'active' : status.turn === 'black' && u.name === grabbed.name }"
                         v-for="u in base.units" v-on:click="my.player === 'black' && grab('black', u.name)"
                         v-if="u.crop">
-                        <div>{{ u.name }}<br />({{ u.crop }})</div>
+                        <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
                         <img v-bind:src="'img/black/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
                     </div>
                 </div>
-                <div class="status">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>
-                                    <i class="fa fa-pagelines" aria-hidden="true"></i>
-                                </th>
-                                <td>{{ status.black.crop }} / {{ status.black.maxCrop }}</td>
-                                <td class="button" rowspan="2">
-                                    <button type="button" v-on:click="status.passable && pass('white')"
-                                        v-if="!status.finished"
-                                        v-bind:disabled="my.player !== 'black' || status.turn !== 'black'">pass</button>
-                                    <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>
-                                    <i class="fa fa-user" aria-hidden="true"></i>
-                                </th>
-                                <td>{{ status.black.units }} / {{ status.black.maxUnit }}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="action">
+                    <!-- {{ status.black.crop }} / {{ status.black.maxCrop }} -->
+                    <!-- {{ status.black.units }} / {{ status.black.maxUnit }} -->
+                    <button type="button" v-on:click="status.passable && pass('white')" v-if="!status.finished"
+                        v-bind:disabled="my.player !== 'black' || status.turn !== 'black'">pass</button>
+                    <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                 </div>
             </div>
             <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
@@ -263,6 +225,10 @@
                 </div>
                 <span class="close-btn" v-on:click="closeModal()">&times;</span>
             </div>
+        </div>
+        <div class="bottom" v-if="status.started">
+            <span>crop : {{ status[my.player].crop }} / {{ status[my.player].maxCrop }}</span>
+            <span class="pull-right">units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
         </div>
     </div>
     <script src="js/mo.min.js"></script>
