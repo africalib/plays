@@ -1795,7 +1795,7 @@ let app = new Vue({
                                 else if (eachUnit.length) {
                                     t.modal.type = 'unit';
                                     t.modal.info = t.base.units[eachUnit.data('name')];
-                                    t.modal.info.player = eachUnit.closest('.area-player').data('player');
+                                    t.modal.info.player = t.my.player;
                                 }
 
                                 t.setAreaDefault();
