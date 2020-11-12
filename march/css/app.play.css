@@ -331,29 +331,27 @@ button {
     transform: rotate(270deg) scaleX(-1);
 }
 
-.app[data-player=black] > .area .area-wrapper .each-area[data-status=attack],
-.app[data-player=black] > .area .area-wrapper .each-area[data-status=attack] .unit,
-.app[data-player=black] > .area .area-wrapper .each-area[data-status=attack] .shelter,
-.app[data-player=white] > .area .area-wrapper .each-area[data-status=attack],
-.app[data-player=white] > .area .area-wrapper .each-area[data-status=attack] .unit,
-.app[data-player=white] > .area .area-wrapper .each-area[data-status=attack] .shelter {
+.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=attack] .unit,
+.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=attack] .shelter,
+.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=attack] .unit,
+.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=attack] .shelter {
     background: orange;
 }
 
-.app[data-player=white] > .area .area-wrapper .each-area[data-player=white][data-status=move],
-.app[data-player=white] > .area .area-wrapper .each-area[data-owner=white][data-status=enter],
-.app[data-player=black] > .area .area-wrapper .each-area[data-player=black][data-status=move],
-.app[data-player=black] > .area .area-wrapper .each-area[data-owner=black][data-status=enter] {
+.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=move],
+.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=enter],
+.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=move],
+.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=enter] {
     background: #efffcd;
 }
 
-.app[data-player=white] > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
-.app[data-player=white] > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=white] {
+.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
+.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=white] {
     background: #dcecb7;
 }
 
-.app[data-player=black] > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=black],
-.app[data-player=black] > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=black] {
+.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=black],
+.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=black] {
     background: #546f18;
 }
 
@@ -389,8 +387,8 @@ button {
     left: 0;
 }
 
-.app[data-player=black] > .area .area-wrapper .each-area.active .unit[data-player=black],
-.app[data-player=white] > .area .area-wrapper .each-area.active .unit[data-player=white] {
+.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area.active .unit,
+.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area.active .unit {
     background: #b3b3b3;
 }
 
