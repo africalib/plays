@@ -62,40 +62,6 @@
                     </div>
                 </div>
             </div>
-            <div class="area-player" data-player="white" v-if="status.started && my.player === 'white'">
-                <div class="units">
-                    <div class="each-unit" v-bind:data-name="u.name"
-                        v-bind:class="{ 'active' : status.turn === 'white' && u.name === grabbed.name }"
-                        v-for="u in getReversed(base.units)" v-on:click="my.player === 'white' && grab('white', u.name)"
-                        v-if="u.crop">
-                        <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
-                        <img v-bind:src="'img/white/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
-                    </div>
-                </div>
-                <div class="action">
-                    <button type="button" v-on:click="status.passable && pass('black')" v-if="!status.finished"
-                        v-bind:disabled="my.player !== 'white' || status.turn !== 'white'">pass</button>
-                    <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
-                </div>
-            </div>
-            <div class="area-player" data-player="black" v-if="status.started && my.player === 'black'">
-                <div class="units">
-                    <div class="each-unit" v-bind:data-name="u.name"
-                        v-bind:class="{ 'active' : status.turn === 'black' && u.name === grabbed.name }"
-                        v-for="u in base.units" v-on:click="my.player === 'black' && grab('black', u.name)"
-                        v-if="u.crop">
-                        <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
-                        <img v-bind:src="'img/black/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
-                    </div>
-                </div>
-                <div class="action">
-                    <!-- {{ status.black.crop }} / {{ status.black.maxCrop }} -->
-                    <!-- {{ status.black.units }} / {{ status.black.maxUnit }} -->
-                    <button type="button" v-on:click="status.passable && pass('white')" v-if="!status.finished"
-                        v-bind:disabled="my.player !== 'black' || status.turn !== 'black'">pass</button>
-                    <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
-                </div>
-            </div>
             <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
                 v-on:click="setLabelHide()">
                 <div>{{ label.message }}</div>
@@ -124,8 +90,25 @@
             </div>
         </div>
         <div class="bottom" v-if="status.started">
-            <span>crop : {{ status[my.player].crop }} / {{ status[my.player].maxCrop }}</span>
-            <span class="pull-right">units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
+            <div class="status">
+                <span>units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
+                <span class="pull-right">crop : {{ status[my.player].crop }} / {{ status[my.player].maxCrop }}</span>
+            </div>
+            <div class="player">
+                <div class="units">
+                    <div class="each-unit" v-bind:data-name="u.name"
+                        v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
+                        v-for="u in base.units" v-on:click="grab(my.player, u.name)" v-if="u.crop">
+                        <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
+                        <img v-bind:src="'img/' + my.player + '/' + u.name + '.png'" v-bind:data-rotate="u.rotate" />
+                    </div>
+                </div>
+                <div class="action">
+                    <button type="button" v-on:click="pass(my.player === 'black' ? 'white' : 'black')" v-bind:disabled="status.turn !== my.player"
+                        v-if="!status.finished">pass</button>
+                    <button type="button" v-on:click="goHome()" v-else="status.finished">home</button>
+                </div>
+            </div>
         </div>
         <div class="modal-area" v-bind:data-player="modal.info.player" v-bind:data-turn="my.player"
             v-if="modal.info.name">

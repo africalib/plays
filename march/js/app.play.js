@@ -340,7 +340,6 @@ let app = new Vue({
             finished: false,
             paused: true,
             touchable: true,
-            passable: true,
             time: 0,
             white: {
                 crop: 0,
@@ -467,21 +466,6 @@ let app = new Vue({
             }
 
             return false;
-        },
-        getReversed: function (obj) {
-            let newObject = {};
-            let keys = [];
-
-            for (let key in obj) {
-                keys.push(key);
-            }
-
-            for (let i = keys.length - 1; i >= 0; i -= 1) {
-                let value = obj[keys[i]];
-                newObject[keys[i]] = value;
-            }
-
-            return newObject;
         },
         getLang: function (lang, keyword) {
             switch (lang) {

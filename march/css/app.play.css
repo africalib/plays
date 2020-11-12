@@ -58,7 +58,8 @@ button {
     font-size: 10px;
     width: 100%;
     height: 25px;
-    padding: 5px 8px;
+    padding: 0 8px;
+    line-height: 25px;
 }
 
 .app > .top i {
@@ -226,16 +227,16 @@ button {
 }
 
 .app[data-started=Y] {
+    padding: 25px 0 75px 0;
     font-family: 'Orbitron', sans-serif;
-    padding: 25px 0;
 }
 
 .app[data-started=Y][data-player=black] > .area {
-    padding: 0 0 50px 0;
+    padding: 0;
 }
 
 .app[data-started=Y][data-player=white] > .area {
-    padding: 50px 0 0  0;
+    padding: 0;
 }
 
 .app[data-player=white] > .area .area-wrapper .each-area .unit[data-player=white] + .shelter[data-player=white] {
@@ -387,14 +388,39 @@ button {
     background: #b3b3b3;
 }
 
-.app > .area .area-player {
+.app > .bottom {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-top: 1px solid #ddd;
+    height: 75px;
+    font-size: 10px;
+}
+
+.app[data-player=black] > .bottom {
+    background: #2f2f2f;
+    color: #fff;
+}
+
+.app[data-player=white] > .bottom {
+    background: #fff;
+}
+
+.app > .bottom > .status {
+    padding: 0 8px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.app > .bottom > .player {
     position: absolute;
     width: 100%;
     left: 0;
     height: 50px;
 }
 
-.app > .area .area-player .units {
+.app > .bottom > .player .units {
     width: 100%;
     position: absolute;
     white-space: nowrap;
@@ -403,25 +429,21 @@ button {
     -webkit-overflow-scrolling: touch;
 }
 
-.app > .area .area-player .each-unit {
-    display: inline-block;
+.app > .bottom > .player .each-unit {
     cursor: pointer;
     height: 100%;
     position: relative;
     text-align: center;
+    float: left;
     overflow: hidden;
     width: calc(100%/9);
 }
 
-.app > .area .area-player[data-player=white] .each-unit {
-    padding: 24px 8px 6px 8px;
-}
-
-.app > .area .area-player[data-player=black] .each-unit {
+.app > .bottom > .player .each-unit {
     padding: 6px 8px 24px 8px;
 }
 
-.app > .area .area-player .each-unit * {
+.app > .bottom > .player .each-unit * {
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -429,15 +451,11 @@ button {
     user-select: none;
 }
 
-.app > .area .area-player[data-player=white] .each-unit img[data-rotate='90'] {
-    transform: rotate(-90deg);
-}
-
-.app > .area .area-player[data-player=black] .each-unit img[data-rotate='90'] {
+.app > .bottom > .player .each-unit img[data-rotate='90'] {
     transform: rotate(90deg);
 }
 
-.app > .area .area-player .each-unit div {
+.app > .bottom > .player .each-unit div {
     text-align: center;
     font-size: 9px;
     line-height: 1;
@@ -446,7 +464,7 @@ button {
     width: 100%;
 }
 
-.app > .area .area-player .action {
+.app > .bottom > .player .action {
     display: inline-block;
     font-size: 12px;
     padding: 6px;
@@ -455,7 +473,7 @@ button {
     position: relative;
 }
 
-.app > .area .area-player .action > button {
+.app > .bottom > .player .action > button {
     width: 100%;
     height: 100%;
     font-weight: bold;
@@ -463,95 +481,33 @@ button {
     border: 0;
 }
 
-.app > .area .area-player[data-player=white] {
-    top: 0;
-    text-align: right;
-    background: #fff;
-    border-bottom: 1px solid #ddd;
-}
-
-.app > .area .area-player[data-player=white] .units {
-    right: 0;
-}
-
-.app > .area .area-player[data-player=white] .each-unit {
-    border-right: 1px solid #ddd;
-}
-
-.app > .area .area-player[data-player=white] .each-unit:first-child {
-    /*border-right-color: #fff;*/
-}
-
-.app > .area .area-player[data-player=white] .each-unit.active {
-    background: #eee;
-}
-
-.app > .area .area-player[data-player=white] .each-unit img {
-    transform: rotate(180deg);
-}
-
-.app > .area .area-player[data-player=white] .each-unit div {
-    transform: rotate(180deg);
-    top: 3px;
-}
-
-.app > .area .area-player[data-player=white] .action {
-    transform: rotate(180deg);
-    float: left;
-    border-left: 1px solid #ddd;
-}
-
-.app > .area .area-player[data-player=white] .action button {
-    background: #fff;
-    color: #3a3a3a;
-}
-
-.app > .area .area-player[data-player=black] {
+.app > .bottom > .player {
     bottom: 0;
-    background: #2f2f2f;
     border-top: 1px solid #ddd;
 }
 
-.app > .area .area-player[data-player=black] .units {
+.app > .bottom > .player .units {
     left: 0;
 }
 
-.app > .area .area-player[data-player=black] .each-unit {
+.app > .bottom > .player .each-unit {
     border-right: 1px solid #ddd;
 }
 
-.app > .area .area-player[data-player=black] .each-unit.active {
+.app > .bottom > .player .each-unit.active {
     background: #b3b3b3;
 }
 
-.app > .area .area-player[data-player=black] .each-unit div {
-    color: #fff;
+.app > .bottom > .player .each-unit div {
     bottom: 3px;
 }
 
-.app > .area .area-player[data-player=black] .action {
-    color: #fff;
+.app > .bottom > .player .action {
     float: right;
 }
 
-.app > .area .area-player[data-player=black] .action button {
+.app > .bottom > .player .action button {
     background: none;
-}
-
-.app > .bottom {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 100%;
-    border-top: 1px solid #ddd;
-    height: 25px;
-    padding: 5px 8px;
-    font-size: 10px;
-}
-
-.app[data-player=black] > .bottom {
-    background: #2f2f2f;
-    color: #fff;
 }
 
 .app .pause-area {
@@ -574,7 +530,6 @@ button {
     text-align: center;
     top: 50%;
     font-weight: 600;
-    font-style: italic;
     margin-top: -34px;
     padding: 20px 0;
     z-index: 100;
@@ -704,7 +659,7 @@ button {
         padding: 7px 0;
     }
 
-    .app > .area .area-player {
+    .app > .bottom > .player {
         height: 7px;
     }
 }
@@ -714,7 +669,7 @@ button {
         padding: 85px 0;
     }
 
-    .app > .area .area-player {
+    .app > .bottom > .player {
         height: 85px;
     }
 }
