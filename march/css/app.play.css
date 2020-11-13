@@ -42,7 +42,7 @@ button {
     position: absolute;
     top: 0;
     left: 0;
-    background: #2f2f2f;
+    background: rgba(1, 14, 31, 0.76);
     color: #fff;
     font-size: 10px;
     width: 100%;
@@ -74,10 +74,10 @@ button {
 }
 
 .app > .area .area-wrapper .each-area {
-    background: #f1f1f1;
+    background: rgba(241, 241, 241, 0.66);
     display: inline-block;
     width: calc(100%/9);
-    outline: 1px solid #d6d6d6;
+    outline: 1px solid #eee;
     height: calc(100%/16);
     position: relative;
     cursor: pointer;
@@ -184,11 +184,11 @@ button {
 }
 
 .app > .area .area-wrapper .each-area[data-owner='white'] {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.76);
 }
 
 .app > .area .area-wrapper .each-area[data-owner='black'] {
-    background: #fdfff1;
+    background: rgba(253, 255, 241, 0.76);
 }
 
 .app > .area .area-wrapper .each-area[data-type='sea'] {
@@ -217,7 +217,7 @@ button {
 
 .app > .area .area-wrapper .each-area .unit[data-player=white],
 .app > .area .area-wrapper .each-area .shelter[data-player=white] {
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.55);
 }
 
 .app[data-player=black] > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]) {
@@ -229,6 +229,7 @@ button {
 }
 
 .app[data-started=Y] {
+    background: url(../img/common/bg.sand.jpg);
     padding: 25px 0 75px 0;
     font-family: 'Orbitron', sans-serif;
 }
@@ -291,7 +292,7 @@ button {
 
 .app > .area .area-wrapper .each-area .unit[data-player=black],
 .app > .area .area-wrapper .each-area .shelter[data-player=black] {
-    background: rgba(41, 41, 41, 0.97);
+    background: rgba(0, 0, 0, 0.76);
 }
 
 .app > .area .area-wrapper .each-area .unit[data-player=black] .power {
@@ -331,14 +332,14 @@ button {
 .app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=attack] .shelter,
 .app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=attack] .unit,
 .app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=attack] .shelter {
-    background: orange;
+    background: rgba(255, 203, 109, 76%);
 }
 
 .app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=move],
 .app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=enter],
 .app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=move],
 .app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=enter] {
-    background: #efffcd;
+    background: rgba(239, 255, 205, 0.76);
 }
 
 .app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
@@ -399,12 +400,12 @@ button {
 }
 
 .app[data-player=black] > .bottom {
-    background: #2f2f2f;
+    background: rgba(0, 0, 0, 0.76);
     color: #fff;
 }
 
 .app[data-player=white] > .bottom {
-    background: #fff;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 .app > .bottom > .status {
