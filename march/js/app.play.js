@@ -1301,10 +1301,15 @@ let app = new Vue({
                     for (let i in t.areas) {
                         if (t.areas[i].unit && t.areas[i].unit.name) {
                             t.areas[i].unit.hp -= t.areas[i].unit.subHp;
-                            t.areas[i].unit.subHp = 0;
 
                             if (t.areas[i].unit.hp <= 0)
                                 t.areas[i].unit = {};
+
+                            if (t.areas[i].unit.subHp !== 0) {
+                                setTimeout(function () {
+                                    t.areas[i].unit.subHp = 0;
+                                }, 500);
+                            }
                         }
 
                         if (t.areas[i].shelter && t.areas[i].shelter.name) {

@@ -10,15 +10,6 @@ body {
     overflow: hidden;
 }
 
-body > div[data-name="mojs-shape"]::-webkit-scrollbar {
-    display: none;
-}
-
-body > div[data-name="mojs-shape"] {
-    -ms-overflow-style: none; /* IE and Edge */
-    scrollbar-width: none; /* Firefox */
-}
-
 img {
     max-width: 100%;
     max-height: 100%;
@@ -109,10 +100,15 @@ button {
 
 .app > .area .area-wrapper .each-area .hp .remain {
     background-color: #d82916;
-
-    /* -webkit-transition: none;
+    -webkit-transition: none;
     -o-transition: none;
-    transition: none; */
+    transition: none;
+}
+
+.app > .area .area-wrapper .each-area .hp .remain.transition {
+    -webkit-transition: width .5s ease;
+    -o-transition: width .5s ease;
+    transition: width .5s ease;
 }
 
 .app > .area .area-wrapper .each-area .unit,

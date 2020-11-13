@@ -20,7 +20,7 @@
                 <span v-else>ready</span>
             </span>
             <span class="pull-right">
-                <span>{{ status.time }} / {{ base.time }}</span>
+                <span>time : {{ status.time }} / {{ base.time }}</span>
             </span>
         </div>
         <div class="area">
@@ -43,6 +43,7 @@
                         </div>
                         <div class="hp" v-if="a.unit.hp && a.unit.maxHp">
                             <div class="remain progress-bar progress-bar-striped"
+                                v-bind:class="{ 'transition' : a.unit.subHp }"
                                 v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }"></div>
                         </div>
                         <div class="level" v-if="a.unit.level">{{ a.unit.level }}</div>
