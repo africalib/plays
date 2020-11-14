@@ -1503,7 +1503,6 @@ let app = new Vue({
             }
             else {
                 appLib.bandMessage(this.my.player, '오류가 있습니다.', this.time.message);
-                console.error('error');
             }
         },
         setLabel: function (txt, time) {
@@ -1704,6 +1703,10 @@ let app = new Vue({
 
                     this.status.finished = true;
                     window.onbeforeunload = null;
+
+                    setTimeout(function () {
+                        socket.disconnect();
+                    }, 5000);
                 }
             }
         }
@@ -1825,10 +1828,6 @@ let app = new Vue({
                             if (typeof t[res.value.name] === 'function') {
                                 switch (res.value.name) {
                                     case 'touch':
-                                        // clearTimeout(t.timer.touch);
-                                        // t.timer.touch = setTimeout(function () {
-                                        //     t.status.touchable = true;
-                                        // }, 250);
                                         t.status.touchable = true;
                                         break;
                                 }
