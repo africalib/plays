@@ -50,7 +50,7 @@
                         v-bind:data-idx="a.idx" v-bind:data-owner="a.owner" v-bind:data-type="a.type"
                         v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
                         v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
-                        v-bind:data-shelter="a.shelter.name" v-on:click="touch(idx)">
+                        v-bind:data-shelter="a.shelter.name" v-on:click="getTouchable(idx) && touch(idx)">
                         <div class="unit" v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
                             v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
                             v-bind:data-status="a.unit.status" v-if="a.unit.name" v-bind:style="a.unit.style">
@@ -91,21 +91,33 @@
                     <span class="pull-right">crop : {{ status[my.player].crop }} /
                         {{ status[my.player].maxCrop }}</span>
                 </div>
-                <div class="player">
+                <div class="controls replay" v-if="status.replay">
+                    <div class="icos">
+                        <i class="backward fa fa-step-backward" aria-hidden="true"
+                            v-on:click="replay.touchable && backward()"></i>
+                        <i class="forward fa fa-step-forward" aria-hidden="true"
+                            v-on:click="replay.touchable && forward()"></i>
+                        <i class="fa fa-pause" aria-hidden="true" v-on:click="replay.touchable && pause()"
+                            v-if="replay.status === 'play'"></i>
+                        <i class="fa fa-play" aria-hidden="true" v-on:click="replay.touchable && play()" v-else></i>
+                    </div>
+                    <div class="speed" v-on:click="speed()">&times; {{ replay.speed }}</div>
+                </div>
+                <div class="controls play" v-else>
                     <div class="units">
                         <div class="each-unit" v-bind:data-name="u.name"
                             v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
-                            v-for="u in base.units" v-bind:key="u.name" v-on:click="grab(my.player, u.name)"
-                            v-if="u.crop">
+                            v-for="u in base.units" v-bind:key="u.name"
+                            v-on:click="status.started && !status.finished && grab(my.player, u.name)" v-if="u.crop">
                             <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
                             <img v-bind:src="'img/' + my.player + '/' + u.name + '.png'"
                                 v-bind:data-rotate="u.rotate" />
                         </div>
                     </div>
                     <div class="action">
+                        <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                         <button type="button" v-on:click="pass(my.player === 'black' ? 'white' : 'black')"
-                            v-bind:disabled="status.turn !== my.player" v-if="!status.finished">pass</button>
-                        <button type="button" v-on:click="goHome()" v-else="status.finished">home</button>
+                            v-bind:disabled="!status.started || status.turn !== my.player">pass</button>
                     </div>
                 </div>
             </div>

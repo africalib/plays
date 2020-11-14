@@ -16,13 +16,13 @@
     timer: {},
 
     isNullOrEmpty: function (paramValue) {
-		return paramValue === '' || paramValue === undefined || paramValue === null;
+        return paramValue === '' || paramValue === undefined || paramValue === null;
     },
-	
-	isNumber: function(n) {
-	  return !isNaN(parseFloat(n)) && isFinite(n);
-	},
-	
+
+    isNumber: function (n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    },
+
     replaceAll: function (paramValue, paramFind, paramReplace) {
         returnValue = paramValue;
 
@@ -113,31 +113,39 @@
         return returnValue;
     },
 
-    now: function () {
+    now: function (format) {
         var today = new Date();
         var yyyy = today.getFullYear();
-        var mm = today.getMonth() + 1;
+        var MM = today.getMonth() + 1;
         var dd = today.getDate();
-        var hh = today.getHours();
-        var ii = today.getMinutes();
+        var HH = today.getHours();
+        var mm = today.getMinutes();
         var ss = today.getSeconds();
 
-        if (mm < 10)
-            mm = '0' + mm
+        if (MM < 10)
+            MM = '0' + MM;
 
         if (dd < 10)
-            dd = '0' + dd
+            dd = '0' + dd;
 
-        if (hh < 10)
-            hh = '0' + hh
+        if (HH < 10)
+            HH = '0' + HH;
 
-        if (ii < 10)
-            ii = '0' + ii
+        if (mm < 10)
+            mm = '0' + mm;
 
         if (ss < 10)
             ss = '0' + ss
 
-        today = yyyy + '' + mm + '' + dd + '' + hh + '' + ii + '' + ss;
+        switch (format) {
+            case 'yyyy-MM-dd HH:mm:ss':
+                today = yyyy + '-' + MM + '-' + dd + ' ' + HH + ':' + mm + ':' + ss;
+                break;
+
+            default:
+                today = yyyy + '' + MM + '' + dd + '' + HH + '' + mm + '' + ss;
+                break;
+        }
 
         return today;
     },

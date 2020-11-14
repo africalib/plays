@@ -4,12 +4,19 @@ let app = new Vue({
     el: '#app',
     data: {
         base: {
-            maxCrop: 50,
             time: 120,
             fieldCount: 100,
             columnNum: 9,
             rowNum: 16,
-            maxUnit: 500,
+            status: {
+                player: {
+                    crop: 0,
+                    incomeCrop: 10,
+                    maxCrop: 50,
+                    units: 0,
+                    maxUnit: 500
+                }
+            },
             nature: {
                 start: 45,
                 end: 98
@@ -332,8 +339,8 @@ let app = new Vue({
             turn: null,
             started: false,
             finished: false,
-            paused: true,
             touchable: true,
+            replay: false,
             time: 0,
             white: {
                 crop: 0,
@@ -370,15 +377,34 @@ let app = new Vue({
         timer: {},
         interval: {},
         touchStart: 0,
-        autoRotateArr: []
+        autoRotateArr: [],
+        flows: [],
+        replay: {
+            idx: 0,
+            status: null,
+            touchable: false,
+            speed: 2,
+            flows: []
+        }
     },
     methods: {
-        enter: function (name) { },
-        start: function () {
-            this.status['white'].maxCrop = this.base.maxCrop;
-            this.status['white'].maxUnit = this.base.maxUnit;
-            this.status['black'].maxCrop = this.base.maxCrop;
-            this.status['black'].maxUnit = this.base.maxUnit;
+        init: function () {
+            let players = ['black', 'white'];
+            this.status.started = true;
+            clearInterval(this.interval['dot']);
+
+            this.areas = [];
+
+            for (let i in players) {
+                let player = players[i];
+                this.status[player].units = this.base.status.player.units;
+                this.status[player].maxUnit = this.base.status.player.maxUnit;
+                this.status[player].crop = this.base.status.player.crop;
+                this.status[player].incomeCrop = this.base.status.player.incomeCrop;
+                this.status[player].maxCrop = this.base.status.player.maxCrop;
+            }
+
+            this.status['white']['crop'] += 5;
 
             for (let i in this.base.units)
                 this.base.units[i].buffed = appLib.renew(this.base.buffed);
@@ -418,21 +444,179 @@ let app = new Vue({
                 else if (i === 130)
                     this.setUnit('black', 'king', i, true);
             }
+        },
+        start: function () {
+            let t = this;
+            let mc = new Hammer(document.querySelector('body'));
+            t.init();
 
-            setTimeout(function () {
-                $('#app').fadeIn();
-                $('.area-player[data-player=black] .units').scrollLeft($(this).width());
-            }, 500);
+            mc.on('press', function (e) {
+                let eachArea = $(e.target).closest('.each-area');
+                let eachUnit = $(e.target).closest('.each-unit');
 
-            if (navigator.platform !== 'Win32') {
-                $(document).on('contextmenu', function (e) {
-                    e.preventDefault();
-                });
-            }
+                if (eachArea.length && eachArea.data('idx')) {
+                    let idx = eachArea.data('idx');
+                    t.modal.idx = idx;
+
+                    if (t.areas[idx] && t.getIsShelterInArea(idx)) {
+                        if (t.my.player === t.areas[idx].unit.player && t.areas[idx].unit && t.areas[idx].unit.name) {
+                            t.modal.info = t.areas[idx].unit;
+                            t.modal.type = 'unit';
+                        }
+                        else {
+                            t.modal.info = t.areas[idx].shelter;
+                            t.modal.type = 'shelter';
+                        }
+                    }
+                    else if (t.areas[idx] && t.areas[idx].unit) {
+                        t.modal.info = t.areas[idx].unit;
+                        t.modal.type = 'unit';
+                    }
+                    else
+                        return;
+                }
+                else if (eachUnit.length) {
+                    t.modal.type = 'unit';
+                    t.modal.info = t.base.units[eachUnit.data('name')];
+                    t.modal.info.player = t.my.player;
+                }
+
+                t.setAreaDefault();
+                t.setActiveDefault();
+                t.setGrabbedDefault();
+            });
 
             window.onbeforeunload = function () {
                 return true;
             };
+
+            t.setLabel("You are the " + t.my.player + " player", 2500);
+
+            setTimeout(function () {
+                t.setLabel("Let's march", 2000);
+            }, 2500);
+
+        },
+        save: function () {
+            var replay = localStorage.getItem('replays');
+
+            if (replay)
+                replay = JSON.parse(replay);
+            else
+                replay = [];
+
+            for (let i in replay) {
+                if (replay[i].name === this.my.room)
+                    return;
+            }
+
+            replay.push({
+                name: this.my.room,
+                player: this.my.player,
+                flows: this.flows,
+                date: appLib.now('yyyy-MM-dd HH:mm:ss')
+            });
+
+            localStorage.setItem('replays', JSON.stringify(replay));
+        },
+        runFunc: function (value) {
+            switch (value.name) {
+                case 'touch':
+                    this.status.touchable = true;
+                    break;
+            }
+
+            if (!isNaN(Number(value.val1)))
+                value.val1 = Number(value.val1);
+
+            if (!isNaN(Number(value.val2)))
+                value.val2 = Number(value.val2);
+
+            if (value.val2)
+                this[value.name](value.val1, value.val2, true);
+            else
+                this[value.name](value.val1, true);
+        },
+        move: function () {
+            this.init();
+
+            for (let i = 0; i <= this.replay.idx; i += 1) {
+                let f = this.replay.flows[i];
+                this.runFunc(f);
+            }
+
+            this.replay.status = 'pause';
+        },
+        play: function () {
+            let t = this;
+
+            if (t.replay.status === 'stop') {
+                t.replay.idx = 0;
+                this.move();
+            }
+
+            t.replay.status = 'play';
+            t.interval['replay'] = setInterval(function () {
+                let f = t.replay.flows[t.replay.idx];
+                t.runFunc(f);
+                t.replay.idx += 1;
+
+                if (t.replay.idx >= t.replay.flows.length) {
+                    clearInterval(t.interval['replay']);
+                    t.replay.status = 'stop';
+                }
+            }, 1000 / t.replay.speed);
+        },
+        pause: function () {
+            this.replay.status = 'pause';
+            clearInterval(this.interval['replay']);
+        },
+        speed: function () {
+            if (this.replay.speed >= 3)
+                this.replay.speed = 0;
+
+            this.replay.speed += 1;
+
+            if (this.replay.status === 'play') {
+                this.pause();
+                this.play();
+            }
+        },
+        backward: function () {
+            let limit = this.replay.idx - 1;
+
+            if (limit <= 0) {
+                this.replay.idx = 0;
+            }
+            else {
+                for (let i = limit; i >= 0; i -= 1) {
+                    if (this.replay.flows[i].name === 'pass') {
+                        this.replay.idx = i;
+                        break;
+                    }
+                }
+            }
+
+            this.move();
+            this.pause();
+        },
+        forward: function () {
+            let limit = this.replay.idx + 1;
+
+            if (limit >= this.replay.flows.length) {
+                this.replay.idx = this.replay.flows.length - 1;
+            }
+            else {
+                for (let i = limit; i < this.replay.flows.length; i += 1) {
+                    if (this.replay.flows[i].name === 'pass') {
+                        this.replay.idx = i;
+                        break;
+                    }
+                }
+            }
+
+            this.move();
+            this.pause();
         },
         goHome: function () {
             location.href = 'index.html';
@@ -447,10 +631,11 @@ let app = new Vue({
                 return;
             }
 
+            this.setMessage('hide');
             this.setTurn(player);
         },
         getTouchable: function (idx) {
-            if (this.status.touchable) {
+            if (this.status.started && !this.status.finished && this.status.touchable && !this.status.replay) {
                 var area = this.areas[idx];
 
                 if (area && area.unit && Object.keys(area.unit).length && area.status !== 'attack')
@@ -818,7 +1003,7 @@ let app = new Vue({
             }
             else if (t.grabbed.name) {
                 if (t.status.turn === t.my.player)
-                    appLib.bandMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.time.message);
+                    t.setMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.time.message);
                 return;
             }
             else {
@@ -849,18 +1034,18 @@ let app = new Vue({
 
                 if (fieldCount >= this.base.fieldCount) {
                     if (t.status.turn === t.my.player)
-                        appLib.bandMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
+                        t.setMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
                     return;
                 }
 
                 if (this.status[player].crop < unit.crop) {
                     if (this.status.turn === this.my.player)
-                        appLib.bandMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
+                        t.setMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
                     return;
                 }
                 else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
                     if (this.status.turn === this.my.player)
-                        appLib.bandMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
+                        t.setMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
                     return;
                 }
 
@@ -872,18 +1057,10 @@ let app = new Vue({
 
                 for (let i in this.areas) {
                     let area = this.areas[i];
-                    if (!area.unit.name && unit.type === area.type && (!this.getIsShelterInArea(i) || this.getHasShelter(i))) {
-                        switch (player) {
-                            case 'white':
-                                if (area.owner === 'white')
-                                    area.status = 'enter';
-                                break;
 
-                            case 'black':
-                                if (area.owner === 'black')
-                                    area.status = 'enter';
-                                break;
-                        }
+                    if (!area.unit.name && unit.type === area.type && (!this.getIsShelterInArea(i) || this.getHasGrayShelter(i))) {
+                        if (player === area.owner)
+                            area.status = 'enter';
                     }
                 }
             }
@@ -1447,9 +1624,9 @@ let app = new Vue({
                 $showUp = $area.find('.show-up');
 
                 if (this.my.player === 'white')
-                    obj.bottom = '-2.1rem';
+                    obj.bottom = -21;
                 else
-                    obj.top = '-2.1rem';
+                    obj.top = -21;
 
                 $showUp.stop().animate(obj, 1000, function () {
                     $showUp.remove();
@@ -1502,11 +1679,15 @@ let app = new Vue({
                 area.unit = unit;
             }
             else {
-                appLib.bandMessage(this.my.player, '오류가 있습니다.', this.time.message);
+                this.setMessage(this.my.player, '오류가 있습니다.', this.time.message);
             }
         },
         setLabel: function (txt, time) {
             let t = this;
+
+            if (t.status.replay)
+                return;
+
             clearTimeout(t.timer['label']);
             $('#labelArea').stop().fadeIn(0);
 
@@ -1605,7 +1786,9 @@ let app = new Vue({
             this.setAreaDefault();
             this.setActiveDefault();
             this.setGrabbedDefault();
-            this.setTimer();
+
+            if (!this.status.replay)
+                this.setTimer();
         },
         setAutoRotate: function () {
             if (this.active.idx === undefined || this.active.idx === null)
@@ -1641,6 +1824,10 @@ let app = new Vue({
                 this.autoRotateArr = [];
             }
         },
+        setMessage: function (val1, val2, val3) {
+            if (!this.status.replay)
+                appLib.bandMessage(val1, val2, val3);
+        },
         setTimer: function () {
             let t = this;
             clearInterval(t.interval['timer']);
@@ -1651,12 +1838,12 @@ let app = new Vue({
 
                     if (t.status.time === 30 && t.status.turn === t.my.player) {
                         t.setLabel('Hurry up, time is running out');
-                        appLib.bandMessage(t.my.player, '유효 시간이 30초 남았습니다.', t.time.message);
+                        t.setMessage(t.my.player, '유효 시간이 30초 남았습니다.', t.time.message);
                     }
                 }
                 else {
                     if (t.status.turn === t.my.player)
-                        appLib.bandMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
+                        t.setMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
 
                     t.setModalClose();
 
@@ -1673,14 +1860,16 @@ let app = new Vue({
             };
         },
         setFinished: function () {
-            if (!this.status.finished) {
+            let t = this;
+
+            if (!t.status.finished) {
                 let king = {
                     white: 0,
                     black: 0
                 };
 
-                for (let i in this.areas) {
-                    let unit = this.areas[i].unit;
+                for (let i in t.areas) {
+                    let unit = t.areas[i].unit;
 
                     if (unit.name) {
                         if (unit.name === 'king') {
@@ -1694,19 +1883,28 @@ let app = new Vue({
 
                 if (!king.white || !king.black) {
                     let winner = !king.white ? 'Black' : 'White';
-                    this.setLabel(winner + ' player won', 0);
-                    appLib.bandMessage(this.my.player, this.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
-                    clearInterval(this.interval['timer']);
+                    t.setLabel(winner + ' player won', 0);
+                    t.setMessage(t.my.player, t.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
+                    clearInterval(t.interval['timer']);
 
-                    for (let i in this.areas)
-                        this.areas[i].owner = winner;
+                    for (let i in t.areas)
+                        t.areas[i].owner = winner;
 
-                    this.status.finished = true;
+                    t.status.finished = true;
                     window.onbeforeunload = null;
 
-                    setTimeout(function () {
-                        socket.disconnect();
-                    }, 5000);
+                    if (!t.status.replay) {
+                        setTimeout(function () {
+                            if (confirm('이 경기를 리플레이에 저장하시겠습니까?')) {
+                                t.save();
+                                alert('리플레이에 저장하였습니다.');
+                            }
+                        }, 1000);
+
+                        setTimeout(function () {
+                            socket.disconnect();
+                        }, 5000);
+                    }
                 }
             }
         }
@@ -1714,6 +1912,8 @@ let app = new Vue({
     created: function () {
         var t = this;
         var name = location.hash ? location.hash.replace('#/', '') : '';
+        var replays = localStorage.getItem('replays');
+
         var run = function () {
             t.my.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
             t.status.time = t.base.time;
@@ -1744,23 +1944,12 @@ let app = new Vue({
                                 t.my.player = res.player;
                                 t.my.room = res.room;
                                 t.my.roomUrl = window.location.href + '#/' + res.room;
-                                t.label.player = res.turn;
+                                //t.label.player = res.turn;
                             }
                             break;
 
                         case 'start':
-                            let mc = new Hammer(document.querySelector('body'));
-
-                            t.status.started = true;
-                            t.status.paused = false;
-                            clearInterval(t.interval['dot']);
-
                             t.start();
-                            t.setLabel("You are the " + t.my.player + " player", 2500);
-
-                            setTimeout(function () {
-                                t.setLabel("Let's march", 2000);
-                            }, 2500);
 
                             if (t.my.player === 'black') {
                                 setTimeout(function () {
@@ -1768,50 +1957,6 @@ let app = new Vue({
                                     t.pass('black');
                                 }, 3500);
                             }
-
-                            t.status['white']['crop'] += 5;
-
-                            $('.area-player .units').each(function () {
-                                $(this).animate({
-                                    'scrollLeft': $(this).width() * ($(this).parent('.area-player').data('player') === 'black' ? -1 : 1)
-                                }, 1200);
-                            });
-
-                            mc.on('press', function (e) {
-                                let eachArea = $(e.target).closest('.each-area');
-                                let eachUnit = $(e.target).closest('.each-unit');
-
-                                if (eachArea.length && eachArea.data('idx')) {
-                                    let idx = eachArea.data('idx');
-                                    t.modal.idx = idx;
-
-                                    if (t.areas[idx] && t.getIsShelterInArea(idx)) {
-                                        if (t.my.player === t.areas[idx].unit.player && t.areas[idx].unit && t.areas[idx].unit.name) {
-                                            t.modal.info = t.areas[idx].unit;
-                                            t.modal.type = 'unit';
-                                        }
-                                        else {
-                                            t.modal.info = t.areas[idx].shelter;
-                                            t.modal.type = 'shelter';
-                                        }
-                                    }
-                                    else if (t.areas[idx] && t.areas[idx].unit) {
-                                        t.modal.info = t.areas[idx].unit;
-                                        t.modal.type = 'unit';
-                                    }
-                                    else
-                                        return;
-                                }
-                                else if (eachUnit.length) {
-                                    t.modal.type = 'unit';
-                                    t.modal.info = t.base.units[eachUnit.data('name')];
-                                    t.modal.info.player = t.my.player;
-                                }
-
-                                t.setAreaDefault();
-                                t.setActiveDefault();
-                                t.setGrabbedDefault();
-                            });
                             break;
 
                         case 'disconnect':
@@ -1826,22 +1971,8 @@ let app = new Vue({
 
                         default:
                             if (typeof t[res.value.name] === 'function') {
-                                switch (res.value.name) {
-                                    case 'touch':
-                                        t.status.touchable = true;
-                                        break;
-                                }
-
-                                if (!isNaN(Number(res.value.val1)))
-                                    res.value.val1 = Number(res.value.val1);
-
-                                if (!isNaN(Number(res.value.val2)))
-                                    res.value.val2 = Number(res.value.val2);
-
-                                if (res.value.val2)
-                                    t[res.value.name](res.value.val1, res.value.val2, true);
-                                else
-                                    t[res.value.name](res.value.val1, true);
+                                t.runFunc(res.value);
+                                t.flows.push(res.value);
                             }
                             break;
                     }
@@ -1850,6 +1981,29 @@ let app = new Vue({
                     alert('error');
                 }
             });
+        }
+
+        if (replays) {
+            replays = JSON.parse(replays);
+            replays.reverse();
+        }
+        else {
+            replays = [];
+        }
+
+        for (let i in replays) {
+            if (replays[i].name === name) {
+                t.status.replay = true;
+                t.my.player = replays[i].player;
+                t.replay.flows = replays[i].flows;
+                t.start();
+
+                t.timer['replay'] = setTimeout(function () {
+                    t.replay.touchable = true;
+                    t.play();
+                }, 1000);
+                return;
+            }
         }
 
         if (name) {
@@ -1865,6 +2019,12 @@ let app = new Vue({
         }
         else {
             run();
+        }
+
+        if (navigator.platform !== 'Win32') {
+            $(document).on('contextmenu', function (e) {
+                e.preventDefault();
+            });
         }
     }
 });

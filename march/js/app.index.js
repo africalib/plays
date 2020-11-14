@@ -6,7 +6,8 @@ let app = new Vue({
         room: {
             loaded: false,
             list: []
-        }
+        },
+        replays: []
     },
     methods: {
         enter: function (name) {
@@ -28,6 +29,20 @@ let app = new Vue({
         },
         refresh: function () {
             window.location.reload();
+        },
+        remove: function () {
+            if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
+                localStorage.removeItem('replays');
+                this.replays = [];
+            }
+        },
+        openReplays: function () {
+            let replays = localStorage.getItem('replays');
+
+            if (replays)
+                this.replays = JSON.parse(replays)
+
+            $(this.$refs.modal).modal('show');
         }
     },
     created: function () {

@@ -13,8 +13,9 @@
 <body>
     </script>
     <div id="app" class="app" v-cloak>
-        <div class="top hide">
-            <img src="img/common/index.question.svg" />
+        <div class="top">
+            <img src="img/common/index.replay.svg" v-on:click="openReplays()" />
+            <img class="hide pull-right" src="img/common/index.question.svg" />
         </div>
         <div class="run">
             <div class="title">
@@ -48,8 +49,37 @@
                 </div>
             </div>
         </div>
+        <div class="modal fade" role="dialog" ref="modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Replays</h4>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group mb-0" v-if="replays.length">
+                            <li class="list-group-item" v-for="(r, idx) in replays" v-on:click="enter(r.name)">
+                                <span>{{ r.name }}</span>
+                                <span class="label label-danger">{{ r.date }}</span>
+                            </li>
+                        </ul>
+                        <div class="no-data" v-else>
+                            <br />
+                            <span>저장된 리플레이가 없습니다.</span>
+                            <br /><br />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default pull-left" v-on:click="remove()" v-if="replays.length">Remove</button>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
     <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
     <script src="js/vue.js"></script>
     <script src="js/app.global.js"></script>
     <script src="js/app.library.js"></script>

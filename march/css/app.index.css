@@ -2,10 +2,20 @@
     display: none;
 }
 
+.app .no-data {
+    text-align: center;
+}
+
+.app .list-group .label {
+    border-radius: 0;
+    padding: 0.5em 0.6em;
+    float: right;
+}
+
 .app > .top {
     position: absolute;
     text-align: right;
-    padding: 1rem;
+    padding: 2rem;
     width: 100%;
     top: 0;
     left: 0;
@@ -21,23 +31,13 @@
 }
 
 .app .run .rooms {
-    padding: 50px 40px;
+    padding: 50px 30px;
 }
 
 .app .run .rooms > .title {
     font-size: 13px;
     padding: 0 5px 15px 5px;
     font-weight: bold;
-}
-
-.app .run .rooms > ul > li > .label {
-    border-radius: 0;
-    padding: 0.5em 0.6em;
-    float: right;
-}
-
-.app .run .rooms .no-data {
-    text-align: center;
 }
 
 .app .run .rooms .refresh {

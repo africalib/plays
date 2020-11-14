@@ -19,6 +19,10 @@ button {
     cursor: pointer;
 }
 
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
 .gravity-center {
     position: absolute;
     top: 50%;
