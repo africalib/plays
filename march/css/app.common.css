@@ -101,3 +101,20 @@ button {
 .modal.reversed-modal {
     transform: rotate(180deg);
 }
+
+.run {
+    padding: 0 20px;
+}
+
+.run > .title {
+    padding: 25px 10px 10px 10px;
+    text-align: center;
+}
+
+.run > .title > div {
+    font-size: 25px;
+    font-style: italic;
+    display: inline-block;
+    font-weight: bold;
+    margin-top: 25px;
+}

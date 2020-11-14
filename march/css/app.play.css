@@ -554,46 +554,35 @@ button {
     color: #333;
 }
 
-.app .url-area {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    padding: 25px 10px 50px 10px;
+.app .run .title p {
+    font-size: 25px;
+    margin: 10px 0;
+}
+
+.app .run .contents {
     text-align: center;
 }
 
-.app .url-area > .wrapper {
-    padding: 0 20px;
-}
-
-.app .url-area > .wrapper > .title {
-    font-size: 25px;
-    font-style: italic;
-    display: inline-block;
-    margin-top: 25px;
-}
-
-.app .url-area > .wrapper > .text {
+.app .run .contents .text {
     font-size: 14px;
     margin-top: 10px;
 }
 
-.app .url-area > .wrapper .input-group {
+.app .run .input-group {
     margin-top: 35px;
 }
 
-.app .url-area > .wrapper .input-group input {
+.app .run .input-group input {
     outline: 0 !important;
     background: #fff;
     box-shadow: none;
 }
 
-.app .url-area > .wrapper .input-group input:focus {
+.app .run .input-group input:focus {
     border-color: #ccc;
 }
 
-.app .url-area > .wrapper .room {
+.app .run .room {
     font-size: 14px;
     margin: 10px 0;
 }

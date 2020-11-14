@@ -13,32 +13,39 @@
 <body>
     </script>
     <div id="app" class="app" v-cloak>
-        <div class="title">
-            <img src="img/common/home.cavalry.png" />
-            <br />
-            <div>March of the King</div>
+        <div class="top">
+            <img src="img/common/index.question.svg" />
         </div>
-        <div class="rooms">
-            <template v-if="room.list && room.list.length">
-                <div class="title">대기 중인 방 목록</div>
-                <ul class="list-group">
-                    <li class="list-group-item" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
-                        <span>{{ r.name }}</span>
-                        <span class="label label-danger">입장하기</span>
-                    </li>
-                </ul>
-            </template>
-            <div class="no-data" v-else-if="room.loaded">
-                <p>대기 중인 방이 없습니다.</p>
-                <p>
-                    <span class="pointer" v-on:click="enter()">생성하기</span>
-                    <span>버튼을 눌러주세요.</span>
-                </p>
+        <div class="run">
+            <div class="title">
+                <img src="img/common/home.cavalry.png" />
+                <br />
+                <div>March of the King</div>
             </div>
-            <div class="refresh">
-                <a class="pointer" v-on:click="enter()">생성하기</a>
-                <span>&nbsp;&nbsp;&nbsp;</span>
-                <a class="pointer" v-on:click="refresh()">새로고침</a>
+            <div class="contents">
+                <div class="rooms">
+                    <template v-if="room.list && room.list.length">
+                        <div class="title">대기 중인 방 목록</div>
+                        <ul class="list-group">
+                            <li class="list-group-item" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
+                                <span>{{ r.name }}</span>
+                                <span class="label label-danger">입장하기</span>
+                            </li>
+                        </ul>
+                    </template>
+                    <div class="no-data" v-else-if="room.loaded">
+                        <p>대기 중인 방이 없습니다.</p>
+                        <p>
+                            <span class="pointer" v-on:click="enter()">생성하기</span>
+                            <span>버튼을 눌러주세요.</span>
+                        </p>
+                    </div>
+                    <div class="refresh">
+                        <a class="pointer" v-on:click="enter()">생성하기</a>
+                        <span>&nbsp;&nbsp;&nbsp;</span>
+                        <a class="pointer" v-on:click="refresh()">새로고침</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

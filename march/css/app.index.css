@@ -2,46 +2,45 @@
     display: none;
 }
 
-.app > .title {
-    padding: 25px 10px 50px 10px;
-    text-align: center;
+.app > .top {
+    position: absolute;
+}
+
+.app > .top img {
+    height: 1rem;
+}
+
+.app .run > .title {
+    padding-bottom: 50px;
     border-bottom: 1px dotted #ddd;
 }
 
-.app > .title > div {
-    font-size: 25px;
-    font-style: italic;
-    display: inline-block;
-    font-weight: bold;
-    margin-top: 25px;
-}
-
-.app > .rooms {
+.app .run .rooms {
     padding: 50px 40px;
 }
 
-.app > .rooms > .title {
+.app .run .rooms > .title {
     font-size: 13px;
     padding: 0 5px 15px 5px;
     font-weight: bold;
 }
 
-.app > .rooms > ul > li > .label {
+.app .run .rooms > ul > li > .label {
     border-radius: 0;
     padding: 0.5em 0.6em;
     float: right;
 }
 
-.app > .rooms .no-data {
+.app .run .rooms .no-data {
     text-align: center;
 }
 
-.app > .rooms .refresh {
+.app .run .rooms .refresh {
     text-align: center;
     font-size: 13px;
 }
 
-.app > .rooms .refresh a {
+.app .run .rooms .refresh a {
     display: inline-block;
     margin-top: 10px;
 }
