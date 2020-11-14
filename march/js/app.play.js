@@ -654,13 +654,13 @@ let app = new Vue({
                                     left: idx - i - 1
                                 };
 
-                                if (t.areas[num.up] && t.areas[num.up].vnum === activeArea.vnum && ((t.getIsShelterInArea(num.up) && !t.getHasShelter(num.up)) || (t.getIsUnitInArea(num.up) && !t.getHasUnit(num.up))))
+                                if (t.areas[num.up] && t.areas[num.up].vnum === activeArea.vnum && ((t.getIsShelterInArea(num.up) && !t.getHasShelter(num.up) && !t.getHasGrayShelter(num.up)) || (t.getIsUnitInArea(num.up) && !t.getHasUnit(num.up))))
                                     t.areas[num.up].status = 'attack';
-                                if (t.areas[num.down] && t.areas[num.down].vnum === activeArea.vnum && ((t.getIsShelterInArea(num.down) && !t.getHasShelter(num.down)) || (t.getIsUnitInArea(num.down) && !t.getHasUnit(num.down))))
+                                if (t.areas[num.down] && t.areas[num.down].vnum === activeArea.vnum && ((t.getIsShelterInArea(num.down) && !t.getHasShelter(num.down) && !t.getHasGrayShelter(num.down)) || (t.getIsUnitInArea(num.down) && !t.getHasUnit(num.down))))
                                     t.areas[num.down].status = 'attack';
-                                if (t.areas[num.left] && t.areas[num.left].hnum === activeArea.hnum && ((t.getIsShelterInArea(num.left) && !t.getHasShelter(num.left)) || (t.getIsUnitInArea(num.left) && !t.getHasUnit(num.left))))
+                                if (t.areas[num.left] && t.areas[num.left].hnum === activeArea.hnum && ((t.getIsShelterInArea(num.left) && !t.getHasShelter(num.left) && !t.getHasGrayShelter(num.left)) || (t.getIsUnitInArea(num.left) && !t.getHasUnit(num.left))))
                                     t.areas[num.left].status = 'attack';
-                                if (t.areas[num.right] && t.areas[num.right].hnum === activeArea.hnum && ((t.getIsShelterInArea(num.right) && !t.getHasShelter(num.right)) || (t.getIsUnitInArea(num.right) && !t.getHasUnit(num.right))))
+                                if (t.areas[num.right] && t.areas[num.right].hnum === activeArea.hnum && ((t.getIsShelterInArea(num.right) && !t.getHasShelter(num.right) && !t.getHasGrayShelter(num.right)) || (t.getIsUnitInArea(num.right) && !t.getHasUnit(num.right))))
                                     t.areas[num.right].status = 'attack';
                             }
                         }
