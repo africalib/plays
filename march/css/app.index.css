@@ -4,10 +4,15 @@
 
 .app > .top {
     position: absolute;
+    text-align: right;
+    padding: 1rem;
+    width: 100%;
+    top: 0;
+    left: 0;
 }
 
 .app > .top img {
-    height: 1rem;
+    height: 2rem;
 }
 
 .app .run > .title {
