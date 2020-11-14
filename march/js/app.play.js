@@ -537,22 +537,12 @@ let app = new Vue({
             else
                 this[value.name](value.val1, true);
         },
-        move: function () {
-            this.init();
-
-            for (let i = 0; i <= this.replay.idx; i += 1) {
-                let f = this.replay.flows[i];
-                this.runFunc(f);
-            }
-
-            this.replay.status = 'pause';
-        },
         play: function () {
             let t = this;
 
             if (t.replay.status === 'stop') {
                 t.replay.idx = 0;
-                this.move();
+                this.ward();
             }
 
             t.replay.status = 'play';
@@ -582,6 +572,16 @@ let app = new Vue({
                 this.play();
             }
         },
+        ward: function () {
+            this.init();
+
+            for (let i = 0; i <= this.replay.idx; i += 1) {
+                let f = this.replay.flows[i];
+                this.runFunc(f);
+            }
+
+            this.replay.status = 'pause';
+        },
         backward: function () {
             let limit = this.replay.idx - 1;
 
@@ -597,8 +597,9 @@ let app = new Vue({
                 }
             }
 
-            this.move();
+            this.ward();
             this.pause();
+            this.replay.idx -= 1;
         },
         forward: function () {
             let limit = this.replay.idx + 1;
@@ -615,8 +616,9 @@ let app = new Vue({
                 }
             }
 
-            this.move();
+            this.ward();
             this.pause();
+            this.replay.idx += 1;
         },
         goHome: function () {
             location.href = 'index.html';
