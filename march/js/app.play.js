@@ -1034,18 +1034,18 @@ let app = new Vue({
 
                 if (fieldCount >= this.base.fieldCount) {
                     if (t.status.turn === t.my.player)
-                        t.setMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
+                        this.setMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
                     return;
                 }
 
                 if (this.status[player].crop < unit.crop) {
                     if (this.status.turn === this.my.player)
-                        t.setMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
+                        this.setMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
                     return;
                 }
                 else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
                     if (this.status.turn === this.my.player)
-                        t.setMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
+                        this.setMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
                     return;
                 }
 
