@@ -49,7 +49,7 @@
                     </div>
                     <div class="shelter" v-bind:data-player="a.shelter.player" v-bind:data-name="a.shelter.name"
                         v-if="a.shelter.name">
-                        <img v-bind:src="'img/' + a.shelter.player + '/' + a.shelter.name + '.png'" />
+                        <img v-bind:src="'img/gray/' + a.shelter.name + '.png'" />
                     </div>
                     <div class="weapon" v-bind:data-direction="a.weapon.direction" v-bind:data-status="a.weapon.status"
                         v-bind:data-name="a.weapon.name" v-if="a.weapon && a.weapon.name" v-bind:style="a.weapon.style">
@@ -125,6 +125,11 @@
                             <th>{{ getLang('ko', 'type') }}</th>
                             <td>:</td>
                             <td>shelter</td>
+                        </tr>
+                        <tr>
+                            <th>{{ getLang('ko', 'hp') }}</th>
+                            <td>:</td>
+                            <td>{{ modal.info.hp }} / {{ modal.info.maxHp }}</td>
                         </tr>
                     </tbody>
                 </table>

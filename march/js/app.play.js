@@ -613,9 +613,9 @@ let app = new Vue({
                             if (each.cond && eachArea) {
                                 t.areas[num[each.direction]].player = t.status.turn;
 
-                                if (attackable && ((t.getIsShelterInArea(each.idx) && !t.getHasShelter(each.idx)) || (t.getIsUnitInArea(each.idx) && !t.getHasUnit(each.idx))) && targetArea.unit.distance === 1)
+                                if (attackable && ((t.getIsShelterInArea(each.idx) && !t.getHasShelter(each.idx) && !t.getHasGrayShelter(each.idx)) || (t.getIsUnitInArea(each.idx) && !t.getHasUnit(each.idx))) && targetArea.unit.distance === 1)
                                     t.areas[num[each.direction]].status = 'attack';
-                                else if (activeArea.unit.type === eachArea.type && !t.getIsUnitInArea(each.idx) && (!t.getIsShelterInArea(each.idx) || t.getHasShelter(each.idx)))
+                                else if (activeArea.unit.type === eachArea.type && !t.getIsUnitInArea(each.idx) && (!t.getIsShelterInArea(each.idx) || t.getHasGrayShelter(each.idx)))
                                     t.areas[num[each.direction]].status = 'move';
                             }
                             else {
@@ -718,7 +718,7 @@ let app = new Vue({
                         activeArea.unit.direction = t.getDirection(idx, t.active.idx);
 
                         if (loopIdx !== t.active.idx) {
-                            if ((t.getIsShelterInArea(loopIdx) && !t.getHasShelter(loopIdx)) || t.getIsUnitInArea(loopIdx)) {
+                            if ((t.getIsShelterInArea(loopIdx) && !t.getHasShelter(loopIdx) && !t.getHasGrayShelter(loopIdx)) || t.getIsUnitInArea(loopIdx)) {
                                 if (loopArea.unit.player === activeArea.unit.player) {
                                     teamUnits.push({
                                         idx: loopIdx,
@@ -910,7 +910,10 @@ let app = new Vue({
             return this.areas[idx] && this.areas[idx].shelter && this.areas[idx].shelter.name;
         },
         getHasShelter: function (idx) {
-            return this.getIsShelterInArea(idx) && (this.areas[idx].shelter.player === 'gray' || this.areas[idx].shelter.player === this.status.turn);
+            return this.getIsShelterInArea(idx) && this.areas[idx].shelter.player === this.status.turn;
+        },
+        getHasGrayShelter: function (idx) {
+            return this.getIsShelterInArea(idx) && this.areas[idx].shelter.player === 'gray';
         },
         getIsUnitInArea: function (idx) {
             return this.areas[idx] && this.areas[idx].unit && this.areas[idx].unit.name;
@@ -1068,6 +1071,17 @@ let app = new Vue({
 
                 if (!isRunned && anotherKingIdx != null)
                     this.setOwner(anotherKingIdx, true);
+            }
+
+            for (let i in this.areas) {
+                let eachArea = this.areas[i];
+
+                if (eachArea.shelter && eachArea.shelter.name) {
+                    eachArea.shelter.player = 'gray';
+
+                    if (eachArea.unit && eachArea.unit.name)
+                        eachArea.shelter.player = eachArea.unit.player;
+                }
             }
         },
         setBuff: function () {
@@ -1739,17 +1753,17 @@ let app = new Vue({
                             clearInterval(t.interval['dot']);
 
                             t.start();
-                            t.setLabel("You are the " + t.my.player + " player", 3000);
+                            t.setLabel("You are the " + t.my.player + " player", 2500);
 
                             setTimeout(function () {
                                 t.setLabel("Let's march", 2000);
-                            }, 3000);
+                            }, 2500);
 
                             if (t.my.player === 'black') {
                                 setTimeout(function () {
                                     t.setRandomShelter();
                                     t.pass('black');
-                                }, 5000);
+                                }, 3500);
                             }
 
                             t.status['white']['crop'] += 5;
