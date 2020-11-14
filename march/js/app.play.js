@@ -35,12 +35,6 @@ let app = new Vue({
                     hp: 100,
                     maxHp: 100,
                     subHp: 0
-                },
-                tree: {
-                    name: 'tree',
-                    hp: 20,
-                    maxHp: 20,
-                    subHp: 0
                 }
             },
             units: {
@@ -916,7 +910,7 @@ let app = new Vue({
             return this.areas[idx] && this.areas[idx].shelter && this.areas[idx].shelter.name;
         },
         getHasShelter: function (idx) {
-            return this.getIsShelterInArea(idx) && this.areas[idx].shelter.player === this.status.turn;
+            return this.getIsShelterInArea(idx) && (this.areas[idx].shelter.player === 'gray' || this.areas[idx].shelter.player === this.status.turn);
         },
         getIsUnitInArea: function (idx) {
             return this.areas[idx] && this.areas[idx].unit && this.areas[idx].unit.name;
@@ -1301,15 +1295,10 @@ let app = new Vue({
                     for (let i in t.areas) {
                         if (t.areas[i].unit && t.areas[i].unit.name) {
                             t.areas[i].unit.hp -= t.areas[i].unit.subHp;
+                            t.areas[i].unit.subHp = 0;
 
                             if (t.areas[i].unit.hp <= 0)
                                 t.areas[i].unit = {};
-
-                            if (t.areas[i].unit.subHp !== 0) {
-                                setTimeout(function () {
-                                    t.areas[i].unit.subHp = 0;
-                                }, 500);
-                            }
                         }
 
                         if (t.areas[i].shelter && t.areas[i].shelter.name) {
@@ -1330,14 +1319,13 @@ let app = new Vue({
         setRandomShelter: function () {
             let t = this;
             let shelterCount = 1;
-            let players = ['black', 'white'];
 
-            for (x in players) {
+            for (n = 0; n < 2; n += 1) {
                 let shelterEmptyArr = [];
                 let shelterRandomArr = [];
 
                 for (let i in t.areas) {
-                    if (t.areas[i].type === 'land' && !t.getIsShelterInArea(i) && !t.getIsUnitInArea(i) && players[x] === 'black' ? i >= 81 && i <= 116 : i >= 27 && i <= 62)
+                    if (t.areas[i].type === 'land' && !t.getIsShelterInArea(i) && !t.getIsUnitInArea(i) && n ? i >= 81 && i <= 116 : i >= 27 && i <= 62)
                         shelterEmptyArr.push(i);
                 }
 
@@ -1349,7 +1337,7 @@ let app = new Vue({
                     }
 
                     for (let i = 0; i < shelterRandomArr.length; i += 1)
-                        t.setShelter(players[x], i % 2 ? 'tree' : 'rock', Number(shelterRandomArr[i]));
+                        t.setShelter('gray', 'rock', Number(shelterRandomArr[i]));
                 }
             }
         },
@@ -1781,7 +1769,7 @@ let app = new Vue({
                                     t.modal.idx = idx;
 
                                     if (t.areas[idx] && t.getIsShelterInArea(idx)) {
-                                        if (t.my.player === t.areas[idx].shelter.player && t.areas[idx].unit && t.areas[idx].unit.name) {
+                                        if (t.my.player === t.areas[idx].unit.player && t.areas[idx].unit && t.areas[idx].unit.name) {
                                             t.modal.info = t.areas[idx].unit;
                                             t.modal.type = 'unit';
                                         }
