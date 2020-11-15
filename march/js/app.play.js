@@ -495,7 +495,9 @@ let app = new Vue({
             setTimeout(function () {
                 t.setLabel("Let's march", 2000);
             }, 2500);
-
+        },
+        refresh: function () {
+            window.location.reload();
         },
         save: function () {
             var replay = localStorage.getItem('replays');
@@ -541,19 +543,21 @@ let app = new Vue({
             let t = this;
 
             if (t.replay.status === 'stop') {
-                t.replay.idx = 0;
-                this.ward();
+                this.refresh();
+                return;
             }
 
             t.replay.status = 'play';
             t.interval['replay'] = setInterval(function () {
                 let f = t.replay.flows[t.replay.idx];
                 t.runFunc(f);
-                t.replay.idx += 1;
 
-                if (t.replay.idx >= t.replay.flows.length) {
+                if (t.replay.idx >= t.replay.flows.length - 1) {
                     clearInterval(t.interval['replay']);
                     t.replay.status = 'stop';
+                }
+                else {
+                    t.replay.idx += 1;
                 }
             }, 1000 / t.replay.speed);
         },
@@ -562,7 +566,7 @@ let app = new Vue({
             clearInterval(this.interval['replay']);
         },
         speed: function () {
-            if (this.replay.speed >= 3)
+            if (this.replay.speed >= 5)
                 this.replay.speed = 0;
 
             this.replay.speed += 1;
@@ -571,54 +575,6 @@ let app = new Vue({
                 this.pause();
                 this.play();
             }
-        },
-        ward: function () {
-            this.init();
-
-            for (let i = 0; i <= this.replay.idx; i += 1) {
-                let f = this.replay.flows[i];
-                this.runFunc(f);
-            }
-
-            this.replay.status = 'pause';
-        },
-        backward: function () {
-            let limit = this.replay.idx - 1;
-
-            if (limit <= 0) {
-                this.replay.idx = 0;
-            }
-            else {
-                for (let i = limit; i >= 0; i -= 1) {
-                    if (this.replay.flows[i].name === 'pass') {
-                        this.replay.idx = i;
-                        break;
-                    }
-                }
-            }
-
-            this.ward();
-            this.pause();
-            this.replay.idx -= 1;
-        },
-        forward: function () {
-            let limit = this.replay.idx + 1;
-
-            if (limit >= this.replay.flows.length) {
-                this.replay.idx = this.replay.flows.length - 1;
-            }
-            else {
-                for (let i = limit; i < this.replay.flows.length; i += 1) {
-                    if (this.replay.flows[i].name === 'pass') {
-                        this.replay.idx = i;
-                        break;
-                    }
-                }
-            }
-
-            this.ward();
-            this.pause();
-            this.replay.idx += 1;
         },
         goHome: function () {
             location.href = 'index.html';
@@ -1916,8 +1872,9 @@ let app = new Vue({
         var name = location.hash ? location.hash.replace('#/', '') : '';
         var replays = localStorage.getItem('replays');
 
+        t.my.device = appLib.isMobileDevice() ? 'mobile' : 'desktop';
+
         var run = function () {
-            t.my.device = appLib.isMobileDevice() ? 'mobile' : 'pc';
             t.status.time = t.base.time;
 
             socket = io.connect(global.baseUrl, {

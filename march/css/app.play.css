@@ -33,12 +33,17 @@ button {
 }
 
 .app {
-    width: 100%;
     height: 100%;
+}
+
+.app > .wrapper {
+    background: #fff;
+    height: 100%;
+    position: relative;
     margin: 0 auto;
 }
 
-.app > .top {
+.app > .wrapper > .top {
     position: absolute;
     top: 0;
     left: 0;
@@ -51,15 +56,15 @@ button {
     line-height: 25px;
 }
 
-.app > .top i {
+.app > .wrapper > .top i {
     margin-right: 2.5px;
 }
 
-.app > .top i.fa-flag {
+.app > .wrapper > .top i.fa-flag {
     font-size: 10px;
 }
 
-.app > .area {
+.app > .wrapper > .area {
     width: 100%;
     height: 100%;
     position: relative;
@@ -67,13 +72,13 @@ button {
     overflow: hidden;
 }
 
-.app > .area .area-wrapper {
+.app > .wrapper > .area .area-wrapper {
     position: relative;
     height: 100%;
     overflow: hidden;
 }
 
-.app > .area .area-wrapper .each-area {
+.app > .wrapper > .area .area-wrapper .each-area {
     background: rgba(241, 241, 241, 0.66);
     display: inline-block;
     width: calc(100%/9);
@@ -83,7 +88,7 @@ button {
     cursor: pointer;
 }
 
-.app > .area .area-wrapper .each-area[data-type=land]:after {
+.app > .wrapper > .area .area-wrapper .each-area[data-type=land]:after {
     background-image: url(../img/common/tile.zigzag.png);
     position: absolute;
     left: 0;
@@ -94,18 +99,18 @@ button {
     opacity: 0.5;
 }
 
-.app > .area .area-wrapper .each-area.nature {
+.app > .wrapper > .area .area-wrapper .each-area.nature {
     background: none;
 }
 
-.app > .area .area-wrapper .each-area .unit,
-.app > .area .area-wrapper .each-area .shelter {
+.app > .wrapper > .area .area-wrapper .each-area .unit,
+.app > .wrapper > .area .area-wrapper .each-area .shelter {
     outline: 1px solid #ddd;
 }
 
-.app > .area .area-wrapper .each-area .unit,
-.app > .area .area-wrapper .each-area .shelter,
-.app > .area .area-wrapper .each-area .weapon {
+.app > .wrapper > .area .area-wrapper .each-area .unit,
+.app > .wrapper > .area .area-wrapper .each-area .shelter,
+.app > .wrapper > .area .area-wrapper .each-area .weapon {
     position: absolute;
     display: inline-block;
     text-align: center;
@@ -114,54 +119,54 @@ button {
     z-index: 10;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-status=move],
-.app > .area .area-wrapper .each-area .weapon[data-status=move] {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-status=move],
+.app > .wrapper > .area .area-wrapper .each-area .weapon[data-status=move] {
     transition: top 0.2s, left 0.2s;
     -webkit-transition: top 0.2s, left 0.2s;
     z-index: 25;
 }
 
-.app > .area .area-wrapper .each-area .unit img,
-.app > .area .area-wrapper .each-area .shelter img {
+.app > .wrapper > .area .area-wrapper .each-area .unit img,
+.app > .wrapper > .area .area-wrapper .each-area .shelter img {
     padding: 7px;
 }
 
-.app > .area .area-wrapper .each-area .shelter img {
+.app > .wrapper > .area .area-wrapper .each-area .shelter img {
     -webkit-filter: invert(76%);
     filter: invert(76%);
 }
 
-.app > .area .area-wrapper .each-area .unit .power,
-.app > .area .area-wrapper .each-area .unit .level {
+.app > .wrapper > .area .area-wrapper .each-area .unit .power,
+.app > .wrapper > .area .area-wrapper .each-area .unit .level {
     position: absolute;
     padding: 0 2px;
     font-size: 10px;
 }
 
-.app > .area .area-wrapper .each-area .unit .exp {
+.app > .wrapper > .area .area-wrapper .each-area .unit .exp {
     position: absolute;
     height: 100%;
     width: 5px;
     padding-bottom: 5px;
 }
 
-.app > .area .area-wrapper .each-area .unit .exp .exp-wrapper {
+.app > .wrapper > .area .area-wrapper .each-area .unit .exp .exp-wrapper {
     height: 100%;
     position: relative;
 }
 
-.app > .area .area-wrapper .each-area .unit .exp .status {
+.app > .wrapper > .area .area-wrapper .each-area .unit .exp .status {
     width: 100%;
     max-height: 100%;
     background-color: #215da9;
     position: absolute;
 }
 
-.app > .area .area-wrapper .each-area .unit .level:before {
+.app > .wrapper > .area .area-wrapper .each-area .unit .level:before {
     content: 'L';
 }
 
-.app > .area .area-wrapper .each-area .unit .hp {
+.app > .wrapper > .area .area-wrapper .each-area .unit .hp {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -170,99 +175,105 @@ button {
     overflow: hidden;
 }
 
-.app > .area .area-wrapper .each-area .unit .hp .remain {
+.app > .wrapper > .area .area-wrapper .each-area .unit .hp .remain {
     background-color: #d82916;
     height: 100%;
 }
 
-.app > .area .area-wrapper .each-area[data-owner='white'] {
+.app > .wrapper > .area .area-wrapper .each-area[data-owner='white'] {
     background: rgba(255, 255, 255, 0.76);
 }
 
-.app > .area .area-wrapper .each-area[data-owner='black'] {
+.app > .wrapper > .area .area-wrapper .each-area[data-owner='black'] {
     background: rgba(253, 255, 241, 0.76);
 }
 
-.app > .area .area-wrapper .each-area[data-type='sea'] {
+.app > .wrapper > .area .area-wrapper .each-area[data-type='sea'] {
     background: #e0f7f4;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-direction='3'] img,
-.app > .area .area-wrapper .each-area .weapon[data-direction='3'] img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-direction='3'] img,
+.app > .wrapper > .area .area-wrapper .each-area .weapon[data-direction='3'] img {
     transform: rotate(90deg);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-direction='6'] img,
-.app > .area .area-wrapper .each-area .weapon[data-direction='6'] img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-direction='6'] img,
+.app > .wrapper > .area .area-wrapper .each-area .weapon[data-direction='6'] img {
     transform: rotate(180deg);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-direction='9'] img,
-.app > .area .area-wrapper .each-area .weapon[data-direction='9'] img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-direction='9'] img,
+.app > .wrapper > .area .area-wrapper .each-area .weapon[data-direction='9'] img {
     transform: rotate(270deg);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-direction='12'] img,
-.app > .area .area-wrapper .each-area .weapon[data-direction='12'] img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-direction='12'] img,
+.app > .wrapper > .area .area-wrapper .each-area .weapon[data-direction='12'] img {
     transform: rotate(0);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white],
-.app > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white],
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
     background: rgba(255, 255, 255, 0.55);
 }
 
-.app[data-player=black] > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]) {
+.app[data-started=Y][data-device=desktop] {}
+
+.app[data-started=Y][data-device=desktop] > .wrapper {
+    width: 768px;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]) {
     display: none;
 }
 
-.app[data-player=white] > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=white]) {
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=white]) {
     display: none;
 }
 
-.app[data-started=Y] {
+.app[data-started=Y] > .wrapper {
     background: url(../img/common/bg.sand.jpg);
     padding: 25px 0 75px 0;
     font-family: 'Orbitron', sans-serif;
 }
 
-.app[data-started=Y][data-player=black] > .area {
+.app[data-started=Y][data-player=black] > .wrapper > .area {
     padding: 0;
 }
 
-.app[data-started=Y][data-player=white] > .area {
+.app[data-started=Y][data-player=white] > .wrapper > .area {
     padding: 0;
 }
 
-.app[data-player=white] > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
     background: rgba(255, 255, 255, 0.7);
 }
 
-.app[data-player=white] > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
     opacity: 0.5;
 }
 
-.app[data-player=black] > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
     background: rgba(0, 0, 0, 0.25);
 }
 
-.app[data-player=black] > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
     -webkit-filter: invert(100%);
     filter: invert(100%);
     opacity: 0.5;
 }
 
-.app > .area .area-wrapper .each-area .shelter[data-player=white] img {
+.app > .wrapper > .area .area-wrapper .each-area .shelter[data-player=white] img {
     transform: rotate(180deg);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white] .power {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .power {
     bottom: 0;
     left: 0;
     transform: rotate(180deg);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white] .level {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .level {
     color: #000;
     top: 5px;
     right: 0;
@@ -270,101 +281,101 @@ button {
     transform: rotate(180deg);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white] .exp {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .exp {
     right: 0;
     top: 0;
     padding-bottom: 0;
     padding-top: 5px;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white] .exp .status {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .exp .status {
     top: 0;
     right: 0;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white] .hp,
-.app > .area .area-wrapper .each-area .shelter[data-player=white] .hp {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .hp,
+.app > .wrapper > .area .area-wrapper .each-area .shelter[data-player=white] .hp {
     background: #000;
     top: 0;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white][data-direction='3'][data-rotate='90'] img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white][data-direction='3'][data-rotate='90'] img {
     transform: rotate(90deg) scaleX(-1);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
     -webkit-filter: invert(100%);
     filter: invert(100%);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black],
-.app > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black],
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
     background: rgba(0, 0, 0, 0.76);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
     -webkit-filter: invert(0);
     filter: invert(0);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black] .power {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .power {
     color: #fff;
     top: 0;
     right: 0;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black] .level {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .level {
     color: #fff;
     bottom: 5px;
     left: 0px;
     background: rgba(0, 0, 0, 0.25);
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black] .exp {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .exp {
     left: 0;
     bottom: 0;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black] .exp .status {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .exp .status {
     bottom: 0;
     left: 0;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black] .hp,
-.app > .area .area-wrapper .each-area .shelter[data-player=black] .hp {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .hp,
+.app > .wrapper > .area .area-wrapper .each-area .shelter[data-player=black] .hp {
     background: #fff;
     bottom: 0;
 }
 
-.app > .area .area-wrapper .each-area .unit[data-player=black][data-direction='9'][data-rotate='90'] img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black][data-direction='9'][data-rotate='90'] img {
     transform: rotate(270deg) scaleX(-1);
 }
 
-.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=attack] .unit,
-.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=attack] .shelter,
-.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=attack] .unit,
-.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=attack] .shelter {
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=attack] .unit,
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=attack] .shelter,
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=attack] .unit,
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=attack] .shelter {
     background: rgba(255, 203, 109, 76%);
 }
 
-.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=move],
-.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=enter],
-.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=move],
-.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=enter] {
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move],
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=move],
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=enter] {
     background: rgba(239, 255, 205, 0.76);
 }
 
-.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
-.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=white] {
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=white] {
     background: #dcecb7;
 }
 
-.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=black],
-.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=black] {
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=black],
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=black] {
     background: #546f18;
 }
 
-.app > .area .area-wrapper .each-area .show-up {
+.app > .wrapper > .area .area-wrapper .each-area .show-up {
     position: absolute;
     display: inline-block;
     font-size: 9px;
@@ -373,35 +384,35 @@ button {
     z-index: 50;
 }
 
-.app > .area .area-wrapper .each-area .show-up[data-act=attack] {
+.app > .wrapper > .area .area-wrapper .each-area .show-up[data-act=attack] {
     background: #ff4141;
 }
 
-.app > .area .area-wrapper .each-area .show-up[data-act=restoreHp] {
+.app > .wrapper > .area .area-wrapper .each-area .show-up[data-act=restoreHp] {
     background: yellowgreen;
 }
 
-.app > .area .area-wrapper .each-area .show-up[data-act=levelUp] {
+.app > .wrapper > .area .area-wrapper .each-area .show-up[data-act=levelUp] {
     background: #215da9;
 }
 
-.app > .area .area-wrapper .each-area .show-up[data-player=white] {
+.app > .wrapper > .area .area-wrapper .each-area .show-up[data-player=white] {
     bottom: 0;
     right: 0;
     transform: rotate(180deg);
 }
 
-.app > .area .area-wrapper .each-area .show-up[data-player=black] {
+.app > .wrapper > .area .area-wrapper .each-area .show-up[data-player=black] {
     top: 0;
     left: 0;
 }
 
-.app[data-player=black][data-turn=black] > .area .area-wrapper .each-area.active .unit,
-.app[data-player=white][data-turn=white] > .area .area-wrapper .each-area.active .unit {
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area.active .unit,
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area.active .unit {
     background: #b3b3b3;
 }
 
-.app > .bottom {
+.app > .wrapper > .bottom {
     position: absolute;
     left: 0;
     bottom: 0;
@@ -411,22 +422,22 @@ button {
     font-size: 10px;
 }
 
-.app[data-player=black] > .bottom {
+.app[data-player=black] > .wrapper > .bottom {
     background: rgba(0, 0, 0, 0.76);
     color: #fff;
 }
 
-.app[data-player=white] > .bottom {
+.app[data-player=white] > .wrapper > .bottom {
     background: rgba(255, 255, 255, 0.9);
 }
 
-.app > .bottom > .status {
+.app > .wrapper > .bottom > .status {
     padding: 0 8px;
     height: 25px;
     line-height: 25px;
 }
 
-.app > .bottom > .controls {
+.app > .wrapper > .bottom > .controls {
     position: absolute;
     width: 100%;
     left: 0;
@@ -435,7 +446,7 @@ button {
     border-top: 1px solid #ddd;
 }
 
-.app > .bottom > .controls.play .units {
+.app > .wrapper > .bottom > .controls.play .units {
     width: 100%;
     position: absolute;
     white-space: nowrap;
@@ -445,7 +456,7 @@ button {
     left: 0;
 }
 
-.app > .bottom > .controls.play .units .each-unit {
+.app > .wrapper > .bottom > .controls.play .units .each-unit {
     cursor: pointer;
     height: 100%;
     position: relative;
@@ -457,11 +468,11 @@ button {
     border-right: 1px solid #ddd;
 }
 
-.app > .bottom > .controls.play .units .each-unit.active {
+.app > .wrapper > .bottom > .controls.play .units .each-unit.active {
     background: #b3b3b3;
 }
 
-.app > .bottom > .controls.play .units .each-unit * {
+.app > .wrapper > .bottom > .controls.play .units .each-unit * {
     -webkit-user-select: none;
     -khtml-user-select: none;
     -moz-user-select: none;
@@ -469,11 +480,11 @@ button {
     user-select: none;
 }
 
-.app > .bottom > .controls.play .units .each-unit img[data-rotate='90'] {
+.app > .wrapper > .bottom > .controls.play .units .each-unit img[data-rotate='90'] {
     transform: rotate(90deg);
 }
 
-.app > .bottom > .controls.play .units .each-unit div {
+.app > .wrapper > .bottom > .controls.play .units .each-unit div {
     text-align: center;
     font-size: 9px;
     line-height: 1;
@@ -483,7 +494,7 @@ button {
     bottom: 3px;
 }
 
-.app > .bottom > .controls.play .action {
+.app > .wrapper > .bottom > .controls.play .action {
     display: inline-block;
     font-size: 12px;
     padding: 6px;
@@ -492,7 +503,7 @@ button {
     position: relative;
 }
 
-.app > .bottom > .controls.play .action > button {
+.app > .wrapper > .bottom > .controls.play .action > button {
     width: 100%;
     height: 100%;
     font-weight: bold;
@@ -500,49 +511,68 @@ button {
     border: 0;
 }
 
-.app > .bottom > .controls.replay {
+.app > .wrapper > .bottom > .controls.replay {
     text-align: center;
     font-size: 20px;
     position: relative;
-    padding-right: calc(100%/9*2);
+    padding-right: calc(100%/9*6);
+    line-height: 50px;
 }
 
-.app > .bottom > .controls.replay .icos {
+.app > .wrapper > .bottom > .controls.replay .icos {
     position: relative;
-    border-right: 1px solid #ddd;
 }
 
-.app > .bottom > .controls.replay .icos i {
-    padding: 15px;
+.app > .wrapper > .bottom > .controls.replay .icos i {
     cursor: pointer;
+    margin: 0 15px;
 }
 
-.app > .bottom > .controls.replay .icos i.backward {
+.app > .wrapper > .bottom > .controls.replay .icos i.backward {
     position: absolute;
     left: 1rem;
     top: 0;
 }
 
-.app > .bottom > .controls.replay .icos i.forward {
+.app > .wrapper > .bottom > .controls.replay .icos i.forward {
     position: absolute;
     right: 1rem;
     top: 0;
 }
 
-.app > .bottom > .controls.replay .speed {
+.app > .wrapper > .bottom > .controls.replay .icos img {
+    cursor: pointer;
+    margin: 0 15px;
+    display: inline-block;
+    height: 21px;
+    vertical-align: middle;
+    position: relative;
+    top: -2px;
+}
+
+.app > .wrapper > .bottom > .controls.replay .flow {
+    position: absolute;
+    right: calc(100%/9*2);
+    top: 0;
+    text-align: center;
+    width: calc(100%/9*4);
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+.app > .wrapper > .bottom > .controls.replay .speed {
     position: absolute;
     right: 0;
     top: 0;
-    padding: 10px;
     text-align: center;
     width: calc(100%/9*2);
 }
 
-.app > .bottom > .controls .action {
+.app > .wrapper > .bottom > .controls .action {
     float: right;
 }
 
-.app > .bottom > .controls .action button {
+.app > .wrapper > .bottom > .controls .action button {
     background: none;
 }
 
@@ -592,7 +622,7 @@ button {
 }
 
 .app .run .input-group {
-    margin-top: 35px;
+    margin-top: 30px;
 }
 
 .app .run .input-group input {
@@ -671,7 +701,7 @@ button {
     font-family: initial;
 }
 
-.app[data-started=Y][data-player=white] > .area {
+.app[data-started=Y][data-player=white] > .wrapper > .area {
     transform: rotate(180deg);
 }
 
@@ -679,22 +709,24 @@ button {
     display: none;
 }
 
-@media (min-height: 1024px) {
-    .app > .area {
-        padding: 7px 0;
+@media (min-width: 1024px) {
+    .app > .wrapper {
+        padding-bottom: 100px;
     }
 
-    .app > .bottom > .controls {
-        height: 7px;
-    }
-}
-
-@media (min-height: 1366px) {
-    .app > .area {
-        padding: 85px 0;
+    .app > .wrapper > .bottom {
+        height: 100px;
     }
 
-    .app > .bottom > .controls {
-        height: 85px;
+    .app > .wrapper > .bottom > .controls {
+        height: 75px;
+    }
+
+    .app > .wrapper > .bottom > .controls.replay {
+        line-height: 75px;
+    }
+
+    .app > .wrapper > .bottom > .controls.replay > div {
+        height: 100%;
     }
 }

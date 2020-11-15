@@ -31,21 +31,11 @@
 }
 
 .app .run .rooms {
-    padding: 50px 30px;
+    padding: 50px 0;
 }
 
 .app .run .rooms > .title {
     font-size: 13px;
     padding: 0 5px 15px 5px;
     font-weight: bold;
-}
-
-.app .run .rooms .refresh {
-    text-align: center;
-    font-size: 13px;
-}
-
-.app .run .rooms .refresh a {
-    display: inline-block;
-    margin-top: 10px;
 }
