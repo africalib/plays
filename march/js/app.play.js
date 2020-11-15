@@ -1852,16 +1852,11 @@ let app = new Vue({
                     window.onbeforeunload = null;
 
                     if (!t.status.replay) {
-                        setTimeout(function () {
-                            if (confirm('이 경기를 리플레이에 저장하시겠습니까?')) {
-                                t.save();
-                                alert('리플레이에 저장하였습니다.');
-                            }
-                        }, 1000);
+                        t.save();
 
                         setTimeout(function () {
                             socket.disconnect();
-                        }, 5000);
+                        }, 30000);
                     }
                 }
             }
