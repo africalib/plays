@@ -103,15 +103,17 @@ button {
     background: none;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit,
+/* .app > .wrapper > .area .area-wrapper .each-area .unit,
 .app > .wrapper > .area .area-wrapper .each-area .shelter {
     outline: 1px solid #ddd;
-}
+} */
 
 .app > .wrapper > .area .area-wrapper .each-area .unit,
 .app > .wrapper > .area .area-wrapper .each-area .shelter,
 .app > .wrapper > .area .area-wrapper .each-area .weapon {
     position: absolute;
+    left: 0;
+    top: 0;
     display: inline-block;
     text-align: center;
     width: 100%;
@@ -595,6 +597,13 @@ button {
 
 .app .run .contents {
     text-align: center;
+}
+
+.app .run .contents .dots {
+    line-height: 0;
+    margin-bottom: 55px;
+    font-size: 30px;
+    margin-top: -5px;
 }
 
 .app .run .contents .text {
