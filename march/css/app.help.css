@@ -7,14 +7,10 @@
     line-height: 1.8;
 }
 
-.app .run > .contents p {
-    margin-bottom: 0;
-}
-
 .app .run > .contents p b {
     background: #3a3a3a;
     color: #fff;
     padding: 0.5rem 0.75rem;
     display: inline-block;
-    margin-bottom: 1.5rem;
+    margin-bottom: 0.5rem;
 }
