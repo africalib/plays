@@ -14,7 +14,7 @@
     <div id="app" class="app" v-cloak>
         <div class="top">
             <a>
-                <img src="img/common/index.replay.svg" v-on:click="openReplays()" />
+                <img src="img/common/index.replay.svg" v-on:click="open()" />
             </a>
             <a href="./help.html">
                 <img src="img/common/index.help.svg" />
@@ -33,7 +33,7 @@
                         <ul class="list-group">
                             <li class="list-group-item" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
                                 <span>{{ r.name }}</span>
-                                <span class="label label-danger">입장하기</span>
+                                <span class="label label-danger">Go !</span>
                             </li>
                         </ul>
                     </template>
@@ -62,8 +62,13 @@
                     <div class="modal-body">
                         <ul class="list-group mb-0" v-if="replays.length">
                             <li class="list-group-item" v-for="(r, idx) in replays" v-on:click="enter(r.name)">
+                                <p>
+                                    <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }} player</span>
+                                    <span class="label label-danger">{{ r.flows.length }} flows</span>
+                                    <span class="label label-default">{{ r.date }}</span>
+                                </p>
                                 <span>{{ r.name }}</span>
-                                <span class="label label-danger">{{ r.date }}</span>
+                                <button type="button" class="close" v-on:click.stop="remove(idx)">×</button>
                             </li>
                         </ul>
                         <div class="no-data" v-else>

@@ -32,6 +32,30 @@ button {
     text-align: center;
 }
 
+.label {
+    border-radius: 0;
+    padding: 0.25em 0.6em;
+    border: 1px solid #ddd;
+    display: inline-block;
+}
+
+.label.label-black {
+    background-color: #3a3a3a;
+}
+
+.label.label-danger {
+    background-color: #d9534f;
+}
+
+.label.label-default {
+    border-color: #777;
+}
+
+.label.label-white {
+    background-color: #eaeaea;
+    color: #333;
+}
+
 .btn {
     outline: 0 !important;
 }

@@ -36,15 +36,28 @@ let app = new Vue({
                 this.replays = [];
             }
         },
-        openReplays: function () {
+        open: function () {
             let replays = localStorage.getItem('replays');
 
             if (replays) {
                 this.replays = JSON.parse(replays)
-                this.replays.reverse();
+                this.replays.sort(function (a, b) {
+                    if (a.date < b.date)
+                        return 1;
+                    else if (a.date === b.date)
+                        return 0;
+                    else if (a.date > b.date)
+                        return -1;
+                });
             }
 
             $(this.$refs.modal).modal('show');
+        },
+        remove: function (idx) {
+            if (confirm('삭제하시겠습니까?')) {
+                this.replays.splice(idx, 1);
+                localStorage.setItem('replays', JSON.stringify(this.replays));
+            }
         }
     },
     created: function () {

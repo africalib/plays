@@ -6,23 +6,31 @@
     text-align: center;
 }
 
-.app .list-group .label {
-    border-radius: 0;
-    padding: 0.5em 0.6em;
+.app .list-group > .list-group-item {
+    padding: 10px;
+}
+
+.app .list-group > .list-group-item .close {
+    position: absolute;
+    right: 9px;
+    top: 0;
+}
+
+.app .list-group > .list-group-item > .label {
     float: right;
 }
 
 .app > .top {
     position: absolute;
     text-align: right;
-    padding: 2rem;
+    padding: 1.5rem;
     width: 100%;
     top: 0;
     left: 0;
 }
 
 .app > .top > a {
-    margin-left: 1rem;
+    margin-left: 1.5rem;
     display: inline-block;
     cursor: pointer;
 }
