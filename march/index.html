@@ -28,7 +28,7 @@
             </div>
             <div class="contents">
                 <div class="rooms">
-                    <template v-if="room.list && room.list.length > 10">
+                    <template v-if="room.list && room.list.length">
                         <div class="title">대기 중인 방 목록</div>
                         <ul class="list-group">
                             <li class="list-group-item" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
