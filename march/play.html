@@ -93,9 +93,9 @@
                 </div>
                 <div class="controls replay" v-if="status.replay">
                     <div class="icos">
-                        <i class="backward fa fa-step-backward" aria-hidden="true"
+                        <i class="backward hide fa fa-step-backward" aria-hidden="true"
                             v-on:click="replay.touchable && backward()"></i>
-                        <i class="forward fa fa-step-forward" aria-hidden="true"
+                        <i class="forward hide fa fa-step-forward" aria-hidden="true"
                             v-on:click="replay.touchable && forward()"></i>
                         <i class="fa fa-pause" aria-hidden="true" v-on:click="replay.touchable && pause()"
                             v-if="replay.status === 'play'"></i>
