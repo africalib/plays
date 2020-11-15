@@ -30,7 +30,7 @@ let app = new Vue({
         refresh: function () {
             window.location.reload();
         },
-        remove: function () {
+        clear: function () {
             if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
                 localStorage.removeItem('replays');
                 this.replays = [];
