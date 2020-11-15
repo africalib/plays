@@ -39,8 +39,10 @@ let app = new Vue({
         openReplays: function () {
             let replays = localStorage.getItem('replays');
 
-            if (replays)
+            if (replays) {
                 this.replays = JSON.parse(replays)
+                this.replays.reverse();
+            }
 
             $(this.$refs.modal).modal('show');
         }

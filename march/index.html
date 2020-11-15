@@ -11,11 +11,14 @@
     <link href="css/app.index.css?5" rel="stylesheet" />
 </head>
 <body>
-    </script>
     <div id="app" class="app" v-cloak>
         <div class="top">
-            <img src="img/common/index.replay.svg" v-on:click="openReplays()" />
-            <img class="hide pull-right" src="img/common/index.question.svg" />
+            <a>
+                <img src="img/common/index.replay.svg" v-on:click="openReplays()" />
+            </a>
+            <a href="./help.html">
+                <img src="img/common/index.help.svg" />
+            </a>
         </div>
         <div class="run">
             <div class="title">
@@ -70,7 +73,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" v-on:click="remove()" v-if="replays.length">Remove</button>
+                        <button type="button" class="btn btn-default pull-left" v-on:click="remove()"
+                            v-if="replays.length">Remove</button>
                         <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                     </div>
                 </div>

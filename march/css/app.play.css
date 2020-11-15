@@ -82,7 +82,7 @@ button {
     background: rgba(241, 241, 241, 0.66);
     display: inline-block;
     width: calc(100%/9);
-    outline: 1px solid #eee;
+    outline: 1px solid rgba(0, 0, 0, 0.06);
     height: calc(100%/16);
     position: relative;
     cursor: pointer;
@@ -217,10 +217,9 @@ button {
     background: rgba(255, 255, 255, 0.55);
 }
 
-.app[data-started=Y][data-device=desktop] {}
-
 .app[data-started=Y][data-device=desktop] > .wrapper {
     width: 768px;
+    max-width: 100%;
 }
 
 .app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]) {
@@ -528,28 +527,6 @@ button {
     margin: 0 15px;
 }
 
-.app > .wrapper > .bottom > .controls.replay .icos i.backward {
-    position: absolute;
-    left: 1rem;
-    top: 0;
-}
-
-.app > .wrapper > .bottom > .controls.replay .icos i.forward {
-    position: absolute;
-    right: 1rem;
-    top: 0;
-}
-
-.app > .wrapper > .bottom > .controls.replay .icos img {
-    cursor: pointer;
-    margin: 0 15px;
-    display: inline-block;
-    height: 21px;
-    vertical-align: middle;
-    position: relative;
-    top: -2px;
-}
-
 .app > .wrapper > .bottom > .controls.replay .flow {
     position: absolute;
     right: calc(100%/9*2);
@@ -558,6 +535,10 @@ button {
     width: calc(100%/9*4);
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 10px;
 }
 
 .app > .wrapper > .bottom > .controls.replay .speed {

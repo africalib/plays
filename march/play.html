@@ -99,7 +99,7 @@
                     </div>
                     <div class="controls replay" v-if="status.replay">
                         <div class="icos">
-                            <img src="img/common/play.refresh.svg" v-on:click="replay.touchable && refresh()"></i>
+                            <i class="fa fa-repeat" aria-hidden="true" v-on:click="replay.touchable && refresh()"></i>
                             <i class="fa fa-pause" aria-hidden="true" v-on:click="replay.touchable && pause()"
                                 v-if="replay.status === 'play'"></i>
                             <i class="fa fa-play" aria-hidden="true" v-on:click="replay.touchable && play()" v-else></i>

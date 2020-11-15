@@ -1942,13 +1942,10 @@ let app = new Vue({
             });
         }
 
-        if (replays) {
+        if (replays)
             replays = JSON.parse(replays);
-            replays.reverse();
-        }
-        else {
+        else
             replays = [];
-        }
 
         for (let i in replays) {
             if (replays[i].name === name) {

@@ -21,7 +21,13 @@
     left: 0;
 }
 
-.app > .top img {
+.app > .top > a {
+    margin-left: 1rem;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.app > .top > a > img {
     height: 2rem;
 }
 
