@@ -580,7 +580,8 @@ button {
     text-align: center;
     top: 50%;
     font-weight: 600;
-    margin-top: -34px;
+    margin-top: -31px;
+    height: 62px;
     padding: 20px 0;
     z-index: 100;
 }

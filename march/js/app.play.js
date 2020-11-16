@@ -500,26 +500,31 @@ let app = new Vue({
             window.location.reload();
         },
         save: function () {
-            var replay = localStorage.getItem('replays');
+            var replays;
 
-            if (replay)
-                replay = JSON.parse(replay);
+            if (this.flows.length < 10)
+                return;
+
+            replays = localStorage.getItem('replays');
+
+            if (replays)
+                replays = JSON.parse(replays);
             else
-                replay = [];
+                replays = [];
 
-            for (let i in replay) {
-                if (replay[i].name === this.my.room)
+            for (let i in replays) {
+                if (replays[i].name === this.my.room)
                     return;
             }
 
-            replay.push({
+            replays.push({
                 name: this.my.room,
                 player: this.my.player,
                 flows: this.flows,
                 date: appLib.now('yyyy-MM-dd HH:mm:ss')
             });
 
-            localStorage.setItem('replays', JSON.stringify(replay));
+            localStorage.setItem('replays', JSON.stringify(replays));
         },
         runFunc: function (value) {
             switch (value.name) {
@@ -577,6 +582,7 @@ let app = new Vue({
             }
         },
         goHome: function () {
+            this.save();
             location.href = 'index.html';
         },
         request: function (name, val1, val2) {
@@ -951,13 +957,17 @@ let app = new Vue({
                 });
             }
             else if (targetArea.status === 'enter') {
-                t.active.idx = idx;
-                t.setUnit(t.status.turn, t.grabbed.name, idx);
-                t.setBuff();
-                t.setAutoRotate();
-                t.setAreaDefault();
-                t.setActiveDefault();
-                t.setGrabbedDefault();
+                if (this.getUnitSettable(t.grabbed.name)) {
+                    this.active.idx = idx;
+                    this.setUnit(t.status.turn, t.grabbed.name, idx);
+                    this.setBuff();
+                    this.setAutoRotate();
+                    this.setActiveDefault();
+                }
+                else {
+                    this.setAreaDefault();
+                    this.setGrabbedDefault();
+                }
             }
             else if (t.grabbed.name) {
                 if (t.status.turn === t.my.player)
@@ -973,55 +983,64 @@ let app = new Vue({
         closeModal: function () {
             this.setModalClose();
         },
-        grab: function (player, name, requested) {
-            if (this.status.turn === player) {
-                if (!requested) {
-                    this.request('grab', player, name);
-                    return;
-                }
+        grab: function (name, requested) {
+            if (!requested) {
+                this.request('grab', name);
+                return;
+            }
 
-                let unit = this.base.units[name];
-                let fieldCount = 0;
+            this.setAreaDefault();
+            this.setActiveDefault();
 
-                for (let i in this.areas) {
-                    if (this.areas[i].unit.player === player) {
-                        if (this.areas[i].unit.name === name)
-                            fieldCount += 1;
-                    }
-                }
-
-                if (fieldCount >= this.base.fieldCount) {
-                    if (t.status.turn === t.my.player)
-                        this.setMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
-                    return;
-                }
-
-                if (this.status[player].crop < unit.crop) {
-                    if (this.status.turn === this.my.player)
-                        this.setMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
-                    return;
-                }
-                else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
-                    if (this.status.turn === this.my.player)
-                        this.setMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
-                    return;
-                }
-
-                this.setAreaDefault();
-                this.setActiveDefault();
+            if (this.grabbed.name === name) {
                 this.setGrabbedDefault();
-
+            }
+            else if (this.getUnitSettable(name)) {
+                let unit = this.base.units[name];
                 this.grabbed.name = name;
 
                 for (let i in this.areas) {
                     let area = this.areas[i];
 
                     if (!area.unit.name && unit.type === area.type && (!this.getIsShelterInArea(i) || this.getHasGrayShelter(i))) {
-                        if (player === area.owner)
+                        if (this.status.turn === area.owner)
                             area.status = 'enter';
                     }
                 }
             }
+            else {
+                this.setGrabbedDefault();
+            }
+        },
+        getUnitSettable: function (name) {
+            let player = this.status.turn;
+            let unit = this.base.units[name];
+            let fieldCount = 0;
+
+            for (let i in this.areas) {
+                if (this.areas[i].unit.player === player) {
+                    if (this.areas[i].unit.name === name)
+                        fieldCount += 1;
+                }
+            }
+
+            if (fieldCount >= this.base.fieldCount) {
+                if (t.status.turn === t.my.player)
+                    this.setMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
+                return;
+            }
+            else if (this.status[player].crop < unit.crop) {
+                if (this.status.turn === this.my.player)
+                    this.setMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
+                return false;
+            }
+            else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
+                if (this.status.turn === this.my.player)
+                    this.setMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
+                return false;
+            }
+
+            return true;
         },
         getIsInCross: function (i, j) {
             return this.areas[i] && this.areas[j] && (this.areas[i].vnum === this.areas[j].vnum || this.areas[i].hnum === this.areas[j].hnum);
@@ -1852,8 +1871,6 @@ let app = new Vue({
                     window.onbeforeunload = null;
 
                     if (!t.status.replay) {
-                        t.save();
-
                         setTimeout(function () {
                             socket.disconnect();
                         }, 30000);
@@ -1917,9 +1934,9 @@ let app = new Vue({
                             if (t.status.started && !t.status.finished) {
                                 socket.disconnect();
                                 t.status.finished = true;
-                                alert('상대방이 경기에서 나갔습니다.');
+                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
                                 window.onbeforeunload = null;
-                                window.location.href = 'index.html';
+                                //window.location.href = 'index.html';
                             }
                             break;
 
