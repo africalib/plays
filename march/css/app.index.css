@@ -30,9 +30,10 @@
 }
 
 .app > .top > a {
-    margin-left: 1.5rem;
+    margin-left: 1rem;
     display: inline-block;
     cursor: pointer;
+    vertical-align: middle;
 }
 
 .app > .top > a > img {
