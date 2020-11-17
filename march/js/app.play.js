@@ -737,9 +737,6 @@ let app = new Vue({
             }
         },
         touch: function (idx) {
-            if (this.my.player !== this.status.turn)
-                return;
-
             let t = this;
             let targetArea = t.areas.live[idx];
             let activeArea = t.areas.live[t.active.idx];
