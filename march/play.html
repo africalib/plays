@@ -52,10 +52,9 @@
                     <div class="area-wrapper">
                         <div class="each-area" v-bind:class="{'active' : active.idx === a.idx }"
                             v-for="(a, idx) in areas" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
-                            v-bind:data-type="a.type" v-bind:data-player="a.player" v-bind:data-vidx="a.vidx"
-                            v-bind:data-hidx="a.hidx" v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum"
-                            v-bind:data-status="a.status" v-bind:data-shelter="a.shelter.name"
-                            v-on:click="getTouchable(idx) && request('touch', idx)">
+                            v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
+                            v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
+                            v-bind:data-shelter="a.shelter.name" v-on:click="touchable(idx) && request('touch', idx)">
                             <div class="unit" v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
                                 v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
                                 v-bind:data-status="a.unit.status" v-if="a.unit.name" v-bind:style="a.unit.style">
@@ -87,7 +86,7 @@
                         </div>
                     </div>
                     <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
-                        v-on:click="setLabelHide()">
+                        v-on:click="hideLabel()">
                         <div>{{ label.message }}</div>
                     </div>
                 </div>
@@ -108,7 +107,8 @@
                             {{ replay.idx + 1 }} / {{ replay.flows.length }}
                         </div>
                         <div class="action">
-                            <button type="button" class="home" v-on:click="goHome()" v-if="status.finished">home</button>
+                            <button type="button" class="home" v-on:click="goHome()"
+                                v-if="status.finished">home</button>
                             <button type="button" class="speed" v-on:click="speed()"
                                 v-else>&times;{{ replay.speed }}</button>
                         </div>
@@ -118,7 +118,7 @@
                             <div class="each-unit" v-bind:data-name="u.name"
                                 v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
                                 v-for="u in base.units" v-bind:key="u.name"
-                                v-on:click="getTouchable() && request('grab', u.name)" v-if="u.crop">
+                                v-on:click="touchable() && request('grab', u.name)" v-if="u.crop">
                                 <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
                                 <img v-bind:src="'img/' + my.player + '/' + u.name + '.png'"
                                     v-bind:data-rotate="u.rotate" />
@@ -182,10 +182,10 @@
                                 <tr>
                                     <th>{{ getLang('ko', 'move') }}</th>
                                     <td>:</td>
-                                    <td>{{ getModalInfoProp('move') }} / {{ modal.info.maxMove }}</td>
+                                    <td>{{ getModalProp('move') }} / {{ modal.info.maxMove }}</td>
                                     <th>{{ getLang('ko', 'defense') }}</th>
                                     <td>:</td>
-                                    <td>{{ getModalInfoProp('defense') }}</td>
+                                    <td>{{ getModalProp('defense') }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{ getLang('ko', 'crop') }}</th>
@@ -193,12 +193,12 @@
                                     <td>{{ modal.info.crop }}</td>
                                     <th>{{ getLang('ko', 'farm') }}</th>
                                     <td>:</td>
-                                    <td>{{ getModalInfoProp('farm') }}</td>
+                                    <td>{{ getModalProp('farm') }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{ getLang('ko', 'direction') }}</th>
                                     <td>:</td>
-                                    <td>{{ modal.info.direction }}</td>
+                                    <td>{{ getModalProp('direction') }}</td>
                                     <th>{{ getLang('ko', 'destory') }}</th>
                                     <td>:</td>
                                     <td>{{ modal.info.destory }}</td>
@@ -206,7 +206,7 @@
                                 <tr>
                                     <th>{{ getLang('ko', 'power') }}</th>
                                     <td>:</td>
-                                    <td>{{ modal.info.power }} / {{ getModalInfoProp('maxPower') }}</td>
+                                    <td>{{ modal.info.power }} / {{ getModalProp('maxPower') }}</td>
                                     <th>{{ getLang('ko', 'restorePower') }}</th>
                                     <td>:</td>
                                     <td>{{ modal.info.restorePower }}</td>
@@ -214,18 +214,18 @@
                                 <tr>
                                     <th>{{ getLang('ko', 'hp') }}</th>
                                     <td>:</td>
-                                    <td>{{ modal.info.hp }} / {{ getModalInfoProp('maxHp') }}</td>
+                                    <td>{{ modal.info.hp }} / {{ getModalProp('maxHp') }}</td>
                                     <th>{{ getLang('ko', 'restoreHp') }}</th>
                                     <td>:</td>
-                                    <td>{{ getModalInfoProp('restoreHp') }}</td>
+                                    <td>{{ getModalProp('restoreHp') }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{ getLang('ko', 'attack') }}</th>
                                     <td>:</td>
-                                    <td>{{ getModalInfoProp('attack') }}</td>
+                                    <td>{{ getModalProp('attack') }}</td>
                                     <th>{{ getLang('ko', 'distance') }}</th>
                                     <td>:</td>
-                                    <td>{{ getModalInfoProp('distance') }} / {{ modal.info.maxDistance }}</td>
+                                    <td>{{ getModalProp('distance') }} / {{ modal.info.maxDistance }}</td>
                                 </tr>
                                 <tr>
                                     <th>{{ getLang('ko', 'accel') }}</th>

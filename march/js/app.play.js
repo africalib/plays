@@ -22,7 +22,6 @@ let app = new Vue({
                 end: 98
             },
             area: {
-                info: {},
                 status: null,
                 unit: {},
                 shelter: {},
@@ -33,8 +32,7 @@ let app = new Vue({
                 hnum: 0,
                 player: null,
                 owner: null,
-                ownOnly: false,
-                type: 'land'
+                ownOnly: false
             },
             shelters: {
                 rock: {
@@ -47,7 +45,6 @@ let app = new Vue({
             units: {
                 farmer: {
                     name: 'farmer',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -80,7 +77,6 @@ let app = new Vue({
                 },
                 sword: {
                     name: 'sword',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -113,7 +109,6 @@ let app = new Vue({
                 },
                 arrow: {
                     name: 'arrow',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -146,7 +141,6 @@ let app = new Vue({
                 },
                 shield: {
                     name: 'shield',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -179,7 +173,6 @@ let app = new Vue({
                 },
                 horse: {
                     name: 'horse',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -212,7 +205,6 @@ let app = new Vue({
                 },
                 elephant: {
                     name: 'elephant',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -245,7 +237,6 @@ let app = new Vue({
                 },
                 cannon: {
                     name: 'cannon',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -278,7 +269,6 @@ let app = new Vue({
                 },
                 king: {
                     name: 'king',
-                    type: 'land',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -458,7 +448,7 @@ let app = new Vue({
                     let idx = eachArea.data('idx');
                     t.modal.idx = idx;
 
-                    if (t.areas[idx] && t.getIsShelterInArea(idx)) {
+                    if (t.areas[idx] && t.isShelterInArea(idx)) {
                         if (t.my.player === t.areas[idx].unit.player && t.areas[idx].unit && t.areas[idx].unit.name) {
                             t.modal.info = t.areas[idx].unit;
                             t.modal.type = 'unit';
@@ -481,9 +471,9 @@ let app = new Vue({
                     t.modal.info.player = t.my.player;
                 }
 
-                t.setAreaDefault();
-                t.setActiveDefault();
-                t.setGrabbedDefault();
+                t.initAreas();
+                t.initActive();
+                t.initGrab();
             });
 
             window.onbeforeunload = function () {
@@ -527,9 +517,6 @@ let app = new Vue({
             localStorage.setItem('replays', JSON.stringify(replays));
         },
         runFunc: function (value) {
-            if (value.name === 'touch' || value.name === 'grab')
-                this.status.touchable = true;
-
             if (!isNaN(Number(value.val1)))
                 value.val1 = Number(value.val1);
 
@@ -585,15 +572,17 @@ let app = new Vue({
         request: function (name, val1, val2) {
             if (name === 'touch' || name === 'grab')
                 this.status.touchable = false;
+            else if (name === 'pass')
+                this.request('deploy', JSON.stringify(this.areas));
 
             socket.emit('request', { type: 'send', name: name, player: this.my.player, val1: val1, val2: val2 });
         },
         pass: function (player) {
             this.setMessage('hide');
-            this.setTurn(player);
+            this.turnOver(player);
         },
-        getTouchable: function (idx) {
-            if (this.status.started && !this.status.finished && this.status.turn && this.status.touchable && !this.status.replay) {
+        touchable: function (idx) {
+            if (this.status.touchable && this.status.started && !this.status.finished && this.status.turn && !this.status.replay) {
                 if (idx !== undefined) {
                     var area = this.areas[idx];
 
@@ -639,9 +628,29 @@ let app = new Vue({
             }
             return keyword;
         },
-        getModalInfoProp: function (prop) {
-            if (this.modal.info.buffed && this.modal.info.buffed[prop] !== undefined) {
+        getModalProp: function (prop) {
+            if (prop === 'direction') {
+                if (this.my.player === 'white') {
+                    switch (this.modal.info.direction) {
+                        case 6:
+                            return 12;
+
+                        case 12:
+                            return 6;
+
+                        case 3:
+                            return 9;
+
+                        case 9:
+                            return 3;
+                    }
+                }
+
+                return this.modal.info.direction;
+            }
+            else if (this.modal.info.buffed && this.modal.info.buffed[prop] !== undefined) {
                 if (this.modal.info.name) {
+
                     let buff = this.modal.info.buffed[prop];
                     let unitProp = this.modal.info[prop] + buff;
                     return unitProp + (buff ? ' (+' + buff + ' buff)' : '');
@@ -657,20 +666,16 @@ let app = new Vue({
                 document.execCommand("copy");
             }
         },
-        setAreas: function (val) {
+        deploy: function (val) {
+            console.log(val);
             this.areas = JSON.parse(val);
-        },
-        setShelter: function (player, name, idx) {
-            let shelter = appLib.renew(this.base.shelters[name]);
-            shelter.player = player;
-            this.areas[idx].shelter = shelter;
         },
         touch: function (idx) {
             let t = this;
             let targetArea = t.areas[idx];
             let activeArea = t.areas[t.active.idx];
 
-            if (t.getIsUnitInArea(idx) && targetArea.unit.player === t.status.turn) {
+            if (t.isUnitInArea(idx) && targetArea.unit.player === t.status.turn) {
                 if (t.active.idx === idx || !targetArea.unit.power) {
                     targetArea.unit.direction = Number(targetArea.unit.direction) + 3;
 
@@ -678,9 +683,9 @@ let app = new Vue({
                         targetArea.unit.direction = 3;
                 }
 
-                t.setAreaDefault();
-                t.setActiveDefault();
-                t.setGrabbedDefault();
+                t.initAreas();
+                t.initActive();
+                t.initGrab();
 
                 t.active.idx = idx;
                 t.active.unit = targetArea.unit;
@@ -697,7 +702,7 @@ let app = new Vue({
                         right: true
                     }
 
-                    let getEachCond = function (direction, i) {
+                    let cond = function (direction, i) {
                         return accessable[direction] && t.areas[i];
                     }
 
@@ -716,25 +721,25 @@ let app = new Vue({
                                 case 0:
                                     each.direction = 'up';
                                     each.idx = (i + 1) * -(t.base.columnNum) + idx;
-                                    each.cond = getEachCond(each.direction, each.idx);
+                                    each.cond = cond(each.direction, each.idx);
                                     break;
 
                                 case 1:
                                     each.direction = 'down';
                                     each.idx = (i + 1) * t.base.columnNum + idx;
-                                    each.cond = getEachCond(each.direction, each.idx);
+                                    each.cond = cond(each.direction, each.idx);
                                     break;
 
                                 case 2:
                                     each.direction = 'right';
                                     each.idx = idx + i + 1;
-                                    each.cond = getEachCond(each.direction, each.idx) && targetArea.hnum === t.getVerticalNum(each.idx);
+                                    each.cond = cond(each.direction, each.idx) && targetArea.hnum === t.getVerticalNum(each.idx);
                                     break;
 
                                 case 3:
                                     each.direction = 'left';
                                     each.idx = idx - i - 1;
-                                    each.cond = getEachCond(each.direction, each.idx) && targetArea.hnum === t.getVerticalNum(each.idx);
+                                    each.cond = cond(each.direction, each.idx) && targetArea.hnum === t.getVerticalNum(each.idx);
                                     break;
 
                                 default:
@@ -746,9 +751,9 @@ let app = new Vue({
                             if (each.cond && eachArea) {
                                 t.areas[num[each.direction]].player = t.status.turn;
 
-                                if (attackable && ((t.getIsShelterInArea(each.idx) && !t.getHasShelter(each.idx) && !t.getHasGrayShelter(each.idx)) || (t.getIsUnitInArea(each.idx) && !t.getHasUnit(each.idx))) && targetArea.unit.distance === 1)
+                                if (attackable && ((t.isShelterInArea(each.idx) && !t.hasShelter(each.idx) && !t.hasGrayShelter(each.idx)) || (t.isUnitInArea(each.idx) && !t.hasUnit(each.idx))) && targetArea.unit.distance === 1)
                                     t.areas[num[each.direction]].status = 'attack';
-                                else if (activeArea.unit.type === eachArea.type && !t.getIsUnitInArea(each.idx) && (!t.getIsShelterInArea(each.idx) || t.getHasGrayShelter(each.idx)))
+                                else if (!t.isUnitInArea(each.idx) && (!t.isShelterInArea(each.idx) || t.hasGrayShelter(each.idx)))
                                     t.areas[num[each.direction]].status = 'move';
                             }
                             else {
@@ -774,7 +779,7 @@ let app = new Vue({
                                 let eachVerticalNum = t.getVerticalNum(i);
                                 let eachLastNum = i - (eachVerticalNum * 10);
 
-                                if (attackable && ((t.getIsShelterInArea(i) && !t.getHasShelter(i)) || (t.getIsUnitInArea(i) && !t.getHasUnit(i))) && eachVerticalNum >= minVerticalNum && eachVerticalNum <= maxVerticalNum && eachLastNum >= minLastNum && eachLastNum <= maxLastNum && !t.getHasShelter(i))
+                                if (attackable && ((t.isShelterInArea(i) && !t.hasShelter(i)) || (t.isUnitInArea(i) && !t.hasUnit(i))) && eachVerticalNum >= minVerticalNum && eachVerticalNum <= maxVerticalNum && eachLastNum >= minLastNum && eachLastNum <= maxLastNum && !t.hasShelter(i))
                                     t.areas[i].status = 'attack';
                             }
                         }
@@ -787,13 +792,13 @@ let app = new Vue({
                                     left: idx - i - 1
                                 };
 
-                                if (t.areas[num.up] && t.areas[num.up].vnum === activeArea.vnum && ((t.getIsShelterInArea(num.up) && !t.getHasShelter(num.up) && !t.getHasGrayShelter(num.up)) || (t.getIsUnitInArea(num.up) && !t.getHasUnit(num.up))))
+                                if (t.areas[num.up] && t.areas[num.up].vnum === activeArea.vnum && ((t.isShelterInArea(num.up) && !t.hasShelter(num.up) && !t.hasGrayShelter(num.up)) || (t.isUnitInArea(num.up) && !t.hasUnit(num.up))))
                                     t.areas[num.up].status = 'attack';
-                                if (t.areas[num.down] && t.areas[num.down].vnum === activeArea.vnum && ((t.getIsShelterInArea(num.down) && !t.getHasShelter(num.down) && !t.getHasGrayShelter(num.down)) || (t.getIsUnitInArea(num.down) && !t.getHasUnit(num.down))))
+                                if (t.areas[num.down] && t.areas[num.down].vnum === activeArea.vnum && ((t.isShelterInArea(num.down) && !t.hasShelter(num.down) && !t.hasGrayShelter(num.down)) || (t.isUnitInArea(num.down) && !t.hasUnit(num.down))))
                                     t.areas[num.down].status = 'attack';
-                                if (t.areas[num.left] && t.areas[num.left].hnum === activeArea.hnum && ((t.getIsShelterInArea(num.left) && !t.getHasShelter(num.left) && !t.getHasGrayShelter(num.left)) || (t.getIsUnitInArea(num.left) && !t.getHasUnit(num.left))))
+                                if (t.areas[num.left] && t.areas[num.left].hnum === activeArea.hnum && ((t.isShelterInArea(num.left) && !t.hasShelter(num.left) && !t.hasGrayShelter(num.left)) || (t.isUnitInArea(num.left) && !t.hasUnit(num.left))))
                                     t.areas[num.left].status = 'attack';
-                                if (t.areas[num.right] && t.areas[num.right].hnum === activeArea.hnum && ((t.getIsShelterInArea(num.right) && !t.getHasShelter(num.right) && !t.getHasGrayShelter(num.right)) || (t.getIsUnitInArea(num.right) && !t.getHasUnit(num.right))))
+                                if (t.areas[num.right] && t.areas[num.right].hnum === activeArea.hnum && ((t.isShelterInArea(num.right) && !t.hasShelter(num.right) && !t.hasGrayShelter(num.right)) || (t.isUnitInArea(num.right) && !t.hasUnit(num.right))))
                                     t.areas[num.right].status = 'attack';
                             }
                         }
@@ -851,7 +856,7 @@ let app = new Vue({
                         activeArea.unit.direction = t.getDirection(idx, t.active.idx);
 
                         if (loopIdx !== t.active.idx) {
-                            if ((t.getIsShelterInArea(loopIdx) && !t.getHasShelter(loopIdx) && !t.getHasGrayShelter(loopIdx)) || t.getIsUnitInArea(loopIdx)) {
+                            if ((t.isShelterInArea(loopIdx) && !t.hasShelter(loopIdx) && !t.hasGrayShelter(loopIdx)) || t.isUnitInArea(loopIdx)) {
                                 if (loopArea.unit.player === activeArea.unit.player) {
                                     teamUnits.push({
                                         idx: loopIdx,
@@ -862,7 +867,7 @@ let app = new Vue({
                                     t.areas[t.active.idx].unit = {};
                                     t.active.idx = loopIdx;
                                 }
-                                else if (t.setAttack(loopIdx, false, i > 1, i)) {
+                                else if (t.attack(loopIdx, false, i > 1, i)) {
                                     let removeIdx = obj.loopArr.indexOf(loopIdx);
                                     obj.loopArr.splice(removeIdx, obj.loopArr.length - removeIdx);
                                     break;
@@ -882,12 +887,12 @@ let app = new Vue({
                     teamUnits.reverse();
 
                     for (let i in teamUnits) {
-                        if (t.getIsUnitInArea(teamUnits[i].idx)) {
+                        if (t.isUnitInArea(teamUnits[i].idx)) {
                             var objArr = appLib.renew(obj.loopArr);
                             objArr.reverse();
 
                             for (let j in objArr) {
-                                if (!t.getIsUnitInArea(objArr[j])) {
+                                if (!t.isUnitInArea(objArr[j])) {
                                     t.areas[objArr[j]].unit = teamUnits[i].unit;
                                     break;
                                 }
@@ -913,44 +918,44 @@ let app = new Vue({
 
                     if (activeArea.unit.through) {
                         for (let i in obj.loopArr) {
-                            if (i > 0 && !t.getIsMine(obj.loopArr[i])) {
-                                let targetDirection = t.getDirection(t.active.idx, obj.loopArr[i]);
-                                t.setAttack(obj.loopArr[i], false, true);
-                                t.autoRotateArr.push({ idx: obj.loopArr[i], direction: targetDirection })
+                            if (i > 0 && !t.isMine(obj.loopArr[i])) {
+                                let tardirection = t.getDirection(t.active.idx, obj.loopArr[i]);
+                                t.attack(obj.loopArr[i], false, true);
+                                t.autoRotateArr.push({ idx: obj.loopArr[i], direction: tardirection })
                             }
                         }
                     }
                     else {
-                        let targetDirection = t.getDirection(t.active.idx, idx);
-                        t.setAttack(idx, false, true);
-                        t.autoRotateArr.push({ idx: idx, direction: targetDirection })
+                        let tardirection = t.getDirection(t.active.idx, idx);
+                        t.attack(idx, false, true);
+                        t.autoRotateArr.push({ idx: idx, direction: tardirection })
                     }
                 }
 
                 t.areas[t.active.idx].unit.power -= obj.powerUse;
-                t.setAreaDefault();
+                t.initAreas();
 
-                t.setAnimate(obj.startIdx, obj.endIdx, obj.aniType, function () {
-                    t.setOwner(t.active.idx);
-                    t.setBuff();
-                    t.setCounterAttack(obj.gap !== null && Math.abs(obj.gap) > t.base.columnNum);
-                    t.setCheckLevel();
-                    t.setAutoRotate();
-                    t.setActiveDefault();
-                    t.setGrabbedDefault();
+                t.animate(obj.startIdx, obj.endIdx, obj.aniType, function () {
+                    t.checkOwn(t.active.idx);
+                    t.checkBuff();
+                    t.counterAttack(obj.gap !== null && Math.abs(obj.gap) > t.base.columnNum);
+                    t.checkLevel();
+                    t.rotateAuto();
+                    t.initActive();
+                    t.initGrab();
                 });
             }
             else if (targetArea.status === 'enter') {
-                if (this.getUnitSettable(t.grabbed.name)) {
+                if (this.isUnitSettable(t.grabbed.name)) {
                     this.active.idx = idx;
                     this.setUnit(t.status.turn, t.grabbed.name, idx);
-                    this.setBuff();
-                    this.setAutoRotate();
-                    this.setActiveDefault();
+                    this.checkBuff();
+                    this.rotateAuto();
+                    this.initActive();
                 }
                 else {
-                    this.setAreaDefault();
-                    this.setGrabbedDefault();
+                    this.initAreas();
+                    this.initGrab();
                 }
             }
             else if (t.grabbed.name) {
@@ -959,39 +964,36 @@ let app = new Vue({
                 return;
             }
             else {
-                t.setAreaDefault();
-                t.setActiveDefault();
-                t.setGrabbedDefault();
+                t.initAreas();
+                t.initActive();
+                t.initGrab();
             }
-        },
-        closeModal: function () {
-            this.setModalClose();
         },
         grab: function (name) {
-            this.setAreaDefault();
-            this.setActiveDefault();
+            this.initAreas();
+            this.initActive();
 
             if (this.grabbed.name === name) {
-                this.setGrabbedDefault();
+                this.initGrab();
             }
-            else if (this.getUnitSettable(name)) {
+            else if (this.isUnitSettable(name)) {
                 let unit = this.base.units[name];
                 this.grabbed.name = name;
 
                 for (let i in this.areas) {
                     let area = this.areas[i];
 
-                    if (!area.unit.name && unit.type === area.type && (!this.getIsShelterInArea(i) || this.getHasGrayShelter(i))) {
+                    if (!area.unit.name && (!this.isShelterInArea(i) || this.hasGrayShelter(i))) {
                         if (this.status.turn === area.owner)
                             area.status = 'enter';
                     }
                 }
             }
             else {
-                this.setGrabbedDefault();
+                this.initGrab();
             }
         },
-        getUnitSettable: function (name) {
+        isUnitSettable: function (name) {
             let player = this.status.turn;
             let unit = this.base.units[name];
             let fieldCount = 0;
@@ -1021,38 +1023,35 @@ let app = new Vue({
 
             return true;
         },
-        getIsInCross: function (i, j) {
+        isInCross: function (i, j) {
             return this.areas[i] && this.areas[j] && (this.areas[i].vnum === this.areas[j].vnum || this.areas[i].hnum === this.areas[j].hnum);
         },
-        getIsMine: function (i) {
-            return this.getHasUnit(i) || this.getHasShelter(i);
+        isMine: function (i) {
+            return this.hasUnit(i) || this.hasShelter(i);
         },
-        getIsInShelterOrArea: function (i) {
-            if (this.getIsUnitInArea(i)) {
+        isInShelterOrArea: function (i) {
+            if (this.isUnitInArea(i)) {
                 let eachArea = this.areas[i];
                 let eachUnit = eachArea.unit;
-                return eachArea.owner === eachUnit.player || (this.getIsShelterInArea(i) && eachArea.shelter.player === this.my.player);
+                return eachArea.owner === eachUnit.player || (this.isShelterInArea(i) && eachArea.shelter.player === this.my.player);
             }
 
             return false;
         },
-        getVerticalNum: function (val, isRowNum) {
-            return Math.floor(val / (isRowNum ? this.base.rowNum : this.base.columnNum));
-        },
-        getIsShelterInArea: function (idx) {
+        isShelterInArea: function (idx) {
             return this.areas[idx] && this.areas[idx].shelter && this.areas[idx].shelter.name;
         },
-        getHasShelter: function (idx) {
-            return this.getIsShelterInArea(idx) && this.areas[idx].shelter.player === this.status.turn;
+        hasShelter: function (idx) {
+            return this.isShelterInArea(idx) && this.areas[idx].shelter.player === this.status.turn;
         },
-        getHasGrayShelter: function (idx) {
-            return this.getIsShelterInArea(idx) && this.areas[idx].shelter.player === 'gray';
+        hasGrayShelter: function (idx) {
+            return this.isShelterInArea(idx) && this.areas[idx].shelter.player === 'gray';
         },
-        getIsUnitInArea: function (idx) {
+        isUnitInArea: function (idx) {
             return this.areas[idx] && this.areas[idx].unit && this.areas[idx].unit.name;
         },
-        getHasUnit: function (idx) {
-            return this.getIsUnitInArea(idx) && this.areas[idx].unit.player === this.status.turn;
+        hasUnit: function (idx) {
+            return this.isUnitInArea(idx) && this.areas[idx].unit.player === this.status.turn;
         },
         getDirection: function (targetIdx, presentIdx) {
             let target = this.areas[targetIdx];
@@ -1091,7 +1090,10 @@ let app = new Vue({
 
             return returnValue;
         },
-        getBuff: function () {
+        getVerticalNum: function (val, isRowNum) {
+            return Math.floor(val / (isRowNum ? this.base.rowNum : this.base.columnNum));
+        },
+        getBuffArr: function () {
             let buffArr = [];
 
             for (let i in this.areas) {
@@ -1129,339 +1131,10 @@ let app = new Vue({
 
             return buffArr;
         },
-        setAnimate: function (startIdx, endIdx, type, func) {
-            let t = this;
-
-            if (startIdx !== endIdx) {
-                let startArea = t.areas[startIdx];
-                let endArea = t.areas[endIdx];
-                let unit = null;
-                let $startArea = $('#app .each-area[data-idx=' + startIdx + ']');
-
-                switch (type) {
-                    case 'weapon':
-                        unit = t.areas[endIdx].weapon;
-                        break;
-
-                    default:
-                        unit = t.areas[endIdx].unit;
-                        break;
-                }
-
-                t.status.touchable = false;
-                unit.status = 'move';
-                t.$set(unit, 'style', { top: 0, left: 0 });
-
-                if (startArea.vnum === endArea.vnum)
-                    unit.style.top = (startArea.vidx - endArea.vidx) * $startArea.height() + 'px';
-                else if (startArea.hnum === endArea.hnum)
-                    unit.style.left = (startIdx - endIdx) * $startArea.width() + 'px';
-
-                setTimeout(function () {
-                    unit.style.top = 0;
-                    unit.style.left = 0;
-
-                    setTimeout(function () {
-                        unit.status = null;
-                        unit.style = {};
-                        t.status.touchable = true;
-
-                        if (type === 'weapon')
-                            delete t.areas[endIdx]['weapon'];
-                    }, t.time.animate - 100);
-                }, 100);
-
-                if (typeof func === 'function')
-                    func();
-            }
-            else if (typeof func === 'function') {
-                func();
-            }
-        },
-        setOwner: function (idx, isRunned) {
-            if (this.getIsUnitInArea(idx) && this.areas[idx].unit.name === 'king') {
-                let kingUnit = this.areas[idx].unit;
-                let startIdx = (Math.floor(idx / this.base.columnNum) * this.base.columnNum) + (this.base.columnNum * (kingUnit.player === 'black' ? -1 : 1));
-                let endIdx = startIdx + this.base.columnNum - 1;
-                let anotherKingIdx = null;
-
-                for (let i in this.areas) {
-                    let eachArea = this.areas[i];
-                    let idx = Number(i);
-                    let eachCond = kingUnit.player === 'black' ? idx >= startIdx : idx <= endIdx;
-
-                    if (eachCond) {
-                        if (!eachArea.owner && !eachArea.ownOnly)
-                            eachArea.owner = kingUnit.player;
-                    }
-                    else if (eachArea.owner === kingUnit.player && !eachArea.ownOnly) {
-                        eachArea.owner = null;
-                    }
-
-                    if (this.getIsUnitInArea(idx) && eachArea.unit.name === 'king' && eachArea.unit.player !== kingUnit.player)
-                        anotherKingIdx = idx;
-                }
-
-                if (!isRunned && anotherKingIdx != null)
-                    this.setOwner(anotherKingIdx, true);
-            }
-
-            for (let i in this.areas) {
-                let eachArea = this.areas[i];
-
-                if (eachArea.shelter && eachArea.shelter.name) {
-                    eachArea.shelter.player = 'gray';
-
-                    if (eachArea.unit && eachArea.unit.name)
-                        eachArea.shelter.player = eachArea.unit.player;
-                }
-            }
-        },
-        setBuff: function () {
-            let buffArr = this.getBuff();
-
-            for (let i in this.areas) {
-                if (this.getIsUnitInArea(i)) {
-                    let eachArea = this.areas[i];
-                    let eachUnit = eachArea.unit;
-                    let inInBuffArr = false;
-
-                    for (let j in buffArr) {
-                        if (Number(i) === Number(buffArr[j].idx) && eachUnit.player === buffArr[j].player) {
-                            inInBuffArr = true;
-                            break;
-                        }
-                    }
-
-                    if (inInBuffArr) {
-                        eachUnit.buffed['attack'] = 1;
-                        eachUnit.buffed['defense'] = 1;
-
-                        if (eachUnit.farm > 0)
-                            eachUnit.buffed['farm'] = 0.25;
-
-                        if (eachUnit.move > 1)
-                            eachUnit.buffed['move'] = 1;
-
-                        if (eachUnit.distance > 1)
-                            eachUnit.buffed['distance'] = 1;
-
-                        if (eachUnit.maxDistance > 1)
-                            eachUnit.buffed['maxDistance'] = 1;
-
-                        if (eachUnit.restoreHp > 0)
-                            eachUnit.buffed['restoreHp'] = 1;
-
-                        this.setLevel(i);
-                    }
-                    else {
-                        eachUnit.buffed = appLib.renew(this.base.buffed);
-                    }
-                }
-            }
-        },
-        setCounterAttack: function (delay) {
-            let t = this;
-            let isBlackTurn = t.status.turn === 'black';
-            let i = isBlackTurn ? t.areas.length : 0;
-
-            while (isBlackTurn ? i > 0 : i < t.areas.length) {
-                let idx = Number(i);
-                let eachArea = t.areas[idx];
-
-                if (t.getIsUnitInArea(idx) && eachArea.unit.player !== t.status.turn && eachArea.unit.distance && eachArea.unit.power) {
-                    let eachUnit = eachArea.unit;
-
-                    for (let j = 0; j < eachUnit.distance + eachUnit.buffed['distance']; j += 1) {
-                        let targetIdx = null;
-                        let lineCond = false;
-
-                        switch (eachUnit.direction) {
-                            case 12:
-                                targetIdx = idx - (t.base.columnNum * (j + 1));
-                                lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
-                                break;
-
-                            case 6:
-                                targetIdx = idx + (t.base.columnNum * (j + 1));
-                                lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
-                                break;
-
-                            case 3:
-                                targetIdx = idx + j + 1;
-                                lineCond = t.areas[targetIdx] && eachArea.hnum === t.areas[targetIdx].hnum;
-                                break;
-
-                            case 9:
-                                targetIdx = idx - (j + 1);
-                                lineCond = t.areas[targetIdx] && eachArea.hnum === t.areas[targetIdx].hnum;
-                                break;
-                        }
-
-                        lineCond = lineCond && t.getIsInCross(idx, targetIdx);
-
-                        if (targetIdx && lineCond && !t.getIsShelterInArea(targetIdx) && targetIdx === t.active.idx && targetIdx >= 0 && t.getIsUnitInArea(targetIdx) && eachUnit.player !== t.areas[targetIdx].unit.player) {
-                            t.active.tempIdx = t.active.idx;
-                            t.active.idx = idx;
-
-                            if (eachUnit.distance > 1) {
-                                if (eachUnit.hp < 0)
-                                    return;
-
-                                t.$set(t.areas[targetIdx], 'weapon', {
-                                    name: eachUnit.weapon,
-                                    direction: eachUnit.direction,
-                                    status: null,
-                                    style: {}
-                                });
-
-                                t.setAnimate(idx, targetIdx, 'weapon');
-
-                                if (eachUnit.through) {
-                                    let attackArr = [];
-
-                                    for (let x = 0; x < eachUnit.distance + eachUnit.buffed['distance']; x += 1) {
-                                        switch (eachUnit.direction) {
-                                            case 12:
-                                                attackArr.push(idx - (t.base.columnNum * (x + 1)));
-                                                break;
-
-                                            case 6:
-                                                attackArr.push(idx + (t.base.columnNum * (x + 1)));
-                                                break;
-
-                                            case 3:
-                                                attackArr.push(idx + x + 1);
-                                                break;
-
-                                            case 9:
-                                                attackArr.push(idx - (x + 1));
-                                                break;
-                                        }
-                                    }
-
-                                    for (let y in attackArr)
-                                        t.setAttack(attackArr[y], true, true);
-                                }
-                                else {
-                                    t.setAttack(targetIdx, true, true);
-                                }
-
-                                eachUnit.power -= 0.5;
-                            }
-                            else {
-                                t.setAttack(targetIdx, true, delay);
-                                eachUnit.power -= 0.5;
-                            }
-
-                            t.active.idx = t.active.tempIdx;
-                        }
-                    }
-                }
-
-                i = i + (isBlackTurn ? -1 : 1);
-            }
-        },
-        setAttack: function (targetIdx, stay, delay, runDistance) {
-            let t = this;
-            let targetArea = t.areas[targetIdx];
-            let activeArea = t.areas[t.active.idx];
-            let isAlive = true;
-
-            if (((t.getIsShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.getIsUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player)) && t.getIsUnitInArea(t.active.idx)) {
-                let demage = activeArea.unit.attack + activeArea.unit.buffed['attack'];
-                let accelDemage = 0;
-                let activeDirection = t.getDirection(targetIdx, t.active.idx);
-
-                activeArea.unit.direction = activeDirection;
-
-                if (activeArea.unit.accel && Number(runDistance))
-                    accelDemage = Number(runDistance);
-
-                if (t.getIsShelterInArea(targetIdx)) {
-                    demage += accelDemage;
-                    targetArea.shelter.subHp += demage;
-                    isAlive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.getIsUnitInArea(targetIdx);
-
-                    setTimeout(function () {
-                        t.setShowUp('attack', targetIdx, demage, true);
-                    }, delay ? t.time.animate : 0);
-
-                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
-                        activeArea.unit.destory += 1;
-
-                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0 && activeArea.unit.distance < 2 && !t.getIsUnitInArea(targetIdx)) {
-                        targetArea.unit = appLib.renew(activeArea.unit);
-                        activeArea.unit = {};
-                        t.active.idx = targetIdx;
-                    }
-                }
-                else {
-                    let critical = 1;
-                    let multi = activeDirection * targetArea.unit.direction;
-                    let defense = 0;
-
-                    if (targetArea.unit.direction === activeDirection)
-                        critical = 3;
-                    else if (multi !== 27 && multi !== 72)
-                        critical = 1.5;
-                    else
-                        defense = targetArea.unit.defense + targetArea.unit.buffed['defense'];
-
-                    demage = demage * critical + accelDemage - defense;
-
-                    if (demage < 0)
-                        demage = 0;
-
-                    targetArea.unit.subHp += demage;
-                    isAlive = targetArea.unit.hp - targetArea.unit.subHp > 0;
-
-                    if (activeArea.unit.hp - activeArea.unit.subHp <= 0) {
-                        activeArea.unit.hp = -100;
-                        targetArea.unit.exp += activeArea.unit.crop + activeArea.unit.level;
-                    }
-
-                    if (targetArea.unit.hp - targetArea.unit.subHp <= 0) {
-                        targetArea.unit.hp = -100;
-                        activeArea.unit.exp += targetArea.unit.crop + targetArea.unit.level;
-                        activeArea.unit.destory += 1;
-
-                        if (activeArea.unit.distance < 2 && !stay && activeArea.unit.type === targetArea.type) {
-                            targetArea.unit = appLib.renew(activeArea.unit);
-                            activeArea.unit = {};
-                            t.active.idx = targetIdx;
-                        }
-                    }
-
-                    setTimeout(function () {
-                        t.setShowUp('attack', targetIdx, demage, true);
-                    }, delay ? t.time.animate : 0);
-                }
-
-                setTimeout(function () {
-                    for (let i in t.areas) {
-                        if (t.areas[i].unit && t.areas[i].unit.name) {
-                            t.areas[i].unit.hp -= t.areas[i].unit.subHp;
-                            t.areas[i].unit.subHp = 0;
-
-                            if (t.areas[i].unit.hp <= 0)
-                                t.areas[i].unit = {};
-                        }
-
-                        if (t.areas[i].shelter && t.areas[i].shelter.name) {
-                            t.areas[i].shelter.hp -= t.areas[i].shelter.subHp;
-                            t.areas[i].shelter.subHp = 0;
-
-                            if (t.areas[i].shelter.hp <= 0)
-                                t.areas[i].shelter = {};
-                        }
-                    }
-
-                    t.setFinished();
-                }, delay ? t.time.animate : 0);
-            }
-
-            return isAlive;
+        setShelter: function (player, name, idx) {
+            let shelter = appLib.renew(this.base.shelters[name]);
+            shelter.player = player;
+            this.areas[idx].shelter = shelter;
         },
         setRandomShelter: function () {
             let t = this;
@@ -1472,7 +1145,7 @@ let app = new Vue({
                 let shelterRandomArr = [];
 
                 for (let i in t.areas) {
-                    if (t.areas[i].type === 'land' && !t.getIsShelterInArea(i) && !t.getIsUnitInArea(i) && n ? i >= 81 && i <= 116 : i >= 27 && i <= 62)
+                    if (!t.isShelterInArea(i) && !t.isUnitInArea(i) && n ? i >= 81 && i <= 116 : i >= 27 && i <= 62)
                         shelterEmptyArr.push(i);
                 }
 
@@ -1538,18 +1211,352 @@ let app = new Vue({
                     upLevel += 1;
                 }
 
-                this.setShowUp('levelUp', i, upLevel);
+                this.showUp('levelUp', i, upLevel);
             }
         },
-        setCheckLevel: function () {
+        animate: function (startIdx, endIdx, type, func) {
+            let t = this;
+
+            if (startIdx !== endIdx) {
+                let startArea = t.areas[startIdx];
+                let endArea = t.areas[endIdx];
+                let unit = null;
+                let $startArea = $('#app .each-area[data-idx=' + startIdx + ']');
+
+                switch (type) {
+                    case 'weapon':
+                        unit = t.areas[endIdx].weapon;
+                        break;
+
+                    default:
+                        unit = t.areas[endIdx].unit;
+                        break;
+                }
+
+                //t.status.touchable = false;
+                unit.status = 'move';
+                t.$set(unit, 'style', { top: 0, left: 0 });
+
+                if (startArea.vnum === endArea.vnum)
+                    unit.style.top = (startArea.vidx - endArea.vidx) * $startArea.height() + 'px';
+                else if (startArea.hnum === endArea.hnum)
+                    unit.style.left = (startIdx - endIdx) * $startArea.width() + 'px';
+
+                setTimeout(function () {
+                    unit.style.top = 0;
+                    unit.style.left = 0;
+
+                    setTimeout(function () {
+                        unit.status = null;
+                        unit.style = {};
+                        //t.status.touchable = true;
+
+                        if (type === 'weapon')
+                            delete t.areas[endIdx]['weapon'];
+                    }, t.time.animate - 100);
+                }, 100);
+
+                if (typeof func === 'function')
+                    func();
+            }
+            else if (typeof func === 'function') {
+                func();
+            }
+        },
+        checkOwn: function (idx, isRunned) {
+            if (this.isUnitInArea(idx) && this.areas[idx].unit.name === 'king') {
+                let kingUnit = this.areas[idx].unit;
+                let startIdx = (Math.floor(idx / this.base.columnNum) * this.base.columnNum) + (this.base.columnNum * (kingUnit.player === 'black' ? -1 : 1));
+                let endIdx = startIdx + this.base.columnNum - 1;
+                let anotherKingIdx = null;
+
+                for (let i in this.areas) {
+                    let eachArea = this.areas[i];
+                    let idx = Number(i);
+                    let eachCond = kingUnit.player === 'black' ? idx >= startIdx : idx <= endIdx;
+
+                    if (eachCond) {
+                        if (!eachArea.owner && !eachArea.ownOnly)
+                            eachArea.owner = kingUnit.player;
+                    }
+                    else if (eachArea.owner === kingUnit.player && !eachArea.ownOnly) {
+                        eachArea.owner = null;
+                    }
+
+                    if (this.isUnitInArea(idx) && eachArea.unit.name === 'king' && eachArea.unit.player !== kingUnit.player)
+                        anotherKingIdx = idx;
+                }
+
+                if (!isRunned && anotherKingIdx != null)
+                    this.checkOwn(anotherKingIdx, true);
+            }
+
             for (let i in this.areas) {
-                if (this.getIsUnitInArea(i) && this.areas[i].unit.name === 'king')
+                let eachArea = this.areas[i];
+
+                if (eachArea.shelter && eachArea.shelter.name) {
+                    eachArea.shelter.player = 'gray';
+
+                    if (eachArea.unit && eachArea.unit.name)
+                        eachArea.shelter.player = eachArea.unit.player;
+                }
+            }
+        },
+        checkBuff: function () {
+            let buffArr = this.getBuffArr();
+
+            for (let i in this.areas) {
+                if (this.isUnitInArea(i)) {
+                    let eachArea = this.areas[i];
+                    let eachUnit = eachArea.unit;
+                    let inInBuffArr = false;
+
+                    for (let j in buffArr) {
+                        if (Number(i) === Number(buffArr[j].idx) && eachUnit.player === buffArr[j].player) {
+                            inInBuffArr = true;
+                            break;
+                        }
+                    }
+
+                    if (inInBuffArr) {
+                        eachUnit.buffed['attack'] = 1;
+                        eachUnit.buffed['defense'] = 1;
+
+                        if (eachUnit.farm > 0)
+                            eachUnit.buffed['farm'] = 0.25;
+
+                        if (eachUnit.move > 1)
+                            eachUnit.buffed['move'] = 1;
+
+                        if (eachUnit.distance > 1)
+                            eachUnit.buffed['distance'] = 1;
+
+                        if (eachUnit.maxDistance > 1)
+                            eachUnit.buffed['maxDistance'] = 1;
+
+                        if (eachUnit.restoreHp > 0)
+                            eachUnit.buffed['restoreHp'] = 1;
+
+                        this.setLevel(i);
+                    }
+                    else {
+                        eachUnit.buffed = appLib.renew(this.base.buffed);
+                    }
+                }
+            }
+        },
+        counterAttack: function (delay) {
+            let t = this;
+            let isBlackTurn = t.status.turn === 'black';
+            let i = isBlackTurn ? t.areas.length : 0;
+
+            while (isBlackTurn ? i > 0 : i < t.areas.length) {
+                let idx = Number(i);
+                let eachArea = t.areas[idx];
+
+                if (t.isUnitInArea(idx) && eachArea.unit.player !== t.status.turn && eachArea.unit.distance && eachArea.unit.power) {
+                    let eachUnit = eachArea.unit;
+
+                    for (let j = 0; j < eachUnit.distance + eachUnit.buffed['distance']; j += 1) {
+                        let targetIdx = null;
+                        let lineCond = false;
+
+                        switch (eachUnit.direction) {
+                            case 12:
+                                targetIdx = idx - (t.base.columnNum * (j + 1));
+                                lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
+                                break;
+
+                            case 6:
+                                targetIdx = idx + (t.base.columnNum * (j + 1));
+                                lineCond = t.areas[targetIdx] && eachArea.vnum === t.areas[targetIdx].vnum;
+                                break;
+
+                            case 3:
+                                targetIdx = idx + j + 1;
+                                lineCond = t.areas[targetIdx] && eachArea.hnum === t.areas[targetIdx].hnum;
+                                break;
+
+                            case 9:
+                                targetIdx = idx - (j + 1);
+                                lineCond = t.areas[targetIdx] && eachArea.hnum === t.areas[targetIdx].hnum;
+                                break;
+                        }
+
+                        lineCond = lineCond && t.isInCross(idx, targetIdx);
+
+                        if (targetIdx && lineCond && !t.isShelterInArea(targetIdx) && targetIdx === t.active.idx && targetIdx >= 0 && t.isUnitInArea(targetIdx) && eachUnit.player !== t.areas[targetIdx].unit.player) {
+                            t.active.tempIdx = t.active.idx;
+                            t.active.idx = idx;
+
+                            if (eachUnit.distance > 1) {
+                                if (eachUnit.hp < 0)
+                                    return;
+
+                                t.$set(t.areas[targetIdx], 'weapon', {
+                                    name: eachUnit.weapon,
+                                    direction: eachUnit.direction,
+                                    status: null,
+                                    style: {}
+                                });
+
+                                t.animate(idx, targetIdx, 'weapon');
+
+                                if (eachUnit.through) {
+                                    let attackArr = [];
+
+                                    for (let x = 0; x < eachUnit.distance + eachUnit.buffed['distance']; x += 1) {
+                                        switch (eachUnit.direction) {
+                                            case 12:
+                                                attackArr.push(idx - (t.base.columnNum * (x + 1)));
+                                                break;
+
+                                            case 6:
+                                                attackArr.push(idx + (t.base.columnNum * (x + 1)));
+                                                break;
+
+                                            case 3:
+                                                attackArr.push(idx + x + 1);
+                                                break;
+
+                                            case 9:
+                                                attackArr.push(idx - (x + 1));
+                                                break;
+                                        }
+                                    }
+
+                                    for (let y in attackArr)
+                                        t.attack(attackArr[y], true, true);
+                                }
+                                else {
+                                    t.attack(targetIdx, true, true);
+                                }
+
+                                eachUnit.power -= 0.5;
+                            }
+                            else {
+                                t.attack(targetIdx, true, delay);
+                                eachUnit.power -= 0.5;
+                            }
+
+                            t.active.idx = t.active.tempIdx;
+                        }
+                    }
+                }
+
+                i = i + (isBlackTurn ? -1 : 1);
+            }
+        },
+        attack: function (targetIdx, stay, delay, runDistance) {
+            let t = this;
+            let targetArea = t.areas[targetIdx];
+            let activeArea = t.areas[t.active.idx];
+            let isAlive = true;
+
+            if (((t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player)) && t.isUnitInArea(t.active.idx)) {
+                let demage = activeArea.unit.attack + activeArea.unit.buffed['attack'];
+                let accelDemage = 0;
+                let activeDirection = t.getDirection(targetIdx, t.active.idx);
+
+                activeArea.unit.direction = activeDirection;
+
+                if (activeArea.unit.accel && Number(runDistance))
+                    accelDemage = Number(runDistance);
+
+                if (t.isShelterInArea(targetIdx)) {
+                    demage += accelDemage;
+                    targetArea.shelter.subHp += demage;
+                    isAlive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.isUnitInArea(targetIdx);
+
+                    setTimeout(function () {
+                        t.showUp('attack', targetIdx, demage, true);
+                    }, delay ? t.time.animate : 0);
+
+                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
+                        activeArea.unit.destory += 1;
+
+                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0 && activeArea.unit.distance < 2 && !t.isUnitInArea(targetIdx)) {
+                        targetArea.unit = appLib.renew(activeArea.unit);
+                        activeArea.unit = {};
+                        t.active.idx = targetIdx;
+                    }
+                }
+                else {
+                    let critical = 1;
+                    let multi = activeDirection * targetArea.unit.direction;
+                    let defense = 0;
+
+                    if (targetArea.unit.direction === activeDirection)
+                        critical = 3;
+                    else if (multi !== 27 && multi !== 72)
+                        critical = 1.5;
+                    else
+                        defense = targetArea.unit.defense + targetArea.unit.buffed['defense'];
+
+                    demage = demage * critical + accelDemage - defense;
+
+                    if (demage < 0)
+                        demage = 0;
+
+                    targetArea.unit.subHp += demage;
+                    isAlive = targetArea.unit.hp - targetArea.unit.subHp > 0;
+
+                    if (activeArea.unit.hp - activeArea.unit.subHp <= 0) {
+                        activeArea.unit.hp = -100;
+                        targetArea.unit.exp += activeArea.unit.crop + activeArea.unit.level;
+                    }
+
+                    if (targetArea.unit.hp - targetArea.unit.subHp <= 0) {
+                        targetArea.unit.hp = -100;
+                        activeArea.unit.exp += targetArea.unit.crop + targetArea.unit.level;
+                        activeArea.unit.destory += 1;
+
+                        if (activeArea.unit.distance < 2 && !stay) {
+                            targetArea.unit = appLib.renew(activeArea.unit);
+                            activeArea.unit = {};
+                            t.active.idx = targetIdx;
+                        }
+                    }
+
+                    setTimeout(function () {
+                        t.showUp('attack', targetIdx, demage, true);
+                    }, delay ? t.time.animate : 0);
+                }
+
+                setTimeout(function () {
+                    for (let i in t.areas) {
+                        if (t.areas[i].unit && t.areas[i].unit.name) {
+                            t.areas[i].unit.hp -= t.areas[i].unit.subHp;
+                            t.areas[i].unit.subHp = 0;
+
+                            if (t.areas[i].unit.hp <= 0)
+                                t.areas[i].unit = {};
+                        }
+
+                        if (t.areas[i].shelter && t.areas[i].shelter.name) {
+                            t.areas[i].shelter.hp -= t.areas[i].shelter.subHp;
+                            t.areas[i].shelter.subHp = 0;
+
+                            if (t.areas[i].shelter.hp <= 0)
+                                t.areas[i].shelter = {};
+                        }
+                    }
+
+                    t.checkFinished();
+                }, delay ? t.time.animate : 0);
+            }
+
+            return isAlive;
+        },
+        checkLevel: function () {
+            for (let i in this.areas) {
+                if (this.isUnitInArea(i) && this.areas[i].unit.name === 'king')
                     this.setLevel(i);
-                else if (this.getIsInShelterOrArea(i))
+                else if (this.isInShelterOrArea(i))
                     this.setLevel(i);
             }
         },
-        setShowUp: function (act, idx, val, isImportant) {
+        showUp: function (act, idx, val, isImportant) {
             let visible = val || isImportant;
 
             if (act === 'attack') {
@@ -1589,25 +1596,16 @@ let app = new Vue({
                 });
             }
         },
-        setMove: function (idx) {
-            let targetArea = this.areas[idx];
-            let activeArea = this.areas[this.active.idx];
-
-            activeArea.unit.direction = this.getDirection(idx, this.active.idx);
-            targetArea.unit = activeArea.unit;
-            activeArea.unit = {};
-            this.active.idx = idx;
-        },
-        setAreaDefault: function () {
+        initAreas: function () {
             for (let i in this.areas)
                 delete this.areas[i].status;
         },
-        setGrabbedDefault: function () {
+        initGrab: function () {
             this.grabbed = {
                 name: null
             };
         },
-        setActiveDefault: function () {
+        initActive: function () {
             this.active = {
                 idx: null,
                 tempIdx: null,
@@ -1661,13 +1659,13 @@ let app = new Vue({
                 }, time ? time : 2500);
             }
         },
-        setLabelHide: function () {
+        hideLabel: function () {
             if (this.status.started)
                 this.label.message = null;
         },
-        setTurn: function (player) {
+        turnOver: function (player) {
             let crop = 0;
-            let buffArr = this.getBuff();
+            let buffArr = this.getBuffArr();
 
             this.status.turn = player;
 
@@ -1684,7 +1682,7 @@ let app = new Vue({
                     if (eachUnit.player === player) {
                         let inInBuffArr = false;
                         let restoreHp = 0;
-                        let isInShelterOrArea = this.getIsInShelterOrArea(i);
+                        let isInShelterOrArea = this.isInShelterOrArea(i);
 
                         for (let j in buffArr) {
                             if (Number(i) === Number(buffArr[j].idx) && eachUnit.player === buffArr[j].player) {
@@ -1720,7 +1718,7 @@ let app = new Vue({
                                 restoreHp = eachUnit.restoreHp + (eachUnit.buffed['restoreHp']);
 
                             eachUnit.hp += restoreHp;
-                            this.setShowUp('restoreHp', i, restoreHp);
+                            this.showUp('restoreHp', i, restoreHp);
 
                             if (eachUnit.hp > eachUnit.maxHp)
                                 eachUnit.hp = eachUnit.maxHp;
@@ -1737,16 +1735,16 @@ let app = new Vue({
             if (this.status[player].crop > this.status[player].maxCrop)
                 this.status[player].crop = this.status[player].maxCrop;
 
-            this.setBuff();
-            this.setCheckLevel();
-            this.setAreaDefault();
-            this.setActiveDefault();
-            this.setGrabbedDefault();
+            this.checkBuff();
+            this.checkLevel();
+            this.initAreas();
+            this.initActive();
+            this.initGrab();
 
             if (!this.status.replay)
                 this.setTimer();
         },
-        setAutoRotate: function () {
+        rotateAuto: function () {
             if (this.active.idx === undefined || this.active.idx === null)
                 return;
 
@@ -1767,13 +1765,13 @@ let app = new Vue({
             for (let i in autoRotates) {
                 let area = autoRotates[i].area;
 
-                if (area && area.unit && area.unit.name && this.getIsUnitInArea(this.active.idx) && area.unit.player !== this.areas[this.active.idx].unit.player && this.getIsInCross(this.active.idx, area.idx))
+                if (area && area.unit && area.unit.name && this.isUnitInArea(this.active.idx) && area.unit.player !== this.areas[this.active.idx].unit.player && this.isInCross(this.active.idx, area.idx))
                     area.unit.direction = autoRotates[i].direction;
             }
 
             if (this.autoRotateArr.length) {
                 for (let i in this.autoRotateArr) {
-                    if (this.getIsUnitInArea(this.autoRotateArr[i].idx))
+                    if (this.isUnitInArea(this.autoRotateArr[i].idx))
                         this.areas[this.autoRotateArr[i].idx].unit.direction = this.autoRotateArr[i].direction;
                 }
 
@@ -1798,7 +1796,7 @@ let app = new Vue({
                     }
                 }
                 else {
-                    t.setModalClose();
+                    t.closeModal();
 
                     if (t.status.turn === t.my.player) {
                         t.setMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
@@ -1807,14 +1805,14 @@ let app = new Vue({
                 }
             }, 1000);
         },
-        setModalClose: function () {
+        closeModal: function () {
             this.modal = {
                 idx: null,
                 info: {},
                 type: null
             };
         },
-        setFinished: function () {
+        checkFinished: function () {
             let t = this;
 
             if (!t.status.finished) {
@@ -1903,7 +1901,7 @@ let app = new Vue({
                             if (t.my.player === 'black') {
                                 setTimeout(function () {
                                     t.setRandomShelter();
-                                    t.request('setAreas', JSON.stringify(t.areas));
+                                    //t.request('deploy', JSON.stringify(t.areas));
                                     t.request('pass', 'black');
                                 }, 3500);
                             }
@@ -1921,6 +1919,9 @@ let app = new Vue({
 
                         default:
                             if (typeof t[res.value.name] === 'function') {
+                                if (res.value.name === 'touch' || res.value.name === 'grab')
+                                    t.status.touchable = true;
+
                                 t.runFunc(res.value);
                                 t.flows.push(res.value);
                             }
