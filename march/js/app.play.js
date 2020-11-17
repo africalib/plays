@@ -482,10 +482,6 @@ let app = new Vue({
                 t.initGrab();
             });
 
-            window.onbeforeunload = function () {
-                return true;
-            };
-
             t.setLabel("You are the " + t.my.player + " player", 2500);
 
             setTimeout(function () {
@@ -1974,6 +1970,10 @@ let app = new Vue({
                                     t.request('pass', 'black');
                                 }, 3500);
                             }
+
+                            window.onbeforeunload = function () {
+                                return true;
+                            };
                             break;
 
                         case 'disconnect':
