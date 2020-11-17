@@ -527,11 +527,8 @@ let app = new Vue({
             localStorage.setItem('replays', JSON.stringify(replays));
         },
         runFunc: function (value) {
-            switch (value.name) {
-                case 'touch':
-                    this.status.touchable = true;
-                    break;
-            }
+            if (value.name === 'touch' || value.name === 'grab')
+                this.status.touchable = true;
 
             if (!isNaN(Number(value.val1)))
                 value.val1 = Number(value.val1);
@@ -540,9 +537,9 @@ let app = new Vue({
                 value.val2 = Number(value.val2);
 
             if (value.val2)
-                this[value.name](value.val1, value.val2, true);
+                this[value.name](value.val1, value.val2);
             else
-                this[value.name](value.val1, true);
+                this[value.name](value.val1);
         },
         play: function () {
             let t = this;
@@ -586,24 +583,23 @@ let app = new Vue({
             location.href = 'index.html';
         },
         request: function (name, val1, val2) {
+            if (name === 'touch' || name === 'grab')
+                this.status.touchable = false;
+
             socket.emit('request', { type: 'send', name: name, player: this.my.player, val1: val1, val2: val2 });
         },
-        pass: function (player, requested) {
-            if (!requested) {
-                this.request('setAreas', JSON.stringify(this.areas));
-                this.request('pass', player);
-                return;
-            }
-
+        pass: function (player) {
             this.setMessage('hide');
             this.setTurn(player);
         },
         getTouchable: function (idx) {
-            if (this.status.started && !this.status.finished && this.status.touchable && !this.status.replay) {
-                var area = this.areas[idx];
+            if (this.status.started && !this.status.finished && this.status.turn && this.status.touchable && !this.status.replay) {
+                if (idx !== undefined) {
+                    var area = this.areas[idx];
 
-                if (area && area.unit && Object.keys(area.unit).length && area.status !== 'attack')
-                    return area.unit.player === this.my.player;
+                    if (area && area.unit && Object.keys(area.unit).length && area.status !== 'attack')
+                        return area.unit.player === this.my.player;
+                }
 
                 return true;
             }
@@ -669,22 +665,10 @@ let app = new Vue({
             shelter.player = player;
             this.areas[idx].shelter = shelter;
         },
-        touch: function (idx, requested) {
+        touch: function (idx) {
             let t = this;
-            let targetArea;
-            let activeArea;
-
-            if (!requested) {
-                if (t.status.touchable) {
-                    t.status.touchable = false;
-                    t.request('touch', idx);
-                }
-
-                return;
-            }
-
-            targetArea = t.areas[idx];
-            activeArea = t.areas[t.active.idx];
+            let targetArea = t.areas[idx];
+            let activeArea = t.areas[t.active.idx];
 
             if (t.getIsUnitInArea(idx) && targetArea.unit.player === t.status.turn) {
                 if (t.active.idx === idx || !targetArea.unit.power) {
@@ -983,12 +967,7 @@ let app = new Vue({
         closeModal: function () {
             this.setModalClose();
         },
-        grab: function (name, requested) {
-            if (!requested) {
-                this.request('grab', name);
-                return;
-            }
-
+        grab: function (name) {
             this.setAreaDefault();
             this.setActiveDefault();
 
@@ -1819,13 +1798,12 @@ let app = new Vue({
                     }
                 }
                 else {
-                    if (t.status.turn === t.my.player)
-                        t.setMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
-
                     t.setModalClose();
 
-                    if (t.my.player === t.status.turn)
-                        t.pass(t.status.turn === 'white' ? 'black' : 'white');
+                    if (t.status.turn === t.my.player) {
+                        t.setMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
+                        t.request('pass', t.status.turn === 'white' ? 'black' : 'white');
+                    }
                 }
             }, 1000);
         },
@@ -1925,7 +1903,8 @@ let app = new Vue({
                             if (t.my.player === 'black') {
                                 setTimeout(function () {
                                     t.setRandomShelter();
-                                    t.pass('black');
+                                    t.request('setAreas', JSON.stringify(t.areas));
+                                    t.request('pass', 'black');
                                 }, 3500);
                             }
                             break;

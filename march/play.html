@@ -55,7 +55,7 @@
                             v-bind:data-type="a.type" v-bind:data-player="a.player" v-bind:data-vidx="a.vidx"
                             v-bind:data-hidx="a.hidx" v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum"
                             v-bind:data-status="a.status" v-bind:data-shelter="a.shelter.name"
-                            v-on:click="getTouchable(idx) && touch(idx)">
+                            v-on:click="getTouchable(idx) && request('touch', idx)">
                             <div class="unit" v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
                                 v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
                                 v-bind:data-status="a.unit.status" v-if="a.unit.name" v-bind:style="a.unit.style">
@@ -114,7 +114,7 @@
                             <div class="each-unit" v-bind:data-name="u.name"
                                 v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
                                 v-for="u in base.units" v-bind:key="u.name"
-                                v-on:click="status.started && !status.finished && status.turn && grab(u.name)"
+                                v-on:click="getTouchable() && request('grab', u.name)"
                                 v-if="u.crop">
                                 <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
                                 <img v-bind:src="'img/' + my.player + '/' + u.name + '.png'"
@@ -123,7 +123,7 @@
                         </div>
                         <div class="action">
                             <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
-                            <button type="button" v-on:click="pass(my.player === 'black' ? 'white' : 'black')"
+                            <button type="button" v-on:click="request('pass', my.player === 'black' ? 'white' : 'black')"
                                 v-bind:disabled="!status.started || status.turn !== my.player">pass</button>
                         </div>
                     </div>
