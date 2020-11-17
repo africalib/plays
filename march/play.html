@@ -107,15 +107,18 @@
                         <div class="flow">
                             {{ replay.idx + 1 }} / {{ replay.flows.length }}
                         </div>
-                        <div class="speed" v-on:click="speed()">&times; {{ replay.speed }}</div>
+                        <div class="action">
+                            <button type="button" class="home" v-on:click="goHome()" v-if="status.finished">home</button>
+                            <button type="button" class="speed" v-on:click="speed()"
+                                v-else>&times;{{ replay.speed }}</button>
+                        </div>
                     </div>
                     <div class="controls play" v-else>
                         <div class="units">
                             <div class="each-unit" v-bind:data-name="u.name"
                                 v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
                                 v-for="u in base.units" v-bind:key="u.name"
-                                v-on:click="getTouchable() && request('grab', u.name)"
-                                v-if="u.crop">
+                                v-on:click="getTouchable() && request('grab', u.name)" v-if="u.crop">
                                 <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
                                 <img v-bind:src="'img/' + my.player + '/' + u.name + '.png'"
                                     v-bind:data-rotate="u.rotate" />
@@ -123,7 +126,8 @@
                         </div>
                         <div class="action">
                             <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
-                            <button type="button" v-on:click="request('pass', my.player === 'black' ? 'white' : 'black')"
+                            <button type="button"
+                                v-on:click="request('pass', my.player === 'black' ? 'white' : 'black')"
                                 v-bind:disabled="!status.started || status.turn !== my.player">pass</button>
                         </div>
                     </div>

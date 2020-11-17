@@ -18,6 +18,9 @@ img {
 
 button {
     outline: 0 !important;
+    box-shadow: none;
+    background: none;
+    border: 0;
 }
 
 .hided {
@@ -448,6 +451,22 @@ button {
     border-top: 1px solid #ddd;
 }
 
+.app > .wrapper > .bottom > .controls .action {
+    font-size: 12px;
+    display: inline-block;
+    height: 100%;
+    width: calc(100%/9*2);
+    position: relative;
+}
+
+.app > .wrapper > .bottom > .controls .action > button {
+    width: 100%;
+    height: 100%;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border: 0;
+}
+
 .app > .wrapper > .bottom > .controls.play .units {
     width: 100%;
     position: absolute;
@@ -496,23 +515,6 @@ button {
     bottom: 3px;
 }
 
-.app > .wrapper > .bottom > .controls.play .action {
-    display: inline-block;
-    font-size: 12px;
-    padding: 6px;
-    height: 100%;
-    width: calc(100%/9*2);
-    position: relative;
-}
-
-.app > .wrapper > .bottom > .controls.play .action > button {
-    width: 100%;
-    height: 100%;
-    font-weight: bold;
-    letter-spacing: 1px;
-    border: 0;
-}
-
 .app > .wrapper > .bottom > .controls.replay {
     text-align: center;
     font-size: 20px;
@@ -544,12 +546,21 @@ button {
     padding: 0 10px;
 }
 
-.app > .wrapper > .bottom > .controls.replay .speed {
+.app > .wrapper > .bottom > .controls.replay .action {
+    width: calc(100%/9*2);
     position: absolute;
     right: 0;
     top: 0;
-    text-align: center;
-    width: calc(100%/9*2);
+    height: 100%;
+}
+
+.app > .wrapper > .bottom > .controls.replay .action button {
+    width: 100%;
+    height: 100%;
+}
+
+.app > .wrapper > .bottom > .controls.replay .action > button.speed {
+    font-size: 20px;
 }
 
 .app > .wrapper > .bottom > .controls .action {
@@ -557,7 +568,9 @@ button {
 }
 
 .app > .wrapper > .bottom > .controls .action button {
-    background: none;
+    width: 100%;
+    height: 100%;
+    font-size: 12px;
 }
 
 .app .pause-area {
@@ -701,7 +714,7 @@ button {
     display: none;
 }
 
-.app > .landscape {
+.app[data-device=mobile] > .landscape {
     display: none;
     background: url(../img/common/tile.zigzag.png);
     text-align: center;
@@ -713,22 +726,22 @@ button {
     z-index: 1000;
 }
 
-.app > .landscape > .wrapper {
+.app[data-device=mobile] > .landscape > .wrapper {
     display: table-row;
     background: rgba(255, 255, 255, 0.76);
 }
 
-.app > .landscape > .wrapper > .wrapper {
+.app[data-device=mobile] > .landscape > .wrapper > .wrapper {
     display: table-cell;
     vertical-align: middle;
 }
 
-.app > .landscape > .wrapper > .wrapper i {
+.app[data-device=mobile] > .landscape > .wrapper > .wrapper i {
     font-size: 90px;
     margin-bottom: 30px;
 }
 
-.app > .landscape > .wrapper span {
+.app[data-device=mobile] > .landscape > .wrapper span {
     font-size: 20px;
 }
 
@@ -755,11 +768,11 @@ button {
 }
 
 @media (orientation: landscape) {
-    .app > .wrapper {
+    .app[data-device=mobile] > .wrapper {
         display: none;
     }
 
-    .app > .landscape {
+    .app[data-device=mobile] > .landscape {
         display: table;
     }
 }
