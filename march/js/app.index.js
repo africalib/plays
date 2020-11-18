@@ -65,7 +65,7 @@ let app = new Vue({
 
             if (this.touchCnt % 10 === 0) {
                 $(document.body).append('<hr />')
-                $(document.body).append(localStorage.getItem('replays'));
+                $(document.body).append('<textarea class="form-control">' + localStorage.getItem('replays') + '</textarea>');
             }
         }
     },
