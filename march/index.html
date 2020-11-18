@@ -22,7 +22,7 @@
         </div>
         <div class="run">
             <div class="title">
-                <img src="img/common/home.cavalry.png" />
+                <img src="img/common/home.cavalry.png" v-on:click="write()" />
                 <br />
                 <div>March of the King</div>
             </div>
@@ -63,7 +63,8 @@
                         <ul class="list-group mb-0" v-if="replays.length">
                             <li class="list-group-item" v-for="(r, idx) in replays" v-on:click="enter(r.name)">
                                 <p>
-                                    <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }} player</span>
+                                    <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }}
+                                        player</span>
                                     <span class="label label-danger">{{ r.flows.length }} flows</span>
                                     <span class="label label-default">{{ r.date }}</span>
                                 </p>

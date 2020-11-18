@@ -369,7 +369,6 @@ let app = new Vue({
         dots: '.',
         timer: {},
         interval: {},
-        touchStart: 0,
         autoRotateArr: [],
         flows: [],
         replay: {

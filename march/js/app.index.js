@@ -7,7 +7,8 @@ let app = new Vue({
             loaded: false,
             list: []
         },
-        replays: []
+        replays: [],
+        touchCnt: 0
     },
     methods: {
         enter: function (name) {
@@ -57,6 +58,14 @@ let app = new Vue({
             if (confirm('삭제하시겠습니까?')) {
                 this.replays.splice(idx, 1);
                 localStorage.setItem('replays', JSON.stringify(this.replays));
+            }
+        },
+        write: function () {
+            this.touchCnt += 1;
+
+            if (this.touchCnt % 10 === 0) {
+                $(document.body).append('<hr />')
+                $(document.body).append(localStorage.getItem('replays'));
             }
         }
     },
