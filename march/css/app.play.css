@@ -659,7 +659,7 @@ button {
 }
 
 .app .modal-area .img-part {
-    margin: 10% 0 12.5% 0;
+    margin: 70px 0 10px 0;
     text-align: center;
 }
 
@@ -683,18 +683,62 @@ button {
     transform: rotate(90deg);
 }
 
+.app .modal-area .info-part {
+    color: #fff;
+}
+
+.app .modal-area .info-part > .name {
+    padding: 7px 0 20px 0;
+    text-align: center;
+}
+
+.app .modal-area .info-part > .name > .name {
+    font-size: 21px;
+    display: inline-block;
+    margin-right: 12px;
+}
+
 .app .modal-area .info-part table {
     border-bottom: 1px solid #ddd;
+    table-layout: fixed;
 }
 
 .app .modal-area .info-part table th, .app .modal-area .info-part table td {
     font-size: 11px;
     color: #fff;
+    text-align: center;
+    padding: 10px 5px;
 }
 
 .app .modal-area .info-part table th {
     text-align: right;
     font-weight: 600;
+    width: 70px;
+}
+
+.app .modal-area .info-part > .bar {
+    margin-bottom: 10px;
+}
+
+.app .modal-area .info-part > .bar table {
+    border: 0;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.app .modal-area .info-part > .bar table td {
+    border: 0;
+    padding: 5px 10px;
+}
+
+.app .modal-area .info-part > .bar table td .progress-bar {
+    height: 10px;
+    min-width: 20px;
+}
+
+.app .modal-area .info-part > .bar table td.text {
+    width: 110px;
+    text-align: right;
 }
 
 .app .modal-area .close-btn {
@@ -704,6 +748,7 @@ button {
     right: 10px;
     font-size: 50px;
     font-family: initial;
+    line-height: 0.9;
 }
 
 .app[data-started=Y][data-player=white] > .wrapper > .area {

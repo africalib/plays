@@ -141,18 +141,35 @@
                         </span>
                     </div>
                     <div class="info-part">
+                        <div class="name">
+                            <span class="name">{{ modal.info.name }}</span>
+                            <span>Lv. {{ modal.info.level }}</span>
+                        </div>
+                        <div class="bar">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td class="text">hp : {{ modal.info.hp }} / {{ modal.info.maxHp }}</td>
+                                        <td>
+                                            <div class="progress-bar progress-bar-striped progress-bar-danger"
+                                                v-bind:style="{ width : modal.info.hp ? (modal.info.hp / modal.info.maxHp * 100) + '%' : 0 }">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <tbody>
+                                    <tr>
+                                        <td class="text">exp : {{ modal.info.exp }} / {{ modal.info.maxExp }}</td>
+                                        <td>
+                                            <div class="progress-bar progress-bar-striped"
+                                                v-bind:style="{ width : modal.info.exp ? (modal.info.exp / modal.info.maxExp * 100) + '%' : 0 }">
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <table class="table" v-if="modal.type === 'shelter'">
                             <tbody>
-                                <tr>
-                                    <th>{{ getLang('ko', 'name') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.name }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'type') }}</th>
-                                    <td>:</td>
-                                    <td>shelter</td>
-                                </tr>
                                 <tr>
                                     <th>{{ getLang('ko', 'hp') }}</th>
                                     <td>:</td>
@@ -161,80 +178,40 @@
                             </tbody>
                         </table>
                         </table>
-                        <table class="table" v-if="modal.type === 'unit'">
+                        <table class="table">
                             <tbody>
                                 <tr>
-                                    <th>{{ getLang('ko', 'name') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.name }}</td>
-                                    <th>{{ getLang('ko', 'type') }}</th>
-                                    <td>:</td>
-                                    <td>unit</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'level') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.level }} / {{ modal.info.maxLevel }}</td>
-                                    <th>{{ getLang('ko', 'exp') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.exp }} / {{ modal.info.maxExp }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'move') }}</th>
-                                    <td>:</td>
-                                    <td>{{ getModalProp('move') }} / {{ modal.info.maxMove }}</td>
+                                    <th>{{ getLang('ko', 'attack') }}</th>
+                                    <td>{{ getModalProp('attack') }}</td>
                                     <th>{{ getLang('ko', 'defense') }}</th>
-                                    <td>:</td>
                                     <td>{{ getModalProp('defense') }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ getLang('ko', 'crop') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.crop }}</td>
                                     <th>{{ getLang('ko', 'farm') }}</th>
-                                    <td>:</td>
                                     <td>{{ getModalProp('farm') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'direction') }}</th>
-                                    <td>:</td>
-                                    <td>{{ getModalProp('direction') }}</td>
                                     <th>{{ getLang('ko', 'destory') }}</th>
-                                    <td>:</td>
                                     <td>{{ modal.info.destory }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ getLang('ko', 'power') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.power }} / {{ getModalProp('maxPower') }}</td>
                                     <th>{{ getLang('ko', 'restorePower') }}</th>
-                                    <td>:</td>
                                     <td>{{ modal.info.restorePower }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'hp') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.hp }} / {{ getModalProp('maxHp') }}</td>
                                     <th>{{ getLang('ko', 'restoreHp') }}</th>
-                                    <td>:</td>
                                     <td>{{ getModalProp('restoreHp') }}</td>
                                 </tr>
                                 <tr>
-                                    <th>{{ getLang('ko', 'attack') }}</th>
-                                    <td>:</td>
-                                    <td>{{ getModalProp('attack') }}</td>
+                                    <th>{{ getLang('ko', 'move') }}</th>
+                                    <td>{{ getModalProp('move') }}</td>
                                     <th>{{ getLang('ko', 'distance') }}</th>
-                                    <td>:</td>
-                                    <td>{{ getModalProp('distance') }} / {{ modal.info.maxDistance }}</td>
+                                    <td>{{ getModalProp('distance') }}</td>
                                 </tr>
-                                <tr>
+                                <!-- <tr>
                                     <th>{{ getLang('ko', 'accel') }}</th>
                                     <td>:</td>
                                     <td>{{ getLang('ko', modal.info.accel) }}</td>
                                     <th>{{ getLang('ko', 'through') }}</th>
                                     <td>:</td>
                                     <td>{{ getLang('ko', modal.info.through) }}</td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>

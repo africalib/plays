@@ -20,7 +20,7 @@ let app = new Vue({
             }
         },
         set: function () {
-            var t = this;
+            let t = this;
             t.room.loaded = false;
 
             $.getJSON(global.baseUrl + '/rooms', function (res) {
@@ -38,11 +38,12 @@ let app = new Vue({
             }
         },
         open: function () {
+            let t = this;
             let replays = localStorage.getItem('replays');
 
             if (replays) {
-                this.replays = JSON.parse(replays)
-                this.replays.sort(function (a, b) {
+                t.replays = JSON.parse(replays)
+                t.replays.sort(function (a, b) {
                     if (a.date < b.date)
                         return 1;
                     else if (a.date === b.date)
@@ -52,7 +53,14 @@ let app = new Vue({
                 });
             }
 
-            $(this.$refs.modal).modal('show');
+            if (!Array.isArray(t.replays) || !t.replays.length) {
+                $.get('./data/replays.json', function (res) {
+                    t.replays = res;
+                    localStorage.setItem('replays', JSON.stringify(t.replays));
+                });
+            }
+
+            $(t.$refs.modal).modal('show');
         },
         remove: function (idx) {
             if (confirm('삭제하시겠습니까?')) {

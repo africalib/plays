@@ -475,10 +475,6 @@ let app = new Vue({
                     t.modal.info = t.base.units[eachUnit.data('name')];
                     t.modal.info.player = t.my.player;
                 }
-
-                t.initAreas();
-                t.initActive();
-                t.initGrab();
             });
 
             t.setLabel("You are the " + t.my.player + " player", 2500);
@@ -556,7 +552,7 @@ let app = new Vue({
             clearInterval(this.interval['replay']);
         },
         speed: function () {
-            if (this.replay.speed >= 9)
+            if (this.replay.speed >= 10)
                 this.replay.speed = 0;
 
             this.replay.speed += 1;
@@ -586,7 +582,7 @@ let app = new Vue({
                         live.status = '';
 
                     for (let j in prev) {
-                        if (typeof prev[j] === 'object') {
+                        if (prev[j] && live[j] && typeof prev[j] === 'object' && typeof live[j] === 'object') {
                             if (JSON.stringify(prev[j]) !== JSON.stringify(live[j])) {
                                 obj[j] = {};
 
@@ -650,9 +646,9 @@ let app = new Vue({
                         case 'black': return '블랙';
                         case 'name': return '이름';
                         case 'type': return '타입';
-                        case 'move': return '이동';
-                        case 'attack': return '공격';
-                        case 'defense': return '방어';
+                        case 'move': return '이동 거리';
+                        case 'attack': return '공격력';
+                        case 'defense': return '방어력';
                         case 'distance': return '공격 거리';
                         case 'hp': return '체력';
                         case 'maxHp': return '최대 체력';
@@ -663,9 +659,9 @@ let app = new Vue({
                         case 'restoreHp': return '회복 체력';
                         case 'level': return '레벨';
                         case 'exp': return '경험';
-                        case 'farm': return '농사';
+                        case 'farm': return '수확 가능';
                         case 'direction': return '방향';
-                        case 'destory': return '파괴';
+                        case 'destory': return '파괴 숫자';
                         case 'accel': return '가속 공격';
                         case 'through': return '스루 공격';
                         case 'true': return '예';
@@ -721,7 +717,7 @@ let app = new Vue({
                 let val = areas[i].val;
 
                 for (let j in val) {
-                    if (typeof val[j] === 'object' && Object.keys(val[j]).length) {
+                    if (val[j] && typeof val[j] === 'object' && Object.keys(val[j]).length) {
                         for (let k in val[j])
                             this.areas.live[idx][j][k] = val[j][k];
                     }
@@ -1094,7 +1090,7 @@ let app = new Vue({
             if (this.isUnitInArea(i)) {
                 let eachArea = this.areas.live[i];
                 let eachUnit = eachArea.unit;
-                return eachArea.owner === eachUnit.player || (this.isShelterInArea(i) && eachArea.shelter.player === this.my.player);
+                return eachArea.owner === eachUnit.player || (this.isShelterInArea(i) && eachArea.shelter.player === eachUnit.player);
             }
 
             return false;
@@ -1962,10 +1958,8 @@ let app = new Vue({
                             t.start();
 
                             if (t.my.player === 'black') {
-                                t.setRandomShelter();
-                                // t.request('deployAll', JSON.stringify(t.areas.live));
-
                                 setTimeout(function () {
+                                    t.setRandomShelter();
                                     t.request('pass', 'black');
                                 }, 3500);
                             }

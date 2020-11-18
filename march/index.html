@@ -66,10 +66,10 @@
                                     <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }}
                                         player</span>
                                     <span class="label label-danger">{{ r.flows.length }} flows</span>
-                                    <span class="label label-default">{{ r.date }}</span>
+                                    <span class="label label-default" v-if="r.name !== 'preview'">{{ r.date }}</span>
                                 </p>
                                 <span>{{ r.name }}</span>
-                                <button type="button" class="close" v-on:click.stop="remove(idx)">×</button>
+                                <button type="button" class="close" v-on:click.stop="remove(idx)" v-if="r.name !== 'preview'">×</button>
                             </li>
                         </ul>
                         <div class="no-data" v-else>
