@@ -566,13 +566,6 @@ let app = new Vue({
                 date: appLib.now('yyyy-MM-dd HH:mm:ss')
             });
 
-            // json = JSON.stringify(replays, function (key, val) {
-            //     if (typeof val === 'function')
-            //         return '/func(' + val.toString() + ')/'
-
-            //     return val;
-            // });
-
             localStorage.setItem('replays', JSON.stringify(replays));
         },
         runFunc: function (value) {
@@ -1941,7 +1934,7 @@ let app = new Vue({
             for (let i in autoRotates) {
                 let area = autoRotates[i].area;
 
-                if (area && area.unit && area.unit.name && this.isUnitInArea(this.active.idx) && area.unit.player !== this.areas.live[this.active.idx].unit.player && this.isInCross(this.active.idx, area.idx))
+                if (area && area.unit && area.unit.name && this.isUnitInArea(this.active.idx) && area.unit.player !== this.areas.live[this.active.idx].unit.player && !this.areas.live[this.active.idx].unit.hidden && this.isInCross(this.active.idx, area.idx))
                     area.unit.direction = autoRotates[i].direction;
             }
 
