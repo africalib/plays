@@ -93,14 +93,14 @@ button {
 }
 
 .app > .wrapper > .area .area-wrapper .each-area:after {
-    background-image: url(../../img/common/tile.zigzag.png);
+    background: url(../../img/common/tile.zigzag.png);
     position: absolute;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
     content: '';
-    opacity: 0.5;
+    z-index: 10;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area.nature {
@@ -186,17 +186,13 @@ button {
     height: 100%;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area[data-owner='white'] {
+/* .app > .wrapper > .area .area-wrapper .each-area[data-owner='white'] {
     background: rgba(255, 255, 255, 0.76);
 }
 
 .app > .wrapper > .area .area-wrapper .each-area[data-owner='black'] {
     background: rgba(253, 255, 241, 0.76);
-}
-
-.app > .wrapper > .area .area-wrapper .each-area[data-type='sea'] {
-    background: #e0f7f4;
-}
+} */
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-direction='3'] img,
 .app > .wrapper > .area .area-wrapper .each-area .weapon[data-direction='3'] img {
@@ -223,15 +219,68 @@ button {
     background: rgba(255, 255, 255, 0.55);
 }
 
+.app > .wrapper > .area .area-wrapper .each-area .flag {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-top: -5px;
+    margin-left: -5px;
+    width: 10px;
+    opacity: 0.75;
+}
+
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .flag {
+    transform: rotate(180deg);
+}
+
 .app[data-started=Y][data-device=desktop] > .wrapper {
     width: 768px;
     max-width: 100%;
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]) {
+.app[data-player] > .wrapper > .area .area-wrapper .each-area:after {
+    background-color: #000;
+    background-image: url(../../img/common/tile.zigzag.png);
+    opacity: 0.5;
+    transition: opacity 0.25s;
+}
+
+.app[data-player] > .wrapper > .area .area-wrapper .each-area[data-visible=true]:after {
+    opacity: 0;
+    z-index: 1;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=black]) > *,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=white]) > * {
     display: none;
 }
 
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.4"]:after,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.4"]:after {
+    opacity: 0.4;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.3"]:after,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.3"]:after {
+    opacity: 0.3;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.2"]:after,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.2"]:after {
+    opacity: 0.2;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.1"]:after,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.1"]:after {
+    opacity: 0.1;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.0"]:after,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.0"]:after {
+    opacity: 0;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]),
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=white]) {
     display: none;
 }
@@ -759,6 +808,16 @@ button {
 
 .app[data-started=Y][data-player=white] > .wrapper > .area {
     transform: rotate(180deg);
+}
+
+.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area:after,
+.app[data-finished=Y] > .wrapper > .area .area-wrapper .each-area:after {
+    content: none !important;
+}
+
+.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area > *,
+.app[data-finished=Y] > .wrapper > .area .area-wrapper .each-area > * {
+    display: inline-block !important;
 }
 
 .app[v-cloak] {

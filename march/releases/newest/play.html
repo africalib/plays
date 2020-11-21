@@ -12,8 +12,9 @@
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <div id="app" class="app" v-bind:data-started="status.started ? 'Y' : 'N'" v-bind:data-player="my.player"
-        v-bind:data-turn="status.turn" v-cloak>
+    <div id="app" class="app" v-bind:data-started="status.started ? 'Y' : 'N'"
+        v-bind:data-replay="status.replay ? 'Y' : 'N'" v-bind:data-finished="status.finished ? 'Y' : 'N'"
+        v-bind:data-player="my.player" v-bind:data-turn="status.turn" v-cloak>
         <div class="wrapper">
             <div class="run" v-if="my.roomUrl && !status.started">
                 <div class="title">
@@ -54,7 +55,8 @@
                             v-for="(a, idx) in areas.live" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
                             v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
                             v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
-                            v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden"
+                            v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden ? 'true' : 'false'"
+                            v-bind:data-watchers="a.watchers" v-bind:data-opacity="a.opacity"
                             v-on:click="touchable(idx) && request('touch', idx)">
                             <div class="unit" v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"
                                 v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
@@ -85,6 +87,7 @@
                                 v-if="a.weapon && a.weapon.name" v-bind:style="a.weapon.style">
                                 <img v-bind:src="'../../img/common/weapon.' + a.weapon.name + '.png'" />
                             </div>
+                            <img src="../../img/common/flag.png" class="flag" v-if="a.owner === my.player" />
                         </div>
                     </div>
                     <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
@@ -153,7 +156,7 @@
                                     <tr>
                                         <td class="text">hp : {{ modal.info.hp }} / {{ modal.info.maxHp }}</td>
                                         <td>
-                                            <div class="progress-bar progress-bar-striped progress-bar-danger"
+                                            <div class="progress-bar progress-bar-striped progress-bar-danger active"
                                                 v-bind:style="{ width : modal.info.hp ? (modal.info.hp / modal.info.maxHp * 100) + '%' : 0 }">
                                             </div>
                                         </td>
@@ -161,7 +164,7 @@
                                     <tr v-if="modal.type === 'unit'">
                                         <td class="text">exp : {{ modal.info.exp }} / {{ modal.info.maxExp }}</td>
                                         <td>
-                                            <div class="progress-bar progress-bar-striped"
+                                            <div class="progress-bar progress-bar-striped active"
                                                 v-bind:style="{ width : modal.info.exp ? (modal.info.exp / modal.info.maxExp * 100) + '%' : 0 }">
                                             </div>
                                         </td>

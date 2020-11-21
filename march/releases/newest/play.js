@@ -27,6 +27,7 @@ let app = new Vue({
                 unit: {},
                 shelter: {},
                 weapon: {},
+                watchers: '',
                 vidx: 0,
                 hidx: 0,
                 vnum: 0,
@@ -59,7 +60,6 @@ let app = new Vue({
                     distance: 1,
                     maxDistance: 1,
                     through: false,
-                    multiple: false,
                     hp: 1,
                     maxHp: 1,
                     subHp: 0,
@@ -92,7 +92,6 @@ let app = new Vue({
                     distance: 1,
                     maxDistance: 1,
                     through: false,
-                    multiple: false,
                     hp: 5,
                     maxHp: 5,
                     subHp: 0,
@@ -125,7 +124,6 @@ let app = new Vue({
                     distance: 5,
                     maxDistance: 10,
                     through: false,
-                    multiple: false,
                     hp: 5,
                     maxHp: 5,
                     subHp: 0,
@@ -158,7 +156,6 @@ let app = new Vue({
                     distance: 2,
                     maxDistance: 4,
                     through: true,
-                    multiple: false,
                     hp: 15,
                     maxHp: 15,
                     subHp: 0,
@@ -191,7 +188,6 @@ let app = new Vue({
                     distance: 1,
                     maxDistance: 1,
                     through: false,
-                    multiple: false,
                     hp: 5,
                     maxHp: 5,
                     subHp: 0,
@@ -224,7 +220,6 @@ let app = new Vue({
                     distance: 1,
                     maxDistance: 1,
                     through: false,
-                    multiple: false,
                     hp: 10,
                     maxHp: 10,
                     subHp: 0,
@@ -257,7 +252,6 @@ let app = new Vue({
                     distance: 1,
                     maxDistance: 1,
                     through: false,
-                    multiple: false,
                     hp: 20,
                     maxHp: 20,
                     subHp: 0,
@@ -290,7 +284,6 @@ let app = new Vue({
                     distance: 10,
                     maxDistance: 20,
                     through: false,
-                    multiple: false,
                     hp: 5,
                     maxHp: 5,
                     subHp: 0,
@@ -323,7 +316,6 @@ let app = new Vue({
                     distance: 1,
                     maxDistance: 1,
                     through: false,
-                    multiple: false,
                     hp: 100,
                     maxHp: 100,
                     subHp: 0,
@@ -480,6 +472,7 @@ let app = new Vue({
             }
 
             this.areas.prev = appLib.renew(this.areas.live);
+            this.checkVisible();
         },
         start: function () {
             let t = this;
@@ -519,6 +512,22 @@ let app = new Vue({
                     t.modal.type = 'unit';
                     t.modal.info = t.base.units[eachUnit.data('name')];
                     t.modal.info.player = t.my.player;
+                }
+
+                if (t.modal.info.hp !== undefined) {
+                    let hp = t.modal.info.hp;
+                    t.modal.info.hp = 0;
+                    setTimeout(function () {
+                        t.modal.info.hp = hp;
+                    });
+                }
+
+                if (t.modal.info.exp !== undefined) {
+                    let exp = t.modal.info.exp;
+                    t.modal.info.exp = 0;
+                    setTimeout(function () {
+                        t.modal.info.exp = exp;
+                    });
                 }
             });
 
@@ -678,7 +687,7 @@ let app = new Vue({
             this.changeTurn(player);
         },
         touchable: function (idx) {
-            if (this.status.touchable && this.status.started && !this.status.finished && this.status.turn && !this.status.replay) {
+            if (this.status.touchable && this.status.started && !this.status.finished && this.status.turn === this.my.player && !this.status.replay) {
                 if (idx !== undefined) {
                     let area = this.areas.live[idx];
 
@@ -862,21 +871,22 @@ let app = new Vue({
                                 t.areas.live[num[each.direction]].player = t.status.turn;
                                 t.areas.live[num[each.direction]].hidden = false;
 
-                                if (attackable && ((t.isShelterInArea(each.idx) && !t.hasShelter(each.idx) && !t.hasGrayShelter(each.idx)) || (t.isUnitInArea(each.idx) && !t.hasUnit(each.idx))) && targetArea.unit.distance === 1) {
+                                if (attackable && ((t.isShelterInArea(each.idx) && !t.hasShelter(each.idx) && !t.hasGrayShelter(each.idx)) || (t.isUnitInArea(each.idx) && !t.isTurnUnit(each.idx))) && targetArea.unit.distance === 1) {
                                     t.areas.live[num[each.direction]].status = 'attack';
 
                                     if (t.isHiddenUnitInArea(each.idx))
                                         t.areas.live[num[each.direction]].hidden = true;
-
                                     continue;
                                 }
 
                                 if (!t.isShelterInArea(each.idx) || t.hasGrayShelter(each.idx)) {
-                                    if (!t.isUnitInArea(each.idx))
+                                    if (!t.isUnitInArea(each.idx)) {
                                         t.areas.live[num[each.direction]].status = 'move';
-                                    else if (t.isHiddenUnitInArea(each.idx))
+                                    }
+                                    else if (t.isHiddenUnitInArea(each.idx)) {
+                                        t.areas.live[num[each.direction]].status = 'move';
                                         t.areas.live[num[each.direction]].hidden = true;
-
+                                    }
                                     continue;
                                 }
                             }
@@ -886,45 +896,23 @@ let app = new Vue({
                         }
                     }
 
-                    if (targetArea.unit.distance > 1) {
-                        if (targetArea.unit.multiple) {
-                            let minVerticalNum = targetArea.hnum - (targetArea.unit.distance + targetArea.unit.buffed['distance']);
-                            let maxVerticalNum = targetArea.hnum + (targetArea.unit.distance + targetArea.unit.buffed['distance']);
-                            let minLastNum = idx - (targetArea.unit.distance + targetArea.unit.buffed['distance']) - (targetArea.hnum * 10);
-                            let maxLastNum = idx + (targetArea.unit.distance + targetArea.unit.buffed['distance']) - (targetArea.hnum * 10);
+                    if (targetArea.unit.distance > 1 && attackable) {
+                        for (let i = 0; i < targetArea.unit.distance + targetArea.unit.buffed['distance']; i += 1) {
+                            let num = {
+                                up: (i + 1) * -(t.base.columnNum) + idx,
+                                down: (i + 1) * t.base.columnNum + idx,
+                                right: idx + i + 1,
+                                left: idx - i - 1
+                            };
 
-                            if (minVerticalNum < 0)
-                                minVerticalNum = 0;
-
-                            if (minLastNum < 0)
-                                minLastNum = 0;
-
-                            for (let i in t.areas.live) {
-                                let eachVerticalNum = t.getVerticalNum(i);
-                                let eachLastNum = i - (eachVerticalNum * 10);
-
-                                if (attackable && ((t.isShelterInArea(i) && !t.hasShelter(i)) || (t.isUnitInArea(i) && !t.hasUnit(i))) && eachVerticalNum >= minVerticalNum && eachVerticalNum <= maxVerticalNum && eachLastNum >= minLastNum && eachLastNum <= maxLastNum && !t.hasShelter(i))
-                                    t.areas.live[i].status = 'attack';
-                            }
-                        }
-                        else if (attackable) {
-                            for (let i = 0; i < targetArea.unit.distance + targetArea.unit.buffed['distance']; i += 1) {
-                                let num = {
-                                    up: (i + 1) * -(t.base.columnNum) + idx,
-                                    down: (i + 1) * t.base.columnNum + idx,
-                                    right: idx + i + 1,
-                                    left: idx - i - 1
-                                };
-
-                                if (t.areas.live[num.up] && t.areas.live[num.up].vnum === activeArea.vnum && ((t.isShelterInArea(num.up) && !t.hasShelter(num.up) && !t.hasGrayShelter(num.up)) || (t.isUnitInArea(num.up) && !t.hasUnit(num.up))))
-                                    t.areas.live[num.up].status = 'attack';
-                                if (t.areas.live[num.down] && t.areas.live[num.down].vnum === activeArea.vnum && ((t.isShelterInArea(num.down) && !t.hasShelter(num.down) && !t.hasGrayShelter(num.down)) || (t.isUnitInArea(num.down) && !t.hasUnit(num.down))))
-                                    t.areas.live[num.down].status = 'attack';
-                                if (t.areas.live[num.left] && t.areas.live[num.left].hnum === activeArea.hnum && ((t.isShelterInArea(num.left) && !t.hasShelter(num.left) && !t.hasGrayShelter(num.left)) || (t.isUnitInArea(num.left) && !t.hasUnit(num.left))))
-                                    t.areas.live[num.left].status = 'attack';
-                                if (t.areas.live[num.right] && t.areas.live[num.right].hnum === activeArea.hnum && ((t.isShelterInArea(num.right) && !t.hasShelter(num.right) && !t.hasGrayShelter(num.right)) || (t.isUnitInArea(num.right) && !t.hasUnit(num.right))))
-                                    t.areas.live[num.right].status = 'attack';
-                            }
+                            if (t.areas.live[num.up] && t.areas.live[num.up].vnum === activeArea.vnum && ((t.isShelterInArea(num.up) && !t.hasShelter(num.up) && !t.hasGrayShelter(num.up)) || (t.isUnitInArea(num.up) && !t.isHiddenUnitInArea(num.up) && !t.isTurnUnit(num.up))))
+                                t.areas.live[num.up].status = 'attack';
+                            if (t.areas.live[num.down] && t.areas.live[num.down].vnum === activeArea.vnum && ((t.isShelterInArea(num.down) && !t.hasShelter(num.down) && !t.hasGrayShelter(num.down)) || (t.isUnitInArea(num.down) && !t.isHiddenUnitInArea(num.down) && !t.isTurnUnit(num.down))))
+                                t.areas.live[num.down].status = 'attack';
+                            if (t.areas.live[num.left] && t.areas.live[num.left].hnum === activeArea.hnum && ((t.isShelterInArea(num.left) && !t.hasShelter(num.left) && !t.hasGrayShelter(num.left)) || (t.isUnitInArea(num.left) && !t.isHiddenUnitInArea(num.left) && !t.isTurnUnit(num.left))))
+                                t.areas.live[num.left].status = 'attack';
+                            if (t.areas.live[num.right] && t.areas.live[num.right].hnum === activeArea.hnum && ((t.isShelterInArea(num.right) && !t.hasShelter(num.right) && !t.hasGrayShelter(num.right)) || (t.isUnitInArea(num.right) && !t.isHiddenUnitInArea(num.right) && !t.isTurnUnit(num.right))))
+                                t.areas.live[num.right].status = 'attack';
                         }
                     }
                 }
@@ -1060,13 +1048,20 @@ let app = new Vue({
                 t.initAreas();
 
                 t.animate(obj.startIdx, obj.endIdx, obj.aniType, function () {
+                    let delay = obj.gap !== null && Math.abs(obj.gap) > t.base.columnNum;
+
                     t.checkOwn(t.active.idx);
                     t.checkBuff();
-                    t.counterAttack(obj.gap !== null && Math.abs(obj.gap) > t.base.columnNum);
+                    t.checkVisible();
+                    t.counterAttack(delay);
                     t.checkLevel();
                     t.rotateAuto();
                     t.initActive();
                     t.initGrab();
+
+                    setTimeout(function () {
+                        t.checkVisible();
+                    }, delay ? t.time.animate : 0);
                 });
             }
             else if (targetArea.status === 'enter') {
@@ -1153,7 +1148,7 @@ let app = new Vue({
             return this.areas.live[i] && this.areas.live[j] && (this.areas.live[i].vnum === this.areas.live[j].vnum || this.areas.live[i].hnum === this.areas.live[j].hnum);
         },
         isMine: function (i) {
-            return this.hasUnit(i) || this.hasShelter(i);
+            return this.isTurnUnit(i) || this.hasShelter(i);
         },
         isInShelterOrArea: function (i) {
             if (this.isUnitInArea(i)) {
@@ -1179,8 +1174,11 @@ let app = new Vue({
         isHiddenUnitInArea: function (idx) {
             return this.isUnitInArea(idx) && this.areas.live[idx].unit.hidden;
         },
-        hasUnit: function (idx) {
+        isTurnUnit: function (idx) {
             return this.isUnitInArea(idx) && this.areas.live[idx].unit.player === this.status.turn;
+        },
+        isMyUnit: function (idx) {
+            return this.isUnitInArea(idx) && this.areas.live[idx].unit.player === this.my.player;
         },
         getDirection: function (targetIdx, presentIdx) {
             let target = this.areas.live[targetIdx];
@@ -1474,6 +1472,44 @@ let app = new Vue({
                 }
             }
         },
+        checkVisible: function () {
+            let hnum = null;
+
+            for (let i in this.areas.live)
+                this.areas.live[i].watchers = '';
+
+            for (let i = 0; i < 2; i += 1) {
+                let player = i === 0 ? 'black' : 'white';
+                let black = player === 'black';
+
+                for (let i in this.areas.live) {
+                    if ((this.isUnitInArea(i) && this.areas.live[i].unit.player === player) || this.areas.live[i].owner === player) {
+                        hnum = this.areas.live[i].hnum;
+
+                        if (black)
+                            break;
+                    }
+                }
+
+                for (let i in this.areas.live) {
+                    let visible = this.areas.live[i].owner === player || (black ? this.areas.live[i].hnum >= hnum - 3 : this.areas.live[i].hnum <= hnum + 3);
+                    let gap = (this.areas.live[i].hnum - hnum) * (black ? -1 : 1);
+
+                    if (visible) {
+                        let opacity = '0.0'
+
+                        if (gap > 2)
+                            opacity = '0.3';
+                        else if (gap > 1)
+                            opacity = '0.2';
+                        else if (gap > 0)
+                            opacity = '0.1';
+
+                        this.areas.live[i].watchers += player + ':' + opacity + '/';
+                    }
+                }
+            }
+        },
         counterAttack: function (delay) {
             let t = this;
             let isBlackTurn = t.status.turn === 'black';
@@ -1516,6 +1552,8 @@ let app = new Vue({
 
                         if (targetIdx && lineCond && !t.isShelterInArea(targetIdx) && targetIdx === t.active.idx && targetIdx >= 0 && t.isUnitInArea(targetIdx) && eachUnit.player !== t.areas.live[targetIdx].unit.player) {
                             if (t.areas.live[targetIdx].unit.hidden)
+                                return;
+                            else if (t.areas.live[targetIdx].watchers.indexOf(eachUnit.player) < 0)
                                 return;
 
                             t.active.tempIdx = t.active.idx;
@@ -1643,10 +1681,12 @@ let app = new Vue({
                         activeArea.unit.exp += targetArea.unit.crop + targetArea.unit.level;
                         activeArea.unit.destory += 1;
 
-                        if (activeArea.unit.distance < 2 && !stay) {
-                            targetArea.unit = appLib.renew(activeArea.unit);
-                            activeArea.unit = {};
-                            t.active.idx = targetIdx;
+                        if (!stay) {
+                            if (targetArea.unit.hidden ? true : activeArea.unit.distance < 2) {
+                                targetArea.unit = appLib.renew(activeArea.unit);
+                                activeArea.unit = {};
+                                t.active.idx = targetIdx;
+                            }
                         }
                     }
 
