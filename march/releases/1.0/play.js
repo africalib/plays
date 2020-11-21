@@ -618,7 +618,9 @@ let app = new Vue({
             }
         },
         goHome: function () {
-            this.save();
+            if (!this.status.replay)
+                this.save();
+
             location.href = '../../index.html';
         },
         request: function (name, val1, val2) {
