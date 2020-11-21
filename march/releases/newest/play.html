@@ -61,7 +61,8 @@
                             <div class="unit" v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"
                                 v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
                                 v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
-                                v-bind:data-status="a.unit.status" v-if="a.unit.name" v-bind:style="a.unit.style">
+                                v-bind:data-hidden="a.unit.hidden" v-bind:data-status="a.unit.status" v-if="a.unit.name"
+                                v-bind:style="a.unit.style">
                                 <img v-bind:src="'../../img/' + a.unit.player + '/' + a.unit.name + '.png'" />
                                 <div class="power">{{ a.unit.power }}</div>
                                 <div class="exp" v-if="a.unit.level">
