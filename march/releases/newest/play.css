@@ -92,8 +92,8 @@ button {
     cursor: pointer;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area[data-type=land]:after {
-    background-image: url(../img/common/tile.zigzag.png);
+.app > .wrapper > .area .area-wrapper .each-area:after {
+    background-image: url(../../img/common/tile.zigzag.png);
     position: absolute;
     left: 0;
     top: 0;
@@ -237,7 +237,7 @@ button {
 }
 
 .app[data-started=Y] > .wrapper {
-    background: url(../img/common/bg.sand.jpg) 100% 100%;
+    background: url(../../img/common/bg.sand.jpg) 100% 100%;
     padding: 25px 0 75px 0;
     font-family: 'Orbitron', sans-serif;
 }
@@ -365,8 +365,10 @@ button {
 
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move],
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-hidden=true],
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=move],
-.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=enter] {
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-hidden=true] {
     background: rgba(239, 255, 205, 0.76);
 }
 
@@ -455,7 +457,7 @@ button {
     font-size: 12px;
     display: inline-block;
     height: 100%;
-    width: calc(100%/9*2);
+    width: calc(100%/9*1);
     position: relative;
 }
 
@@ -570,7 +572,11 @@ button {
 .app > .wrapper > .bottom > .controls .action button {
     width: 100%;
     height: 100%;
-    font-size: 12px;
+    font-size: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
 }
 
 .app .pause-area {
@@ -761,7 +767,7 @@ button {
 
 .app[data-device=mobile] > .landscape {
     display: none;
-    background: url(../img/common/tile.zigzag.png);
+    background: url(../../img/common/tile.zigzag.png);
     text-align: center;
     width: 100%;
     position: fixed;

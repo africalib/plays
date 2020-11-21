@@ -4,20 +4,20 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>March of the King</title>
-    <meta property="og:image" content="img/common/home.cavalry.preview.png">
-    <link href="css/bootstrap.min.css" rel="stylesheet" />
-    <link href="css/font-awesome.min.css" rel="stylesheet" />
-    <link href="css/app.common.css" rel="stylesheet" />
-    <link href="css/app.play.css?17" rel="stylesheet" />
+    <meta property="og:image" content="../../img/common/home.cavalry.preview.png">
+    <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/font-awesome.min.css" rel="stylesheet" />
+    <link href="../../css/app.common.css" rel="stylesheet" />
+    <link href="play.css?17" rel="stylesheet" />
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
 </head>
 <body>
-    <div id="app" class="app" v-bind:data-device="my.device" v-bind:data-started="status.started ? 'Y' : 'N'"
-        v-bind:data-player="my.player" v-bind:data-turn="status.turn" v-cloak>
+    <div id="app" class="app" v-bind:data-started="status.started ? 'Y' : 'N'" v-bind:data-player="my.player"
+        v-bind:data-turn="status.turn" v-cloak>
         <div class="wrapper">
             <div class="run" v-if="my.roomUrl && !status.started">
                 <div class="title">
-                    <img src="img/common/home.cavalry.png" />
+                    <img src="../../img/common/home.cavalry.png" />
                     <br />
                     <div>Waiting for Player</div>
                 </div>
@@ -54,11 +54,13 @@
                             v-for="(a, idx) in areas.live" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
                             v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
                             v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
-                            v-bind:data-shelter="a.shelter.name" v-on:click="touchable(idx) && request('touch', idx)">
-                            <div class="unit" v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
+                            v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden"
+                            v-on:click="touchable(idx) && request('touch', idx)">
+                            <div class="unit" v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"
+                                v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
                                 v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
                                 v-bind:data-status="a.unit.status" v-if="a.unit.name" v-bind:style="a.unit.style">
-                                <img v-bind:src="'img/' + a.unit.player + '/' + a.unit.name + '.png'" />
+                                <img v-bind:src="'../../img/' + a.unit.player + '/' + a.unit.name + '.png'" />
                                 <div class="power">{{ a.unit.power }}</div>
                                 <div class="exp" v-if="a.unit.level">
                                     <div class="exp-wrapper">
@@ -76,12 +78,12 @@
                             </div>
                             <div class="shelter" v-bind:data-player="a.shelter.player" v-bind:data-name="a.shelter.name"
                                 v-if="a.shelter.name">
-                                <img v-bind:src="'img/gray/' + a.shelter.name + '.png'" />
+                                <img v-bind:src="'../../img/gray/' + a.shelter.name + '.png'" />
                             </div>
                             <div class="weapon" v-bind:data-direction="a.weapon.direction"
                                 v-bind:data-status="a.weapon.status" v-bind:data-name="a.weapon.name"
                                 v-if="a.weapon && a.weapon.name" v-bind:style="a.weapon.style">
-                                <img v-bind:src="'img/common/weapon.' + a.weapon.name + '.png'" />
+                                <img v-bind:src="'../../img/common/weapon.' + a.weapon.name + '.png'" />
                             </div>
                         </div>
                     </div>
@@ -104,7 +106,7 @@
                             <i class="fa fa-play" aria-hidden="true" v-on:click="replay.touchable && play()" v-else></i>
                         </div>
                         <div class="flow">
-                            {{ replay.idx + 1 }} / {{ replay.flows.length }}
+                            {{ replay.idx + 1 }} / {{ flows.length }}
                         </div>
                         <div class="action">
                             <button type="button" class="home" v-on:click="goHome()"
@@ -120,7 +122,7 @@
                                 v-for="u in base.units" v-bind:key="u.name"
                                 v-on:click="touchable() && request('grab', u.name)" v-if="u.crop">
                                 <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
-                                <img v-bind:src="'img/' + my.player + '/' + u.name + '.png'"
+                                <img v-bind:src="'../../img/' + my.player + '/' + u.name + '.png'"
                                     v-bind:data-rotate="u.rotate" />
                             </div>
                         </div>
@@ -136,7 +138,7 @@
                     v-if="modal.info.name">
                     <div class="img-part">
                         <span>
-                            <img v-bind:src="'img/' + modal.info.player + '/' + modal.info.name + '.png'"
+                            <img v-bind:src="'../../img/' + modal.info.player + '/' + modal.info.name + '.png'"
                                 v-bind:data-rotate="modal.info.rotate" />
                         </span>
                     </div>
@@ -156,8 +158,7 @@
                                             </div>
                                         </td>
                                     </tr>
-                                <tbody>
-                                    <tr>
+                                    <tr v-if="modal.type === 'unit'">
                                         <td class="text">exp : {{ modal.info.exp }} / {{ modal.info.maxExp }}</td>
                                         <td>
                                             <div class="progress-bar progress-bar-striped"
@@ -168,17 +169,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <table class="table" v-if="modal.type === 'shelter'">
-                            <tbody>
-                                <tr>
-                                    <th>{{ getLang('ko', 'hp') }}</th>
-                                    <td>:</td>
-                                    <td>{{ modal.info.hp }} / {{ modal.info.maxHp }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        </table>
-                        <table class="table">
+                        <table class="table" v-if="modal.type === 'unit'">
                             <tbody>
                                 <tr>
                                     <th>{{ getLang('ko', 'attack') }}</th>
@@ -230,12 +221,12 @@
             </div>
         </div>
     </div>
-    <script src="js/mo.min.js"></script>
-    <script src="js/hammer.min.js"></script>
-    <script src="js/jquery-3.2.1.min.js"></script>
-    <script src="js/vue.js"></script>
-    <script src="js/app.global.js"></script>
-    <script src="js/app.library.js"></script>
-    <script src="js/app.play.js?17"></script>
+    <script src="../../js/mo.min.js"></script>
+    <script src="../../js/hammer.min.js"></script>
+    <script src="../../js/jquery-3.2.1.min.js"></script>
+    <script src="../../js/vue.js"></script>
+    <script src="../../js/app.global.js"></script>
+    <script src="../../js/app.library.js"></script>
+    <script src="play.js?17"></script>
 </body>
 </html>

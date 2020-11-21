@@ -1,8 +1,9 @@
-﻿let socket;
+﻿window.socket;
 
 let app = new Vue({
     el: '#app',
     data: {
+        version: '1.0.0',
         base: {
             time: 120,
             fieldCount: 100,
@@ -352,7 +353,6 @@ let app = new Vue({
             live: []
         },
         my: {
-            device: null,
             player: null,
             room: null,
             roomUrl: null
@@ -375,8 +375,7 @@ let app = new Vue({
             idx: 0,
             status: null,
             touchable: false,
-            speed: 2,
-            flows: []
+            speed: 2
         }
     },
     methods: {
@@ -487,7 +486,7 @@ let app = new Vue({
             window.location.reload();
         },
         save: function () {
-            var replays;
+            let replays;
 
             if (this.flows.length < 10)
                 return;
@@ -506,10 +505,18 @@ let app = new Vue({
 
             replays.push({
                 name: this.my.room,
+                version:this.version,
                 player: this.my.player,
                 flows: this.flows,
                 date: appLib.now('yyyy-MM-dd HH:mm:ss')
             });
+
+            // json = JSON.stringify(replays, function (key, val) {
+            //     if (typeof val === 'function')
+            //         return '/func(' + val.toString() + ')/'
+
+            //     return val;
+            // });
 
             localStorage.setItem('replays', JSON.stringify(replays));
         },
@@ -535,10 +542,10 @@ let app = new Vue({
 
             t.replay.status = 'play';
             t.interval['replay'] = setInterval(function () {
-                let f = t.replay.flows[t.replay.idx];
+                let f = t.flows[t.replay.idx];
                 t.runFunc(f);
 
-                if (t.replay.idx >= t.replay.flows.length - 1) {
+                if (t.replay.idx >= t.flows.length - 1) {
                     clearInterval(t.interval['replay']);
                     t.replay.status = 'stop';
                 }
@@ -564,7 +571,7 @@ let app = new Vue({
         },
         goHome: function () {
             this.save();
-            location.href = 'index.html';
+            location.href = '../../index.html';
         },
         request: function (name, val1, val2) {
             if (name === 'touch' || name === 'grab') {
@@ -627,7 +634,7 @@ let app = new Vue({
         touchable: function (idx) {
             if (this.status.touchable && this.status.started && !this.status.finished && this.status.turn && !this.status.replay) {
                 if (idx !== undefined) {
-                    var area = this.areas.live[idx];
+                    let area = this.areas.live[idx];
 
                     if (area && area.unit && Object.keys(area.unit).length && area.status !== 'attack')
                         return area.unit.player === this.my.player;
@@ -945,7 +952,7 @@ let app = new Vue({
 
                     for (let i in teamUnits) {
                         if (t.isUnitInArea(teamUnits[i].idx)) {
-                            var objArr = appLib.renew(obj.loopArr);
+                            let objArr = appLib.renew(obj.loopArr);
                             objArr.reverse();
 
                             for (let j in objArr) {
@@ -1915,13 +1922,38 @@ let app = new Vue({
         }
     },
     created: function () {
-        var t = this;
-        var name = location.hash ? location.hash.replace('#/', '') : '';
-        var replays = localStorage.getItem('replays');
+        let t = this;
+        let name = location.hash ? location.hash.replace('#/', '') : '';
+        let replays = localStorage.getItem('replays');
+        let run;
 
-        t.my.device = appLib.isMobileDevice() ? 'mobile' : 'desktop';
+        if (navigator.platform !== 'Win32') {
+            $(document).on('contextmenu', function (e) {
+                e.preventDefault();
+            });
+        }
 
-        var run = function () {
+        if (replays)
+            replays = JSON.parse(replays);
+        else
+            replays = [];
+
+        for (let i in replays) {
+            if (replays[i].name === name) {
+                t.status.replay = true;
+                t.my.player = replays[i].player;
+                t.flows = replays[i].flows;
+                t.start();
+
+                t.timer['replay'] = setTimeout(function () {
+                    t.replay.touchable = true;
+                    t.play();
+                }, 1000);
+                return;
+            }
+        }
+
+        run = function () {
             t.status.time = t.base.time;
 
             socket = io.connect(global.baseUrl, {
@@ -1996,45 +2028,22 @@ let app = new Vue({
             });
         }
 
-        if (replays)
-            replays = JSON.parse(replays);
-        else
-            replays = [];
-
-        for (let i in replays) {
-            if (replays[i].name === name) {
-                t.status.replay = true;
-                t.my.player = replays[i].player;
-                t.replay.flows = replays[i].flows;
-                t.start();
-
-                t.timer['replay'] = setTimeout(function () {
-                    t.replay.touchable = true;
-                    t.play();
-                }, 1000);
-                return;
-            }
-        }
-
         if (name) {
             $.get(global.baseUrl + '/valid?name=' + name, function (res) {
                 if (res === 'valid') {
                     run();
                 }
                 else {
-                    alert('유효한 접속이 아닙니다.');
-                    location.href = 'index.html';
+                    alert('유효한 접속이 아닙니다. 다시 시도해주세요.');
+                    location.href = '../../index.html';
                 }
             });
         }
         else {
             run();
         }
-
-        if (navigator.platform !== 'Win32') {
-            $(document).on('contextmenu', function (e) {
-                e.preventDefault();
-            });
-        }
+    },
+    mounted:function(){
+        $(this.$el).attr('data-device', appLib.isMobileDevice() ? 'mobile' : 'desktop');
     }
 });

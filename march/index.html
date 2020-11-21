@@ -61,7 +61,7 @@
                     </div>
                     <div class="modal-body">
                         <ul class="list-group mb-0" v-if="replays.length">
-                            <li class="list-group-item" v-for="(r, idx) in replays" v-on:click="enter(r.name)">
+                            <li class="list-group-item" v-for="(r, idx) in replays" v-on:click="view(r)">
                                 <p>
                                     <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }}
                                         player</span>

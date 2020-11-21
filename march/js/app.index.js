@@ -12,12 +12,12 @@ let app = new Vue({
     },
     methods: {
         enter: function (name) {
-            if (name) {
-                location.href = 'play.html#/' + name;
-            }
-            else {
-                location.href = 'play.html';
-            }
+            location.href = 'releases/newest/play.html' + (name ? '#/' + name : '');
+        },
+        view: function (replay) {
+            var arr = replay.version.split('.');
+            arr.splice(arr.length - 1);
+            location.href = 'releases/' + arr.join('.') + '/play.html#/' + replay.name;
         },
         set: function () {
             let t = this;
