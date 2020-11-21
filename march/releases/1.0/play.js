@@ -67,7 +67,7 @@ let app = new Vue({
                     power: 1,
                     restorePower: 1,
                     maxPower: 1,
-                    farm: 0.5,
+                    farm: 0.25,
                     restoreHp: 1,
                     buff: false,
                     buffed: {},
@@ -565,13 +565,6 @@ let app = new Vue({
                 flows: this.flows,
                 date: appLib.now('yyyy-MM-dd HH:mm:ss')
             });
-
-            // json = JSON.stringify(replays, function (key, val) {
-            //     if (typeof val === 'function')
-            //         return '/func(' + val.toString() + ')/'
-
-            //     return val;
-            // });
 
             localStorage.setItem('replays', JSON.stringify(replays));
         },
@@ -1303,7 +1296,7 @@ let app = new Vue({
                     eachUnit.maxExp += 1;
 
                     if (eachUnit.farm)
-                        eachUnit.farm += 0.5;
+                        eachUnit.farm += 0.25;
 
                     if (eachUnit.move > 1) {
                         eachUnit.move += 1;
@@ -1450,7 +1443,7 @@ let app = new Vue({
                         eachUnit.buffed['defense'] = 1;
 
                         if (eachUnit.farm > 0)
-                            eachUnit.buffed['farm'] = 0.5;
+                            eachUnit.buffed['farm'] = 0.25;
 
                         if (eachUnit.move > 1)
                             eachUnit.buffed['move'] = 1;
@@ -1941,7 +1934,7 @@ let app = new Vue({
             for (let i in autoRotates) {
                 let area = autoRotates[i].area;
 
-                if (area && area.unit && area.unit.name && this.isUnitInArea(this.active.idx) && area.unit.player !== this.areas.live[this.active.idx].unit.player && this.isInCross(this.active.idx, area.idx))
+                if (area && area.unit && area.unit.name && this.isUnitInArea(this.active.idx) && area.unit.player !== this.areas.live[this.active.idx].unit.player && !this.areas.live[this.active.idx].unit.hidden && this.isInCross(this.active.idx, area.idx))
                     area.unit.direction = autoRotates[i].direction;
             }
 
