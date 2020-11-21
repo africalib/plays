@@ -415,9 +415,11 @@ button {
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move],
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-hidden=true],
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=white]),
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=move],
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
-.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-hidden=true] {
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-hidden=true],
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=black]) {
     background: rgba(239, 255, 205, 0.76);
 }
 
@@ -810,12 +812,10 @@ button {
     transform: rotate(180deg);
 }
 
-.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area:after,
 .app[data-finished=Y] > .wrapper > .area .area-wrapper .each-area:after {
     content: none !important;
 }
 
-.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area > *,
 .app[data-finished=Y] > .wrapper > .area .area-wrapper .each-area > * {
     display: inline-block !important;
 }

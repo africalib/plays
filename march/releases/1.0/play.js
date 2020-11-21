@@ -67,7 +67,7 @@ let app = new Vue({
                     power: 1,
                     restorePower: 1,
                     maxPower: 1,
-                    farm: 0.25,
+                    farm: 0.5,
                     restoreHp: 1,
                     buff: false,
                     buffed: {},
@@ -170,7 +170,7 @@ let app = new Vue({
                     status: null,
                     weapon: 'spear',
                     destory: 0,
-                    rotate: 0,
+                    rotate: 90,
                     hidden: false,
                     style: {}
                 },
@@ -192,9 +192,9 @@ let app = new Vue({
                     maxHp: 5,
                     subHp: 0,
                     crop: 7,
-                    power: 3,
-                    restorePower: 3,
-                    maxPower: 6,
+                    power: 2,
+                    restorePower: 2,
+                    maxPower: 4,
                     farm: 0,
                     restoreHp: 1,
                     buff: false,
@@ -1303,7 +1303,7 @@ let app = new Vue({
                     eachUnit.maxExp += 1;
 
                     if (eachUnit.farm)
-                        eachUnit.farm += 0.25;
+                        eachUnit.farm += 0.5;
 
                     if (eachUnit.move > 1) {
                         eachUnit.move += 1;
@@ -1450,7 +1450,7 @@ let app = new Vue({
                         eachUnit.buffed['defense'] = 1;
 
                         if (eachUnit.farm > 0)
-                            eachUnit.buffed['farm'] = 0.25;
+                            eachUnit.buffed['farm'] = 0.5;
 
                         if (eachUnit.move > 1)
                             eachUnit.buffed['move'] = 1;
