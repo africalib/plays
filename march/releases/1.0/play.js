@@ -543,7 +543,7 @@ let app = new Vue({
         save: function () {
             let replays;
 
-            if (this.flows.length < 10)
+            if (this.flows.length < 25)
                 return;
 
             replays = localStorage.getItem('replays');
