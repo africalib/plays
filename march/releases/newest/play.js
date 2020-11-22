@@ -5,7 +5,11 @@ let app = new Vue({
     data: {
         version: '1.0.0',
         base: {
-            time: 120,
+            time: {
+                turn: 120,
+                message: 2500,
+                animate: 250,
+            },
             fieldCount: 100,
             columnNum: 9,
             rowNum: 16,
@@ -188,8 +192,8 @@ let app = new Vue({
                     distance: 1,
                     maxDistance: 1,
                     through: false,
-                    hp: 5,
-                    maxHp: 5,
+                    hp: 4,
+                    maxHp: 4,
                     subHp: 0,
                     crop: 7,
                     power: 2,
@@ -396,10 +400,6 @@ let app = new Vue({
             info: {},
             type: null
         },
-        time: {
-            message: 2500,
-            animate: 250,
-        },
         dots: '.',
         timer: {},
         interval: {},
@@ -489,7 +489,7 @@ let app = new Vue({
                     t.modal.idx = idx;
 
                     if (t.areas.live[idx] && t.isShelterInArea(idx)) {
-                        if (t.my.player === unit.player && unit && unit.name) {
+                        if (unit && unit.name && (t.status.replay ? true : unit.player === t.my.player)) {
                             t.modal.info = unit;
                             t.modal.type = 'unit';
                         }
@@ -499,7 +499,7 @@ let app = new Vue({
                         }
                     }
                     else if (t.areas.live[idx] && unit) {
-                        if (t.my.player !== unit.player && unit.hidden)
+                        if (t.my.player !== unit.player && (t.status.replay ? false : unit.hidden))
                             return;
 
                         t.modal.info = unit;
@@ -900,14 +900,41 @@ let app = new Vue({
                                 left: idx - i - 1
                             };
 
-                            if (t.areas.live[num.up] && t.areas.live[num.up].vnum === activeArea.vnum && ((t.isShelterInArea(num.up) && !t.hasShelter(num.up) && !t.hasGrayShelter(num.up)) || (t.isUnitInArea(num.up) && !t.isHiddenUnitInArea(num.up) && !t.isTurnUnit(num.up))))
-                                t.areas.live[num.up].status = 'attack';
-                            if (t.areas.live[num.down] && t.areas.live[num.down].vnum === activeArea.vnum && ((t.isShelterInArea(num.down) && !t.hasShelter(num.down) && !t.hasGrayShelter(num.down)) || (t.isUnitInArea(num.down) && !t.isHiddenUnitInArea(num.down) && !t.isTurnUnit(num.down))))
-                                t.areas.live[num.down].status = 'attack';
-                            if (t.areas.live[num.left] && t.areas.live[num.left].hnum === activeArea.hnum && ((t.isShelterInArea(num.left) && !t.hasShelter(num.left) && !t.hasGrayShelter(num.left)) || (t.isUnitInArea(num.left) && !t.isHiddenUnitInArea(num.left) && !t.isTurnUnit(num.left))))
-                                t.areas.live[num.left].status = 'attack';
-                            if (t.areas.live[num.right] && t.areas.live[num.right].hnum === activeArea.hnum && ((t.isShelterInArea(num.right) && !t.hasShelter(num.right) && !t.hasGrayShelter(num.right)) || (t.isUnitInArea(num.right) && !t.isHiddenUnitInArea(num.right) && !t.isTurnUnit(num.right))))
-                                t.areas.live[num.right].status = 'attack';
+                            if (t.areas.live[num.up] && t.areas.live[num.up].vnum === activeArea.vnum) {
+                                if (t.isWatcher(num.up)) {
+                                    if (t.isShelterInArea(num.up) && !t.hasShelter(num.up) && !t.hasGrayShelter(num.up))
+                                        t.areas.live[num.up].status = 'attack';
+                                    if (t.isUnitInArea(num.up) && !t.isHiddenUnitInArea(num.up) && !t.isTurnUnit(num.up))
+                                        t.areas.live[num.up].status = 'attack';
+                                }
+                            }
+
+                            if (t.areas.live[num.down] && t.areas.live[num.down].vnum === activeArea.vnum) {
+                                if (t.isWatcher(num.down)) {
+                                    if (t.isShelterInArea(num.down) && !t.hasShelter(num.down) && !t.hasGrayShelter(num.down))
+                                        t.areas.live[num.down].status = 'attack';
+                                    if (t.isUnitInArea(num.down) && !t.isHiddenUnitInArea(num.down) && !t.isTurnUnit(num.down))
+                                        t.areas.live[num.down].status = 'attack';
+                                }
+                            }
+
+                            if (t.areas.live[num.left] && t.areas.live[num.left].hnum === activeArea.hnum) {
+                                if (t.isWatcher(num.left)) {
+                                    if (t.isShelterInArea(num.left) && !t.hasShelter(num.left) && !t.hasGrayShelter(num.left))
+                                        t.areas.live[num.left].status = 'attack';
+                                    if (t.isUnitInArea(num.left) && !t.isHiddenUnitInArea(num.left) && !t.isTurnUnit(num.left))
+                                        t.areas.live[num.left].status = 'attack';
+                                }
+                            }
+
+                            if (t.areas.live[num.right] && t.areas.live[num.right].hnum === activeArea.hnum) {
+                                if (t.isWatcher(num.right)) {
+                                    if (t.isShelterInArea(num.right) && !t.hasShelter(num.right) && !t.hasGrayShelter(num.right))
+                                        t.areas.live[num.right].status = 'attack';
+                                    if (t.isUnitInArea(num.right) && !t.isHiddenUnitInArea(num.right) && !t.isTurnUnit(num.right))
+                                        t.areas.live[num.right].status = 'attack';
+                                }
+                            }
                         }
                     }
                 }
@@ -1056,7 +1083,7 @@ let app = new Vue({
 
                     setTimeout(function () {
                         t.checkVisible();
-                    }, delay ? t.time.animate : 0);
+                    }, 2500);
                 });
             }
             else if (targetArea.status === 'enter') {
@@ -1074,7 +1101,7 @@ let app = new Vue({
             }
             else if (t.grabbed.name) {
                 if (t.status.turn === t.my.player)
-                    t.setMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.time.message);
+                    t.setMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.base.time.message);
                 return;
             }
             else {
@@ -1123,17 +1150,17 @@ let app = new Vue({
 
             if (fieldCount >= this.base.fieldCount) {
                 if (t.status.turn === t.my.player)
-                    this.setMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.time.message);
+                    this.setMessage(this.my.player, '유닛당 ' + this.base.fieldCount + '기까지 배치할 수 있습니다.', this.base.time.message);
                 return;
             }
             else if (this.status[player].crop < unit.crop) {
                 if (this.status.turn === this.my.player)
-                    this.setMessage(this.my.player, '농작물이 부족합니다.', this.time.message);
+                    this.setMessage(this.my.player, '농작물이 부족합니다.', this.base.time.message);
                 return false;
             }
             else if (this.status[player].units + unit.crop > this.status[player].maxUnit) {
                 if (this.status.turn === this.my.player)
-                    this.setMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.time.message);
+                    this.setMessage(this.my.player, '유닛을 더 이상 배치할 수 없습니다.', this.base.time.message);
                 return false;
             }
 
@@ -1168,6 +1195,9 @@ let app = new Vue({
         },
         isHiddenUnitInArea: function (idx) {
             return this.isUnitInArea(idx) && this.areas.live[idx].unit.hidden;
+        },
+        isWatcher: function (idx) {
+            return this.areas.live[idx].watchers && this.areas.live[idx].watchers.indexOf(this.status.turn) >= 0;
         },
         isTurnUnit: function (idx) {
             return this.isUnitInArea(idx) && this.areas.live[idx].unit.player === this.status.turn;
@@ -1375,7 +1405,7 @@ let app = new Vue({
 
                         if (type === 'weapon')
                             delete t.areas.live[endIdx]['weapon'];
-                    }, t.time.animate - 100);
+                    }, t.base.time.animate - 100);
                 }, 100);
 
                 if (typeof func === 'function')
@@ -1635,7 +1665,7 @@ let app = new Vue({
 
                     setTimeout(function () {
                         t.showUp('attack', targetIdx, demage, true);
-                    }, delay ? t.time.animate : 0);
+                    }, delay ? t.base.time.animate : 0);
 
                     if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
                         activeArea.unit.destory += 1;
@@ -1687,7 +1717,7 @@ let app = new Vue({
 
                     setTimeout(function () {
                         t.showUp('attack', targetIdx, demage, true);
-                    }, delay ? t.time.animate : 0);
+                    }, delay ? t.base.time.animate : 0);
                 }
 
                 setTimeout(function () {
@@ -1710,7 +1740,7 @@ let app = new Vue({
                     }
 
                     t.checkFinished();
-                }, delay ? t.time.animate : 0);
+                }, delay ? t.base.time.animate : 0);
             }
 
             return isAlive;
@@ -1802,7 +1832,7 @@ let app = new Vue({
                 area.unit = unit;
             }
             else {
-                this.setMessage(this.my.player, '오류가 있습니다.', this.time.message);
+                this.setMessage(this.my.player, '오류가 있습니다.', this.base.time.message);
             }
         },
         setLabel: function (txt, time) {
@@ -1901,7 +1931,7 @@ let app = new Vue({
             crop = parseFloat(crop).toFixed(2);
             this.status[player].crop = (parseFloat(this.status[player].crop) + parseFloat(this.status[player].incomeCrop) + parseFloat(crop)).toFixed(2);
             this.status[player].crop = Number(this.status[player].crop.toString());
-            this.status.time = this.base.time;
+            this.status.time = this.base.time.turn;
 
             if (this.status[player].crop > this.status[player].maxCrop)
                 this.status[player].crop = this.status[player].maxCrop;
@@ -1963,14 +1993,14 @@ let app = new Vue({
 
                     if (t.status.time === 30 && t.status.turn === t.my.player) {
                         t.setLabel('Hurry up, time is running out');
-                        t.setMessage(t.my.player, '유효 시간이 30초 남았습니다.', t.time.message);
+                        t.setMessage(t.my.player, '유효 시간이 30초 남았습니다.', t.base.time.message);
                     }
                 }
                 else {
                     t.closeModal();
 
                     if (t.status.turn === t.my.player) {
-                        t.setMessage(t.my.player, '유효 시간이 지났습니다.', t.time.message);
+                        t.setMessage(t.my.player, '유효 시간이 지났습니다.', t.base.time.message);
                         t.request('pass', t.status.turn === 'white' ? 'black' : 'white');
                     }
                 }
@@ -2059,7 +2089,7 @@ let app = new Vue({
         }
 
         run = function () {
-            t.status.time = t.base.time;
+            t.status.time = t.base.time.turn;
 
             socket = io.connect(global.baseUrl, {
                 rememberUpgrade: true,
