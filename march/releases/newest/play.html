@@ -149,7 +149,7 @@
                     <div class="info-part">
                         <div class="name">
                             <span class="name">{{ modal.info.name }}</span>
-                            <span>Lv. {{ modal.info.level }}</span>
+                            <span v-if="modal.type === 'unit'">Lv. {{ modal.info.level }}</span>
                         </div>
                         <div class="bar">
                             <table>

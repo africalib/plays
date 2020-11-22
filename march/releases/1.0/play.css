@@ -302,6 +302,10 @@ button {
     padding: 0;
 }
 
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .shelter img {
+    transform: rotate(180deg);
+}
+
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
     background: rgba(255, 255, 255, 0.7);
 }
@@ -318,10 +322,6 @@ button {
     -webkit-filter: invert(100%);
     filter: invert(100%);
     opacity: 0.5;
-}
-
-.app > .wrapper > .area .area-wrapper .each-area .shelter[data-player=white] img {
-    transform: rotate(180deg);
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .power {
