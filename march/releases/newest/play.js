@@ -1578,6 +1578,8 @@ let app = new Vue({
                         if (targetIdx && lineCond && !t.isShelterInArea(targetIdx) && targetIdx === t.active.idx && targetIdx >= 0 && t.isUnitInArea(targetIdx) && eachUnit.player !== t.areas.live[targetIdx].unit.player) {
                             if (t.areas.live[targetIdx].unit.hidden)
                                 return;
+                            else if (eachArea.unit.hidden)
+                                return;
                             else if (t.areas.live[targetIdx].watchers.indexOf(eachUnit.player) < 0)
                                 return;
 
