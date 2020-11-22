@@ -42,8 +42,8 @@ let app = new Vue({
                 hidden: false
             },
             shelters: {
-                rock: {
-                    name: 'rock',
+                fortress: {
+                    name: 'fortress',
                     hp: 100,
                     maxHp: 100,
                     subHp: 0
@@ -1319,7 +1319,7 @@ let app = new Vue({
                     }
 
                     for (let i = 0; i < shelterRandomArr.length; i += 1)
-                        t.setShelter('gray', 'rock', Number(shelterRandomArr[i]));
+                        t.setShelter('gray', 'fortress', Number(shelterRandomArr[i]));
                 }
             }
         },
