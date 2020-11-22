@@ -19,6 +19,14 @@ button {
     cursor: pointer;
 }
 
+.z-0 {
+    z-index: 0 !important;
+}
+
+.d-iblock {
+    display: inline-block !important;
+}
+
 .mb-0 {
     margin-bottom: 0 !important;
 }

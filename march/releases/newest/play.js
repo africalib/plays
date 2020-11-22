@@ -485,28 +485,35 @@ let app = new Vue({
 
                 if (eachArea.length && eachArea.data('idx')) {
                     let idx = eachArea.data('idx');
-                    let unit = t.areas.live[idx].unit;
-                    t.modal.idx = idx;
 
-                    if (t.areas.live[idx] && t.isShelterInArea(idx)) {
-                        if (unit && unit.name && (t.status.replay ? true : unit.player === t.my.player)) {
+                    if (t.status.replay || t.isMyWatcher(idx)) {
+                        let unit = t.areas.live[idx].unit;
+                        t.modal.idx = idx;
+
+                        if (t.areas.live[idx] && t.isShelterInArea(idx)) {
+                            if (unit && unit.name && (t.status.replay || unit.player === t.my.player)) {
+                                t.modal.info = unit;
+                                t.modal.type = 'unit';
+                            }
+                            else {
+                                t.modal.info = t.areas.live[idx].shelter;
+                                t.modal.type = 'shelter';
+                            }
+                        }
+                        else if (t.areas.live[idx] && unit) {
+                            if (t.my.player !== unit.player && !t.status.replay && unit.hidden)
+                                return;
+
                             t.modal.info = unit;
                             t.modal.type = 'unit';
                         }
                         else {
-                            t.modal.info = t.areas.live[idx].shelter;
-                            t.modal.type = 'shelter';
+                            return;
                         }
                     }
-                    else if (t.areas.live[idx] && unit) {
-                        if (t.my.player !== unit.player && (t.status.replay ? false : unit.hidden))
-                            return;
-
-                        t.modal.info = unit;
-                        t.modal.type = 'unit';
-                    }
-                    else
+                    else {
                         return;
+                    }
                 }
                 else if (eachUnit.length) {
                     t.modal.type = 'unit';
@@ -1054,14 +1061,14 @@ let app = new Vue({
                         for (let i in obj.loopArr) {
                             if (i > 0 && !t.isMine(obj.loopArr[i])) {
                                 let tardirection = t.getDirection(t.active.idx, obj.loopArr[i]);
-                                t.attack(obj.loopArr[i], false, true);
+                                t.attack(obj.loopArr[i], true, true);
                                 t.autoRotateArr.push({ idx: obj.loopArr[i], direction: tardirection })
                             }
                         }
                     }
                     else {
                         let tardirection = t.getDirection(t.active.idx, idx);
-                        t.attack(idx, false, true);
+                        t.attack(idx, true, true);
                         t.autoRotateArr.push({ idx: idx, direction: tardirection })
                     }
                 }
@@ -1191,13 +1198,16 @@ let app = new Vue({
             return this.isShelterInArea(idx) && this.areas.live[idx].shelter.player === 'gray';
         },
         isUnitInArea: function (idx) {
-            return this.areas.live[idx] && this.areas.live[idx].unit && this.areas.live[idx].unit.name;
+            return this.areas.live[idx] && this.areas.live[idx].unit && this.areas.live[idx].unit.name && this.areas.live[idx].unit.hp > 0;
         },
         isHiddenUnitInArea: function (idx) {
             return this.isUnitInArea(idx) && this.areas.live[idx].unit.hidden;
         },
         isWatcher: function (idx) {
             return this.areas.live[idx].watchers && this.areas.live[idx].watchers.indexOf(this.status.turn) >= 0;
+        },
+        isMyWatcher: function (idx) {
+            return this.areas.live[idx].watchers && this.areas.live[idx].watchers.indexOf(this.my.player) >= 0;
         },
         isTurnUnit: function (idx) {
             return this.isUnitInArea(idx) && this.areas.live[idx].unit.player === this.status.turn;
@@ -1415,126 +1425,6 @@ let app = new Vue({
                 func();
             }
         },
-        checkOwn: function (idx, isRunned) {
-            if (this.isUnitInArea(idx) && this.areas.live[idx].unit.name === 'king') {
-                let kingUnit = this.areas.live[idx].unit;
-                let startIdx = (Math.floor(idx / this.base.columnNum) * this.base.columnNum) + (this.base.columnNum * (kingUnit.player === 'black' ? -1 : 1));
-                let endIdx = startIdx + this.base.columnNum - 1;
-                let anotherKingIdx = null;
-
-                for (let i in this.areas.live) {
-                    let eachArea = this.areas.live[i];
-                    let idx = Number(i);
-                    let eachCond = kingUnit.player === 'black' ? idx >= startIdx : idx <= endIdx;
-
-                    if (eachCond) {
-                        if (!eachArea.owner && !eachArea.ownOnly)
-                            eachArea.owner = kingUnit.player;
-                    }
-                    else if (eachArea.owner === kingUnit.player && !eachArea.ownOnly) {
-                        eachArea.owner = null;
-                    }
-
-                    if (this.isUnitInArea(idx) && eachArea.unit.name === 'king' && eachArea.unit.player !== kingUnit.player)
-                        anotherKingIdx = idx;
-                }
-
-                if (!isRunned && anotherKingIdx != null)
-                    this.checkOwn(anotherKingIdx, true);
-            }
-
-            for (let i in this.areas.live) {
-                let eachArea = this.areas.live[i];
-
-                if (eachArea.shelter && eachArea.shelter.name) {
-                    eachArea.shelter.player = 'gray';
-
-                    if (eachArea.unit && eachArea.unit.name)
-                        eachArea.shelter.player = eachArea.unit.player;
-                }
-            }
-        },
-        checkBuff: function () {
-            let buffArr = this.getBuffArr();
-
-            for (let i in this.areas.live) {
-                if (this.isUnitInArea(i)) {
-                    let eachArea = this.areas.live[i];
-                    let eachUnit = eachArea.unit;
-                    let inInBuffArr = false;
-
-                    for (let j in buffArr) {
-                        if (Number(i) === Number(buffArr[j].idx) && eachUnit.player === buffArr[j].player) {
-                            inInBuffArr = true;
-                            break;
-                        }
-                    }
-
-                    if (inInBuffArr) {
-                        eachUnit.buffed['attack'] = 1;
-                        eachUnit.buffed['defense'] = 1;
-
-                        if (eachUnit.farm > 0)
-                            eachUnit.buffed['farm'] = 0.25;
-
-                        if (eachUnit.move > 1)
-                            eachUnit.buffed['move'] = 1;
-
-                        if (eachUnit.distance > 1)
-                            eachUnit.buffed['distance'] = 1;
-
-                        if (eachUnit.maxDistance > 1)
-                            eachUnit.buffed['maxDistance'] = 1;
-
-                        if (eachUnit.restoreHp > 0)
-                            eachUnit.buffed['restoreHp'] = 1;
-
-                        this.setLevel(i);
-                    }
-                    else {
-                        eachUnit.buffed = appLib.renew(this.base.buffed);
-                    }
-                }
-            }
-        },
-        checkVisible: function () {
-            let hnum = null;
-
-            for (let i in this.areas.live)
-                this.areas.live[i].watchers = '';
-
-            for (let i = 0; i < 2; i += 1) {
-                let player = i === 0 ? 'black' : 'white';
-                let black = player === 'black';
-
-                for (let i in this.areas.live) {
-                    if ((this.isUnitInArea(i) && this.areas.live[i].unit.player === player) || this.areas.live[i].owner === player) {
-                        hnum = this.areas.live[i].hnum;
-
-                        if (black)
-                            break;
-                    }
-                }
-
-                for (let i in this.areas.live) {
-                    let visible = this.areas.live[i].owner === player || (black ? this.areas.live[i].hnum >= hnum - 3 : this.areas.live[i].hnum <= hnum + 3);
-                    let gap = (this.areas.live[i].hnum - hnum) * (black ? -1 : 1);
-
-                    if (visible) {
-                        let opacity = '0.0'
-
-                        if (gap > 2)
-                            opacity = '0.3';
-                        else if (gap > 1)
-                            opacity = '0.2';
-                        else if (gap > 0)
-                            opacity = '0.1';
-
-                        this.areas.live[i].watchers += player + ':' + opacity + '/';
-                    }
-                }
-            }
-        },
         counterAttack: function (delay) {
             let t = this;
             let isBlackTurn = t.status.turn === 'black';
@@ -1586,10 +1476,10 @@ let app = new Vue({
                             t.active.tempIdx = t.active.idx;
                             t.active.idx = idx;
 
-                            if (eachUnit.distance > 1) {
-                                if (eachUnit.hp < 0)
-                                    return;
+                            if (eachUnit.hp < 0)
+                                return;
 
+                            if (eachUnit.distance > 1) {
                                 t.$set(t.areas.live[targetIdx], 'weapon', {
                                     name: eachUnit.weapon,
                                     direction: eachUnit.direction,
@@ -1650,110 +1540,131 @@ let app = new Vue({
             let activeArea = t.areas.live[t.active.idx];
             let isAlive = true;
 
-            if (((t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player)) && t.isUnitInArea(t.active.idx)) {
-                let demage = activeArea.unit.attack + activeArea.unit.buffed['attack'];
-                let accelDemage = 0;
-                let activeDirection = t.getDirection(targetIdx, t.active.idx);
+            if (t.isUnitInArea(t.active.idx)) {
+                if (((t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player))) {
+                    let demage = activeArea.unit.attack + activeArea.unit.buffed['attack'];
+                    let accelDemage = 0;
+                    let activeDirection = t.getDirection(targetIdx, t.active.idx);
+                    let renewedTargetUnit = appLib.renew(targetArea.unit);
 
-                activeArea.unit.direction = activeDirection;
+                    activeArea.unit.direction = activeDirection;
 
-                if (activeArea.unit.accel && Number(runDistance))
-                    accelDemage = Number(runDistance);
+                    if (activeArea.unit.accel && Number(runDistance))
+                        accelDemage = Number(runDistance);
 
-                if (t.isShelterInArea(targetIdx)) {
-                    demage += accelDemage;
-                    targetArea.shelter.subHp += demage;
-                    isAlive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.isUnitInArea(targetIdx);
+                    if (t.isShelterInArea(targetIdx)) {
+                        demage += accelDemage;
+                        targetArea.shelter.subHp += demage;
+                        isAlive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.isUnitInArea(targetIdx);
 
-                    setTimeout(function () {
-                        t.showUp('attack', targetIdx, demage, true);
-                    }, delay ? t.base.time.animate : 0);
+                        setTimeout(function () {
+                            t.showUp('attack', targetIdx, demage, true);
+                        }, delay ? t.base.time.animate : 0);
 
-                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
-                        activeArea.unit.destory += 1;
+                        if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
+                            activeArea.unit.destory += 1;
 
-                    if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0 && activeArea.unit.distance < 2 && !t.isUnitInArea(targetIdx)) {
-                        targetArea.unit = appLib.renew(activeArea.unit);
-                        activeArea.unit = {};
-                        t.active.idx = targetIdx;
+                        if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0 && activeArea.unit.distance < 2 && !t.isUnitInArea(targetIdx)) {
+                            targetArea.unit = appLib.renew(activeArea.unit);
+                            activeArea.unit = {};
+                            t.active.idx = targetIdx;
+                        }
                     }
-                }
-                else {
-                    let critical = 1;
-                    let multi = activeDirection * targetArea.unit.direction;
-                    let defense = 0;
+                    else {
+                        let critical = 1;
+                        let multi = activeDirection * targetArea.unit.direction;
+                        let defense = 0;
 
-                    if (targetArea.unit.direction === activeDirection)
-                        critical = 3;
-                    else if (multi !== 27 && multi !== 72)
-                        critical = 1.5;
-                    else
-                        defense = targetArea.unit.defense + targetArea.unit.buffed['defense'];
+                        if (targetArea.unit.direction === activeDirection)
+                            critical = 3;
+                        else if (multi !== 27 && multi !== 72)
+                            critical = 1.5;
+                        else
+                            defense = targetArea.unit.defense + targetArea.unit.buffed['defense'];
 
-                    demage = demage * critical + accelDemage - defense;
+                        demage = demage * critical + accelDemage - defense;
 
-                    if (demage < 0)
-                        demage = 0;
+                        if (demage < 0)
+                            demage = 0;
 
-                    targetArea.unit.subHp += demage;
-                    isAlive = targetArea.unit.hp - targetArea.unit.subHp > 0;
+                        targetArea.unit.subHp += demage;
+                        isAlive = targetArea.unit.hp - targetArea.unit.subHp > 0;
 
-                    if (activeArea.unit.hp - activeArea.unit.subHp <= 0) {
-                        activeArea.unit.hp = -100;
-                        targetArea.unit.exp += activeArea.unit.crop + activeArea.unit.level;
-                    }
+                        if (activeArea.unit.hp - activeArea.unit.subHp <= 0) {
+                            activeArea.unit.hp = -100;
+                            targetArea.unit.exp += activeArea.unit.crop + activeArea.unit.level;
+                        }
 
-                    if (targetArea.unit.hp - targetArea.unit.subHp <= 0) {
-                        targetArea.unit.hp = -100;
-                        activeArea.unit.exp += targetArea.unit.crop + targetArea.unit.level;
-                        activeArea.unit.destory += 1;
+                        if (targetArea.unit.hp - targetArea.unit.subHp <= 0) {
+                            targetArea.unit.hp = -100;
+                            activeArea.unit.exp += targetArea.unit.crop + targetArea.unit.level;
+                            activeArea.unit.destory += 1;
 
-                        if (!stay) {
-                            if (targetArea.unit.hidden ? true : activeArea.unit.distance < 2) {
-                                targetArea.unit = appLib.renew(activeArea.unit);
-                                activeArea.unit = {};
-                                t.active.idx = targetIdx;
+                            if (!stay) {
+                                if (targetArea.unit.hidden ? true : activeArea.unit.distance < 2) {
+                                    targetArea.unit = appLib.renew(activeArea.unit);
+                                    activeArea.unit = {};
+                                    t.active.idx = targetIdx;
+                                }
                             }
                         }
+
+                        if (activeArea.unit.distance > 1)
+                            t.showUnitForSeconds(t.active.idx, activeArea.unit);
+
+                        setTimeout(function () {
+                            t.showUp('attack', targetIdx, demage, true);
+                        }, delay ? t.base.time.animate : 0);
                     }
 
                     setTimeout(function () {
-                        t.showUp('attack', targetIdx, demage, true);
+                        for (let i in t.areas.live) {
+                            if (t.areas.live[i].unit && t.areas.live[i].unit.name) {
+                                t.areas.live[i].unit.hp -= t.areas.live[i].unit.subHp;
+                                t.areas.live[i].unit.subHp = 0;
+
+                                if (t.areas.live[i].unit.hp <= 0)
+                                    t.areas.live[i].unit = {};
+                            }
+
+                            if (t.areas.live[i].shelter && t.areas.live[i].shelter.name) {
+                                t.areas.live[i].shelter.hp -= t.areas.live[i].shelter.subHp;
+                                t.areas.live[i].shelter.subHp = 0;
+
+                                if (t.areas.live[i].shelter.hp <= 0)
+                                    t.areas.live[i].shelter = {};
+                            }
+                        }
+
+                        t.checkFinished();
                     }, delay ? t.base.time.animate : 0);
+
+                    if (!isAlive)
+                        t.showUnitForSeconds(targetIdx, renewedTargetUnit);
                 }
-
-                setTimeout(function () {
-                    for (let i in t.areas.live) {
-                        if (t.areas.live[i].unit && t.areas.live[i].unit.name) {
-                            t.areas.live[i].unit.hp -= t.areas.live[i].unit.subHp;
-                            t.areas.live[i].unit.subHp = 0;
-
-                            if (t.areas.live[i].unit.hp <= 0)
-                                t.areas.live[i].unit = {};
-                        }
-
-                        if (t.areas.live[i].shelter && t.areas.live[i].shelter.name) {
-                            t.areas.live[i].shelter.hp -= t.areas.live[i].shelter.subHp;
-                            t.areas.live[i].shelter.subHp = 0;
-
-                            if (t.areas.live[i].shelter.hp <= 0)
-                                t.areas.live[i].shelter = {};
-                        }
-                    }
-
-                    t.checkFinished();
-                }, delay ? t.base.time.animate : 0);
             }
 
             return isAlive;
         },
-        checkLevel: function () {
-            for (let i in this.areas.live) {
-                if (this.isUnitInArea(i) && this.areas.live[i].unit.name === 'king')
-                    this.setLevel(i);
-                else if (this.isInShelterOrArea(i))
-                    this.setLevel(i);
+        showUnitForSeconds: function (idx, unit) {
+            let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
+            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="../../img/' + unit.player + '/' + unit.name + '.png"></div>');
+            let delay = unit.status === 'move';
+
+            if (delay) {
+                setTimeout(function () {
+                    $area.append($clone);
+                }, this.base.time.animate);
             }
+            else {
+                $area.append($clone);
+            }
+
+            setTimeout(function () {
+                $clone.fadeOut(function () {
+                    $clone.remove();
+                });
+            }, this.base.time.animate);
         },
         showUp: function (act, idx, val, isImportant) {
             let visible = val || isImportant;
@@ -2008,12 +1919,133 @@ let app = new Vue({
                 }
             }, 1000);
         },
-        closeModal: function () {
-            this.modal = {
-                idx: null,
-                info: {},
-                type: null
-            };
+        checkOwn: function (idx, isRunned) {
+            if (this.isUnitInArea(idx) && this.areas.live[idx].unit.name === 'king') {
+                let kingUnit = this.areas.live[idx].unit;
+                let startIdx = (Math.floor(idx / this.base.columnNum) * this.base.columnNum) + (this.base.columnNum * (kingUnit.player === 'black' ? -1 : 1));
+                let endIdx = startIdx + this.base.columnNum - 1;
+                let anotherKingIdx = null;
+
+                for (let i in this.areas.live) {
+                    let eachArea = this.areas.live[i];
+                    let idx = Number(i);
+                    let eachCond = kingUnit.player === 'black' ? idx >= startIdx : idx <= endIdx;
+
+                    if (eachCond) {
+                        if (!eachArea.owner && !eachArea.ownOnly)
+                            eachArea.owner = kingUnit.player;
+                    }
+                    else if (eachArea.owner === kingUnit.player && !eachArea.ownOnly) {
+                        eachArea.owner = null;
+                    }
+
+                    if (this.isUnitInArea(idx) && eachArea.unit.name === 'king' && eachArea.unit.player !== kingUnit.player)
+                        anotherKingIdx = idx;
+                }
+
+                if (!isRunned && anotherKingIdx != null)
+                    this.checkOwn(anotherKingIdx, true);
+            }
+
+            for (let i in this.areas.live) {
+                let eachArea = this.areas.live[i];
+
+                if (eachArea.shelter && eachArea.shelter.name) {
+                    eachArea.shelter.player = 'gray';
+
+                    if (eachArea.unit && eachArea.unit.name)
+                        eachArea.shelter.player = eachArea.unit.player;
+                }
+            }
+        },
+        checkBuff: function () {
+            let buffArr = this.getBuffArr();
+
+            for (let i in this.areas.live) {
+                if (this.isUnitInArea(i)) {
+                    let eachArea = this.areas.live[i];
+                    let eachUnit = eachArea.unit;
+                    let inInBuffArr = false;
+
+                    for (let j in buffArr) {
+                        if (Number(i) === Number(buffArr[j].idx) && eachUnit.player === buffArr[j].player) {
+                            inInBuffArr = true;
+                            break;
+                        }
+                    }
+
+                    if (inInBuffArr) {
+                        eachUnit.buffed['attack'] = 1;
+                        eachUnit.buffed['defense'] = 1;
+
+                        if (eachUnit.farm > 0)
+                            eachUnit.buffed['farm'] = 0.25;
+
+                        if (eachUnit.move > 1)
+                            eachUnit.buffed['move'] = 1;
+
+                        if (eachUnit.distance > 1)
+                            eachUnit.buffed['distance'] = 1;
+
+                        if (eachUnit.maxDistance > 1)
+                            eachUnit.buffed['maxDistance'] = 1;
+
+                        if (eachUnit.restoreHp > 0)
+                            eachUnit.buffed['restoreHp'] = 1;
+
+                        this.setLevel(i);
+                    }
+                    else {
+                        eachUnit.buffed = appLib.renew(this.base.buffed);
+                    }
+                }
+            }
+        },
+        checkVisible: function () {
+            let hnum = null;
+
+            for (let i in this.areas.live)
+                this.areas.live[i].watchers = '';
+
+            for (let i = 0; i < 2; i += 1) {
+                let player = i === 0 ? 'black' : 'white';
+                let black = player === 'black';
+
+                for (let i in this.areas.live) {
+                    if ((this.isUnitInArea(i) && this.areas.live[i].unit.player === player) || this.areas.live[i].owner === player) {
+                        hnum = this.areas.live[i].hnum;
+
+                        if (black)
+                            break;
+                    }
+                }
+
+                for (let i in this.areas.live) {
+                    let visible = this.areas.live[i].owner === player || (black ? this.areas.live[i].hnum >= hnum - 3 : this.areas.live[i].hnum <= hnum + 3);
+                    let gap = (this.areas.live[i].hnum - hnum) * (black ? -1 : 1);
+
+                    if (visible) {
+                        let opacity = '0.0'
+
+                        if (gap > 2)
+                            opacity = '0.3';
+                        else if (gap > 1)
+                            opacity = '0.2';
+                        else if (gap > 0)
+                            opacity = '0.1';
+
+                        this.areas.live[i].watchers += player + ':' + opacity + '/';
+                    }
+                }
+            }
+        },
+        checkLevel: function () {
+            for (let i in this.areas.live) {
+                if (this.isUnitInArea(i) && this.areas.live[i].unit.name === 'king')
+                    this.setLevel(i);
+                else if (this.isInShelterOrArea(i))
+                    this.setLevel(i);
+            }
         },
         checkFinished: function () {
             let t = this;
@@ -2056,6 +2088,13 @@ let app = new Vue({
                     }
                 }
             }
+        },
+        closeModal: function () {
+            this.modal = {
+                idx: null,
+                info: {},
+                type: null
+            };
         }
     },
     created: function () {
