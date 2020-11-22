@@ -120,14 +120,18 @@ button {
     z-index: 10;
 }
 
+.app > .wrapper > .area .area-wrapper .each-area .unit + .unit {
+    display: none;
+}
+
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-hidden=true] > img {
     opacity: 0.5;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-status=move],
 .app > .wrapper > .area .area-wrapper .each-area .weapon[data-status=move] {
-    transition: top 0.2s, left 0.2s;
-    -webkit-transition: top 0.2s, left 0.2s;
+    transition: top 0.25s, left 0.25s;
+    -webkit-transition: top 0.25s, left 0.25s;
     z-index: 25;
 }
 
@@ -215,7 +219,7 @@ button {
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white],
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
-    background: rgba(255, 255, 255, 0.55);
+    background: white;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .flag {
@@ -363,7 +367,7 @@ button {
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black],
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
-    background: rgba(0, 0, 0, 0.76);
+    background: black;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
