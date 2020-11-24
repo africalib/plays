@@ -51,7 +51,7 @@ button {
     position: absolute;
     top: 0;
     left: 0;
-    background: rgba(1, 14, 31, 0.76);
+    background: rgba(0, 0, 0, 0.76);
     color: #fff;
     font-size: 10px;
     width: 100%;
@@ -83,7 +83,7 @@ button {
 }
 
 .app > .wrapper > .area .area-wrapper .each-area {
-    background: rgba(241, 241, 241, 0.66);
+    background: rgba(241, 241, 241, 0.76);
     display: inline-block;
     width: calc(100%/9);
     outline: 1px solid rgba(0, 0, 0, 0.06);
@@ -242,10 +242,10 @@ button {
 }
 
 .app[data-player] > .wrapper > .area .area-wrapper .each-area:after {
-    background-color: #000;
-    background-image: url(../../img/common/tile.zigzag.png);
-    opacity: 0.5;
-    transition: opacity 0.25s;
+    background-image: url(../../img/common/gradient66.png);
+    background-size: 100% 100%;
+    transition: background-image 0.5s;
+    -webkit-transition: background-image 0.5s;
 }
 
 .app[data-player] > .wrapper > .area .area-wrapper .each-area[data-visible=true]:after {
@@ -258,29 +258,33 @@ button {
     display: none;
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.4"]:after,
-.app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.4"]:after {
-    opacity: 0.4;
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.3"]:after {
+    background-image: url(../../img/common/gradient664d.png);
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.3"]:after,
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.3"]:after {
-    opacity: 0.3;
+    background-image: url(../../img/common/gradient664d-180.png);
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.2"]:after,
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.2"]:after {
+    background-image: url(../../img/common/gradient4d33.png);
+}
+
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.2"]:after {
-    opacity: 0.2;
+    background-image: url(../../img/common/gradient4d33-180.png);
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.1"]:after,
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.1"]:after {
+    background-image: url(../../img/common/gradient3300.png);
+}
+
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.1"]:after {
-    opacity: 0.1;
+    background-image: url(../../img/common/gradient3300-180.png);
 }
 
 .app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.0"]:after,
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area[data-watchers*="white:0.0"]:after {
-    opacity: 0;
+    background-image: url(../../img/common/gradient00.png);
 }
 
 .app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]),
@@ -423,7 +427,7 @@ button {
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-hidden=true],
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=black]) {
-    background: rgba(239, 255, 205, 0.76);
+    background: rgba(246, 255, 228, 0.76);
 }
 
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
