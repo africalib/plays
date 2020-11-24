@@ -58,10 +58,12 @@ let app = new Vue({
                 }
             }
 
-            $.get('./data/replays.json', function (res) {
+            $.get('./data/replays.json').then(function (res) {
                 t.replay.loaded = true;
                 t.replay.list = res;
                 localStorage.setItem('replays', JSON.stringify(t.replay.list));
+            }, function () {
+                t.replay.loaded = true;
             });
         },
         open: function () {
