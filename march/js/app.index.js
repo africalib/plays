@@ -58,7 +58,7 @@ let app = new Vue({
                 }
             }
 
-            $.get('./data/replays.json').then(function (res) {
+            $.get('./data/replay.json').then(function (res) {
                 t.replay.loaded = true;
                 t.replay.list.push(res);
                 localStorage.setItem('replays', JSON.stringify(t.replay.list));
