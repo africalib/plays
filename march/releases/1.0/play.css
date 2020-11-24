@@ -99,7 +99,7 @@ button {
     width: 100%;
     height: 100%;
     content: '';
-    z-index: 25;
+    z-index: 50;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area.nature {
@@ -131,6 +131,9 @@ button {
 .app > .wrapper > .area .area-wrapper .each-area .weapon[data-status=move] {
     transition: top 0.25s, left 0.25s;
     -webkit-transition: top 0.25s, left 0.25s;
+}
+
+.app > .wrapper > .area .area-wrapper .each-area .weapon[data-status=move] {
     z-index: 50;
 }
 
@@ -677,13 +680,6 @@ button {
     text-align: center;
 }
 
-.app .run .contents .dots {
-    line-height: 0;
-    margin-bottom: 55px;
-    font-size: 30px;
-    margin-top: -5px;
-}
-
 .app .run .contents .text {
     font-size: 14px;
     margin-top: 10px;
@@ -876,7 +872,7 @@ button {
 }
 
 @media (min-width: 1024px) {
-    .app > .wrapper {
+    .app[data-started=Y] > .wrapper {
         padding-bottom: 100px;
     }
 
