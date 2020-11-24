@@ -2150,6 +2150,9 @@ let app = new Vue({
                     let winner = !king.white ? 'Black' : 'White';
                     t.setLabel(winner + ' player won', 0);
                     t.setMessage(t.my.player, t.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
+                    t.initGrab();
+                    t.initActive();
+                    t.initAreas();
                     clearInterval(t.interval['timer']);
 
                     for (let i in t.areas.live)
