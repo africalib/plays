@@ -392,8 +392,12 @@ let app = new Vue({
         },
         my: {
             player: null,
-            room: null,
-            roomUrl: null
+            room: {
+                name: null,
+                url: null,
+                host: false,
+                loaded: false
+            }
         },
         modal: {
             idx: null,
@@ -556,7 +560,7 @@ let app = new Vue({
             });
 
             socket.on('connect', function () {
-                socket.emit('enter', t.my.room ? t.my.room : '');
+                socket.emit('enter', t.my.room.name ? t.my.room.name : '');
             });
 
             socket.on('update', function (res) {
@@ -565,8 +569,8 @@ let app = new Vue({
                         case 'connect':
                             if (!t.my.player) {
                                 t.my.player = res.player;
-                                t.my.room = res.room;
-                                t.my.roomUrl = window.location.href + '#/' + res.room;
+                                t.my.room.name = res.room;
+                                t.my.room.url = window.location.href + '#/' + res.room;
                                 //t.label.player = res.turn;
                             }
                             break;
@@ -629,12 +633,12 @@ let app = new Vue({
                 replays = [];
 
             for (let i in replays) {
-                if (replays[i].name === this.my.room)
+                if (replays[i].name === this.my.room.name)
                     return;
             }
 
             replays.push({
-                name: this.my.room,
+                name: this.my.room.name,
                 version: this.version,
                 player: this.my.player,
                 flows: this.flows,
@@ -2206,7 +2210,8 @@ let app = new Vue({
         if (name) {
             $.get(global.baseUrl + '/valid?name=' + name, function (res) {
                 if (res === 'valid') {
-                    t.my.room = name;
+                    t.my.room.name = name;
+                    t.my.room.loaded = true;
                 }
                 else {
                     alert('유효한 접속이 아닙니다. 다시 시도해주세요.');
@@ -2215,6 +2220,9 @@ let app = new Vue({
             });
         }
         else {
+            t.my.room.name = name;
+            t.my.room.host = true;
+            t.my.room.loaded = true;
             t.enter();
         }
     },
