@@ -1,10 +1,9 @@
-﻿.app .run > .title {
-    border-bottom: 1px dotted #ddd;
+﻿.app .run > .contents {
+    line-height: 1.8;
 }
 
-.app .run > .contents {
-    padding: 50px 0;
-    line-height: 1.8;
+.app .run > .contents .dots {
+    letter-spacing: -3px;
 }
 
 .app .run > .contents label {

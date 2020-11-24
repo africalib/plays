@@ -869,7 +869,7 @@ button {
 }
 
 @media (min-width: 1024px) {
-    .app > .wrapper {
+    .app[data-started=Y] > .wrapper {
         padding-bottom: 100px;
     }
 
