@@ -391,7 +391,7 @@ button {
     color: #fff;
     bottom: 5px;
     left: 0px;
-    background: rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.5);
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .exp {
