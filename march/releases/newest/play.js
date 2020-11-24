@@ -1541,7 +1541,7 @@ let app = new Vue({
             let isAlive = true;
 
             if (t.isUnitInArea(t.active.idx)) {
-                if (((t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player))) {
+                if (!t.hasGrayShelter(targetIdx) && (t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player)) {
                     let demage = activeArea.unit.attack + activeArea.unit.buffed['attack'];
                     let accelDemage = 0;
                     let activeDirection = t.getDirection(targetIdx, t.active.idx);
