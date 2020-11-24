@@ -691,7 +691,7 @@ let app = new Vue({
             clearInterval(this.interval['replay']);
         },
         speed: function () {
-            if (this.replay.speed >= 10)
+            if (this.replay.speed >= 9)
                 this.replay.speed = 0;
 
             this.replay.speed += 1;
