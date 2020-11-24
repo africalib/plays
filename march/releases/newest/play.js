@@ -1738,7 +1738,7 @@ let app = new Vue({
             }
 
             setTimeout(function () {
-                $clone.fadeOut(function () {
+                $clone.fadeOut(500, function () {
                     $clone.remove();
                 });
             }, this.base.time.animate);
