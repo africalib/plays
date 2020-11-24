@@ -40,12 +40,8 @@
     height: 2rem;
 }
 
-.app .run > .title {
-    border-bottom: 1px dotted #ddd;
-}
-
-.app .run .rooms {
-    padding: 50px 0;
+.app .run > .contents .dots {
+    letter-spacing: -3px;
 }
 
 .app .run .rooms > .title {

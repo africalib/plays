@@ -677,13 +677,6 @@ button {
     text-align: center;
 }
 
-.app .run .contents .dots {
-    line-height: 0;
-    margin-bottom: 55px;
-    font-size: 30px;
-    margin-top: -5px;
-}
-
 .app .run .contents .text {
     font-size: 14px;
     margin-top: 10px;

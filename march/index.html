@@ -27,6 +27,7 @@
                 <div>March of the King</div>
             </div>
             <div class="contents">
+                <div class="dots">-------</div>
                 <div class="rooms">
                     <template v-if="room.list && room.list.length">
                         <div class="title">대기 중인 방 목록</div>
@@ -38,10 +39,11 @@
                         </ul>
                     </template>
                     <div class="no-data" v-else-if="room.loaded">
-                        <p>대기 중인 방이 없습니다.</p>
+                        <p>대기 상태인 방이 없습니다.</p>
                         <p>
+                            <span>아래의</span>
                             <span class="pointer" v-on:click="enter()">생성하기</span>
-                            <span>버튼을 눌러주세요.</span>
+                            <span>버튼을 터치해주세요.</span>
                         </p>
                     </div>
                     <div class="anchors">
