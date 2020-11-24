@@ -392,8 +392,12 @@ let app = new Vue({
         },
         my: {
             player: null,
-            room: null,
-            roomUrl: null
+            room: {
+                name: null,
+                url: null,
+                host: false,
+                loaded: false
+            }
         },
         modal: {
             idx: null,
@@ -457,18 +461,23 @@ let app = new Vue({
 
                 this.areas.live.push(each);
 
-                if (i >= 21 && i <= 23)
-                    this.setUnit('white', 'shield', i, true);
-                else if (i >= 120 && i <= 122)
+
+                if (i >= 120 && i <= 122)
                     this.setUnit('black', 'shield', i, true);
-                else if (i === 13)
-                    this.setUnit('white', 'king', i, true);
-                else if (i === 12 || i === 14)
-                    this.setUnit('white', 'horse', i, true);
                 else if (i === 129 || i === 131)
                     this.setUnit('black', 'horse', i, true);
                 else if (i === 130)
                     this.setUnit('black', 'king', i, true);
+                if (i >= 138 && i <= 140)
+                    this.setUnit('black', 'farmer', i, true);
+                else if (i >= 21 && i <= 23)
+                    this.setUnit('white', 'shield', i, true);
+                else if (i === 13)
+                    this.setUnit('white', 'king', i, true);
+                else if (i === 12 || i === 14)
+                    this.setUnit('white', 'horse', i, true);
+                else if (i >= 3 && i <= 5)
+                    this.setUnit('white', 'farmer', i, true);
             }
 
             this.areas.prev = appLib.renew(this.areas.live);
@@ -544,6 +553,74 @@ let app = new Vue({
                 t.setLabel("Let's march", 2000);
             }, 2500);
         },
+        enter: function () {
+            let t = this;
+            t.status.time = t.base.time.turn;
+
+            socket = io.connect(global.baseUrl, {
+                rememberUpgrade: true,
+                transports: ['websocket'],
+                secure: true,
+                rejectUnauthorized: false
+            });
+
+            socket.on('connect', function () {
+                socket.emit('enter', t.my.room.name ? t.my.room.name : '');
+            });
+
+            socket.on('update', function (res) {
+                if (res && Object.keys(res).length) {
+                    switch (res.name) {
+                        case 'connect':
+                            if (!t.my.player) {
+                                t.my.player = res.player;
+                                t.my.room.name = res.room;
+                                t.my.room.url = window.location.href + '#/' + res.room;
+                                //t.label.player = res.turn;
+                            }
+                            break;
+
+                        case 'start':
+                            t.start();
+
+                            if (t.my.player === 'black') {
+                                setTimeout(function () {
+                                    t.setRandomShelter();
+                                    t.request('pass', 'black');
+                                }, 3500);
+                            }
+
+                            window.onbeforeunload = function () {
+                                return true;
+                            };
+                            break;
+
+                        case 'disconnect':
+                            if (t.status.started && !t.status.finished) {
+                                socket.disconnect();
+                                t.status.finished = true;
+                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                                window.onbeforeunload = null;
+                                //window.location.href = 'index.html';
+                            }
+                            break;
+
+                        default:
+                            if (typeof t[res.value.name] === 'function') {
+                                if (res.value.name === 'touch' || res.value.name === 'grab')
+                                    t.status.touchable = true;
+
+                                t.runFunc(res.value);
+                                t.flows.push(res.value);
+                            }
+                            break;
+                    }
+                }
+                else {
+                    alert('error');
+                }
+            });
+        },
         refresh: function () {
             window.location.reload();
         },
@@ -561,12 +638,12 @@ let app = new Vue({
                 replays = [];
 
             for (let i in replays) {
-                if (replays[i].name === this.my.room)
+                if (replays[i].name === this.my.room.name)
                     return;
             }
 
             replays.push({
-                name: this.my.room,
+                name: this.my.room.name,
                 version: this.version,
                 player: this.my.player,
                 flows: this.flows,
@@ -1541,7 +1618,7 @@ let app = new Vue({
             let isAlive = true;
 
             if (t.isUnitInArea(t.active.idx)) {
-                if (((t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player))) {
+                if (!t.hasGrayShelter(targetIdx) && (t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player)) {
                     let demage = activeArea.unit.attack + activeArea.unit.buffed['attack'];
                     let accelDemage = 0;
                     let activeDirection = t.getDirection(targetIdx, t.active.idx);
@@ -2101,7 +2178,6 @@ let app = new Vue({
         let t = this;
         let name = location.hash ? location.hash.replace('#/', '') : '';
         let replays = localStorage.getItem('replays');
-        let run;
 
         if (navigator.platform !== 'Win32') {
             $(document).on('contextmenu', function (e) {
@@ -2129,85 +2205,18 @@ let app = new Vue({
             }
         }
 
-        run = function () {
-            t.status.time = t.base.time.turn;
+        t.interval['dot'] = setInterval(function () {
+            if (t.dots.length > 20)
+                t.dots = '';
 
-            socket = io.connect(global.baseUrl, {
-                rememberUpgrade: true,
-                transports: ['websocket'],
-                secure: true,
-                rejectUnauthorized: false
-            });
-
-            t.interval['dot'] = setInterval(function () {
-                if (t.dots.length > 20)
-                    t.dots = '';
-
-                t.dots += '.';
-            }, 250);
-
-            socket.on('connect', function () {
-                socket.emit('enter', name ? name : '');
-            });
-
-            socket.on('update', function (res) {
-                if (res && Object.keys(res).length) {
-                    switch (res.name) {
-                        case 'connect':
-                            if (!t.my.player) {
-                                t.my.player = res.player;
-                                t.my.room = res.room;
-                                t.my.roomUrl = window.location.href + '#/' + res.room;
-                                //t.label.player = res.turn;
-                            }
-                            break;
-
-                        case 'start':
-                            t.start();
-
-                            if (t.my.player === 'black') {
-                                setTimeout(function () {
-                                    t.setRandomShelter();
-                                    t.request('pass', 'black');
-                                }, 3500);
-                            }
-
-                            window.onbeforeunload = function () {
-                                return true;
-                            };
-                            break;
-
-                        case 'disconnect':
-                            if (t.status.started && !t.status.finished) {
-                                socket.disconnect();
-                                t.status.finished = true;
-                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
-                                window.onbeforeunload = null;
-                                //window.location.href = 'index.html';
-                            }
-                            break;
-
-                        default:
-                            if (typeof t[res.value.name] === 'function') {
-                                if (res.value.name === 'touch' || res.value.name === 'grab')
-                                    t.status.touchable = true;
-
-                                t.runFunc(res.value);
-                                t.flows.push(res.value);
-                            }
-                            break;
-                    }
-                }
-                else {
-                    alert('error');
-                }
-            });
-        }
+            t.dots += '.';
+        }, 250);
 
         if (name) {
             $.get(global.baseUrl + '/valid?name=' + name, function (res) {
                 if (res === 'valid') {
-                    run();
+                    t.my.room.name = name;
+                    t.my.room.loaded = true;
                 }
                 else {
                     alert('유효한 접속이 아닙니다. 다시 시도해주세요.');
@@ -2216,7 +2225,10 @@ let app = new Vue({
             });
         }
         else {
-            run();
+            t.my.room.name = name;
+            t.my.room.host = true;
+            t.my.room.loaded = true;
+            t.enter();
         }
     },
     mounted: function () {

@@ -7,7 +7,10 @@ let app = new Vue({
             loaded: false,
             list: []
         },
-        replays: [],
+        replay: {
+            list: [],
+            loaded: false
+        },
         touchCnt: 0
     },
     methods: {
@@ -31,19 +34,14 @@ let app = new Vue({
         refresh: function () {
             window.location.reload();
         },
-        clear: function () {
-            if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
-                localStorage.removeItem('replays');
-                this.replays = [];
-            }
-        },
-        open: function () {
+        load: function () {
             let t = this;
             let replays = localStorage.getItem('replays');
+            t.replay.loaded = false;
 
             if (replays) {
-                t.replays = JSON.parse(replays)
-                t.replays.sort(function (a, b) {
+                t.replay.list = JSON.parse(replays)
+                t.replay.list.sort(function (a, b) {
                     if (a.date < b.date)
                         return 1;
                     else if (a.date === b.date)
@@ -53,19 +51,36 @@ let app = new Vue({
                 });
             }
 
-            if (!Array.isArray(t.replays) || !t.replays.length) {
-                $.get('./data/replays.json', function (res) {
-                    t.replays = res;
-                    localStorage.setItem('replays', JSON.stringify(t.replays));
-                });
+            for (let i in t.replay.list) {
+                if (t.replay.list[i].name === 'preview') {
+                    t.replay.list.splice(i, 1);
+                    break;
+                }
             }
 
-            $(t.$refs.modal).modal('show');
+            $.get('./data/replays.json', function (res) {
+                t.replay.loaded = true;
+                t.replay.list = res;
+                localStorage.setItem('replays', JSON.stringify(t.replay.list));
+            });
+        },
+        open: function () {
+            this.load();
+            $(this.$refs.modal).modal('show');
         },
         remove: function (idx) {
             if (confirm('삭제하시겠습니까?')) {
-                this.replays.splice(idx, 1);
-                localStorage.setItem('replays', JSON.stringify(this.replays));
+                this.replay.list.splice(idx, 1);
+                localStorage.setItem('replays', JSON.stringify(this.replay.list));
+            }
+
+            t.load();
+        },
+        clear: function () {
+            if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
+                localStorage.removeItem('replays');
+                this.replay.list = [];
+                this.load();
             }
         },
         write: function () {

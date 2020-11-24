@@ -461,18 +461,23 @@ let app = new Vue({
 
                 this.areas.live.push(each);
 
-                if (i >= 21 && i <= 23)
-                    this.setUnit('white', 'shield', i, true);
-                else if (i >= 120 && i <= 122)
+
+                if (i >= 120 && i <= 122)
                     this.setUnit('black', 'shield', i, true);
-                else if (i === 13)
-                    this.setUnit('white', 'king', i, true);
-                else if (i === 12 || i === 14)
-                    this.setUnit('white', 'horse', i, true);
                 else if (i === 129 || i === 131)
                     this.setUnit('black', 'horse', i, true);
                 else if (i === 130)
                     this.setUnit('black', 'king', i, true);
+                if (i >= 138 && i <= 140)
+                    this.setUnit('black', 'farmer', i, true);
+                else if (i >= 21 && i <= 23)
+                    this.setUnit('white', 'shield', i, true);
+                else if (i === 13)
+                    this.setUnit('white', 'king', i, true);
+                else if (i === 12 || i === 14)
+                    this.setUnit('white', 'horse', i, true);
+                else if (i >= 3 && i <= 5)
+                    this.setUnit('white', 'farmer', i, true);
             }
 
             this.areas.prev = appLib.renew(this.areas.live);
