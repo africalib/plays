@@ -39,11 +39,12 @@
                             </div>
                             <div class="anchors">
                                 <a class="pointer" v-on:click="refresh()">다시 만들기</a>
+                                <a class="pointer" v-on:click="goHome()">홈으로</a>
                             </div>
                         </template>
                         <template v-else>
                             <div class="text">게임을 시작하시려면 아래 버튼을 눌러주세요.</div>
-                            <button class="btn-block btn" type="button" v-on:click="enter()">Let's March</button>
+                            <button class="btn-block btn" type="button" v-on:click="enter()">입장하기</button>
                             <div class="anchors">
                                 <a class="pointer" v-on:click="goHome()">홈으로</a>
                             </div>
@@ -73,7 +74,7 @@
                             v-for="(a, idx) in areas.live" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
                             v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
                             v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
-                            v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden ? 'true' : 'false'"
+                            v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden ? 'Y' : 'N'"
                             v-bind:data-watchers="a.watchers" v-bind:data-opacity="a.opacity"
                             v-on:click="touchable(idx) && request('touch', idx)">
                             <div class="unit" v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"

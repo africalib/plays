@@ -41,15 +41,13 @@
                     <div class="no-data" v-else-if="room.loaded">
                         <p>대기 상태인 방이 없습니다.</p>
                         <p>
-                            <span>아래의</span>
                             <span class="pointer" v-on:click="enter()">생성하기</span>
                             <span>버튼을 터치해주세요.</span>
                         </p>
                     </div>
                     <div class="anchors">
-                        <a class="pointer" v-on:click="enter()">생성하기</a>
-                        <span>&nbsp;&nbsp;&nbsp;</span>
-                        <a class="pointer" v-on:click="refresh()">새로고침</a>
+                        <a v-on:click="enter()">생성하기</a>
+                        <a v-on:click="refresh()">새로고침</a>
                     </div>
                 </div>
             </div>
@@ -71,7 +69,8 @@
                                     <span class="label label-default" v-if="r.name !== 'preview'">{{ r.date }}</span>
                                 </p>
                                 <span>{{ r.name }}</span>
-                                <button type="button" class="close" v-on:click.stop="remove(idx)" v-if="r.name !== 'preview'">×</button>
+                                <button type="button" class="close" v-on:click.stop="remove(idx)"
+                                    v-if="r.name !== 'preview'">×</button>
                             </li>
                         </ul>
                         <div class="no-data" v-else-if="replay.loaded">

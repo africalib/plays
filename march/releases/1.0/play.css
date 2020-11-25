@@ -123,7 +123,7 @@ button {
     display: none;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-hidden=true] > img {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-hidden=Y] > img {
     opacity: 0.5;
 }
 
@@ -250,11 +250,6 @@ button {
     -webkit-transition: background-image 0.5s;
 }
 
-.app[data-player] > .wrapper > .area .area-wrapper .each-area[data-visible=true]:after {
-    opacity: 0;
-    z-index: 1;
-}
-
 .app[data-player=black] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=black]) > *,
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=white]) > * {
     display: none;
@@ -320,7 +315,8 @@ button {
     opacity: 0.5;
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter,
+.app[data-player=white][data-replay=Y] > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
     background: rgba(0, 0, 0, 0.25);
 }
 
@@ -421,13 +417,18 @@ button {
     background: rgba(255, 203, 109, 76%);
 }
 
+.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit,
+.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter {
+    background: none !important;
+}
+
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move],
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
-.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-hidden=true],
+.app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-hidden=Y],
 .app[data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=white]),
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=move],
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=enter],
-.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-hidden=true],
+.app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-hidden=Y],
 .app[data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=black]) {
     background: rgba(246, 255, 228, 0.76);
 }
