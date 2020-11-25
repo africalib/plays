@@ -1543,7 +1543,7 @@ let app = new Vue({
                         lineCond = lineCond && t.isInCross(idx, targetIdx);
 
                         if (targetIdx && lineCond && !t.isShelterInArea(targetIdx) && targetIdx === t.active.idx && targetIdx >= 0 && t.isUnitInArea(targetIdx) && eachUnit.player !== t.areas.live[targetIdx].unit.player) {
-                            if (t.areas.live[targetIdx].unit.hidden)
+                            if (t.areas.live[targetIdx].unit.hidden && t.areas.live[targetIdx].unit.player !== t.status.turn)
                                 return;
                             else if (eachArea.unit.hidden)
                                 return;
