@@ -565,6 +565,7 @@ let app = new Vue({
             });
 
             socket.on('connect', function () {
+                alert('connected!');
                 socket.emit('enter', t.my.room.name ? t.my.room.name : '');
             });
 
@@ -577,6 +578,9 @@ let app = new Vue({
                                 t.my.room.name = res.room;
                                 t.my.room.url = window.location.href + '#/' + res.room;
                                 //t.label.player = res.turn;
+                            }
+                            else {
+
                             }
                             break;
 
@@ -595,12 +599,18 @@ let app = new Vue({
                             };
                             break;
 
+                        case 'reconnect':
+                            clearTimeout(t.timer['disconnect']);
+                            break;
+
                         case 'disconnect':
                             if (t.status.started && !t.status.finished) {
-                                socket.disconnect();
-                                t.status.finished = true;
-                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
-                                window.onbeforeunload = null;
+                                t.timer['disconnect'] = setTimeout(function () {
+                                    socket.disconnect();
+                                    t.status.finished = true;
+                                    alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                                    window.onbeforeunload = null;
+                                }, 5000);
                                 //window.location.href = 'index.html';
                             }
                             break;
