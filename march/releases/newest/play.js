@@ -565,14 +565,10 @@ let app = new Vue({
             });
 
             socket.on('connect', function () {
-                if (t.status.started)
-                    alert('reconnected#1');
-                else
-                    socket.emit('enter', t.my.room.name ? t.my.room.name : '');
-            });
+                socket.emit('enter', t.my.room.name ? t.my.room.name : '');
 
-            socket.on('reconnect', function () {
-                alert('reconnected#2');
+                if (t.status.started)
+                    t.request('reconnect');
             });
 
             socket.on('update', function (res) {
@@ -608,6 +604,8 @@ let app = new Vue({
 
                         case 'disconnect':
                             if (t.status.started && !t.status.finished) {
+                                t.setMessage(t.my.player, '상대편의 네트워크에 문제가 있거나 경기에서 나갔습니다. 잠시만 기다려주세요.', t.base.time.message);
+
                                 t.timer['disconnect'] = setTimeout(function () {
                                     socket.disconnect();
                                     t.status.finished = true;
