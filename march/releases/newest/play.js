@@ -567,8 +567,10 @@ let app = new Vue({
             socket.on('connect', function () {
                 socket.emit('enter', t.my.room.name ? t.my.room.name : '');
 
-                if (t.status.started)
-                    t.request('reconnect');
+                if (t.status.started) {
+                    t.setMessage(t.my.player, '재연결을 시도하는 중입니다. 잠시만 기다려주세요.', t.base.time.message);
+                    t.request('reconnect', t.my.player);
+                }
             });
 
             socket.on('update', function (res) {
@@ -599,6 +601,7 @@ let app = new Vue({
                             break;
 
                         case 'reconnect':
+                            alert('reconn');
                             clearTimeout(t.timer['disconnect']);
                             break;
 
