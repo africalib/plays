@@ -566,9 +566,13 @@ let app = new Vue({
 
             socket.on('connect', function () {
                 if (t.status.started)
-                    alert('reconnected!');
+                    alert('reconnected#1');
                 else
                     socket.emit('enter', t.my.room.name ? t.my.room.name : '');
+            });
+
+            socket.on('reconnect', function () {
+                alert('reconnected#2');
             });
 
             socket.on('update', function (res) {
