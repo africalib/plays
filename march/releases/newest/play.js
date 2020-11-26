@@ -565,8 +565,10 @@ let app = new Vue({
             });
 
             socket.on('connect', function () {
-                alert('connected!');
-                socket.emit('enter', t.my.room.name ? t.my.room.name : '');
+                if (t.status.started)
+                    alert('reconnected!');
+                else
+                    socket.emit('enter', t.my.room.name ? t.my.room.name : '');
             });
 
             socket.on('update', function (res) {
@@ -578,9 +580,6 @@ let app = new Vue({
                                 t.my.room.name = res.room;
                                 t.my.room.url = window.location.href + '#/' + res.room;
                                 //t.label.player = res.turn;
-                            }
-                            else {
-
                             }
                             break;
 
