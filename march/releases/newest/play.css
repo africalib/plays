@@ -129,8 +129,8 @@ button {
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-status=move],
 .app > .wrapper > .area .area-wrapper .each-area .weapon[data-status=move] {
-    transition: top 0.25s, left 0.25s;
-    -webkit-transition: top 0.25s, left 0.25s;
+    transition: top 0.37s, left 0.37s;
+    -webkit-transition: top 0.37s, left 0.37s;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .weapon[data-status=move] {
@@ -716,7 +716,6 @@ button {
     background-color: rgba(0, 0, 0, 0.9);
     border: 0;
     color: #fff;
-    background-image: url(../../img/common/tile.zigzag.png);
     font-size: 13px;
 }
 

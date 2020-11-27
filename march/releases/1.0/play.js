@@ -8,7 +8,7 @@ let app = new Vue({
             time: {
                 turn: 120,
                 message: 2500,
-                animate: 250,
+                animate: 370,
             },
             fieldCount: 100,
             columnNum: 9,
@@ -440,27 +440,26 @@ let app = new Vue({
                 this.base.units[i].buffed = appLib.renew(this.base.buffed);
 
             for (let i = 0; i < 150; i += 1) {
-                let each = appLib.renew(this.base.area);
+                let area = appLib.renew(this.base.area);
                 let remain = i % this.base.columnNum;
                 let hnum = this.getVerticalNum(i);
 
-                each.idx = i;
-                each.hidx = i;
-                each.vidx = hnum + (remain * this.base.rowNum);
-                each.vnum = this.getVerticalNum(each.vidx, true);
-                each.hnum = hnum;
+                area.idx = i;
+                area.hidx = i;
+                area.vidx = hnum + (remain * this.base.rowNum);
+                area.vnum = this.getVerticalNum(area.vidx, true);
+                area.hnum = hnum;
 
                 if (i < this.base.nature.start) {
-                    each.owner = 'white';
-                    each.ownOnly = true;
+                    area.owner = 'white';
+                    area.ownOnly = true;
                 }
                 else if (i > this.base.nature.end) {
-                    each.owner = 'black';
-                    each.ownOnly = true;
+                    area.owner = 'black';
+                    area.ownOnly = true;
                 }
 
-                this.areas.live.push(each);
-
+                this.areas.live.push(area);
 
                 if (i >= 120 && i <= 122)
                     this.setUnit('black', 'shield', i, true);
@@ -489,11 +488,11 @@ let app = new Vue({
             t.init();
 
             mc.on('press', function (e) {
-                let eachArea = $(e.target).closest('.each-area');
-                let eachUnit = $(e.target).closest('.each-unit');
+                let area = $(e.target).closest('.each-area');
+                let unit = $(e.target).closest('.each-unit');
 
-                if (eachArea.length && eachArea.data('idx')) {
-                    let idx = eachArea.data('idx');
+                if (area.length && area.data('idx')) {
+                    let idx = area.data('idx');
 
                     if (t.status.replay || t.isMyWatcher(idx)) {
                         let unit = t.areas.live[idx].unit;
@@ -524,9 +523,9 @@ let app = new Vue({
                         return;
                     }
                 }
-                else if (eachUnit.length) {
+                else if (unit.length) {
                     t.modal.type = 'unit';
-                    t.modal.info = t.base.units[eachUnit.data('name')];
+                    t.modal.info = t.base.units[unit.data('name')];
                     t.modal.info.player = t.my.player;
                 }
 
@@ -547,7 +546,7 @@ let app = new Vue({
                 }
             });
 
-            t.setLabel("You are the " + t.my.player + " player", 2500);
+            t.setLabel("You are the " + t.my.player, 2500);
 
             setTimeout(function () {
                 t.setLabel("Let's march", 2000);
@@ -927,64 +926,65 @@ let app = new Vue({
                         };
 
                         for (let j = 0; j < 4; j += 1) {
-                            let each = {}
+                            let obj = {};
+                            let area;
 
                             switch (j) {
                                 case 0:
-                                    each.direction = 'up';
-                                    each.idx = (i + 1) * -(t.base.columnNum) + idx;
-                                    each.cond = cond(each.direction, each.idx);
+                                    obj.direction = 'up';
+                                    obj.idx = (i + 1) * -(t.base.columnNum) + idx;
+                                    obj.cond = cond(obj.direction, obj.idx);
                                     break;
 
                                 case 1:
-                                    each.direction = 'down';
-                                    each.idx = (i + 1) * t.base.columnNum + idx;
-                                    each.cond = cond(each.direction, each.idx);
+                                    obj.direction = 'down';
+                                    obj.idx = (i + 1) * t.base.columnNum + idx;
+                                    obj.cond = cond(obj.direction, obj.idx);
                                     break;
 
                                 case 2:
-                                    each.direction = 'right';
-                                    each.idx = idx + i + 1;
-                                    each.cond = cond(each.direction, each.idx) && targetArea.hnum === t.getVerticalNum(each.idx);
+                                    obj.direction = 'right';
+                                    obj.idx = idx + i + 1;
+                                    obj.cond = cond(obj.direction, obj.idx) && targetArea.hnum === t.getVerticalNum(obj.idx);
                                     break;
 
                                 case 3:
-                                    each.direction = 'left';
-                                    each.idx = idx - i - 1;
-                                    each.cond = cond(each.direction, each.idx) && targetArea.hnum === t.getVerticalNum(each.idx);
+                                    obj.direction = 'left';
+                                    obj.idx = idx - i - 1;
+                                    obj.cond = cond(obj.direction, obj.idx) && targetArea.hnum === t.getVerticalNum(obj.idx);
                                     break;
 
                                 default:
                                     return;
                             }
 
-                            let eachArea = t.areas.live[each.idx];
+                            area = t.areas.live[obj.idx];
 
-                            if (each.cond && eachArea) {
-                                t.areas.live[num[each.direction]].player = t.status.turn;
-                                t.areas.live[num[each.direction]].hidden = false;
+                            if (obj.cond && area) {
+                                t.areas.live[num[obj.direction]].player = t.status.turn;
+                                t.areas.live[num[obj.direction]].hidden = false;
 
-                                if (attackable && ((t.isShelterInArea(each.idx) && !t.hasShelter(each.idx) && !t.hasGrayShelter(each.idx)) || (t.isUnitInArea(each.idx) && !t.isTurnUnit(each.idx))) && targetArea.unit.distance === 1) {
-                                    t.areas.live[num[each.direction]].status = 'attack';
+                                if (attackable && ((t.isShelterInArea(obj.idx) && !t.hasShelter(obj.idx) && !t.hasGrayShelter(obj.idx)) || (t.isUnitInArea(obj.idx) && !t.isTurnUnit(obj.idx))) && targetArea.unit.distance === 1) {
+                                    t.areas.live[num[obj.direction]].status = 'attack';
 
-                                    if (t.isHiddenUnitInArea(each.idx))
-                                        t.areas.live[num[each.direction]].hidden = true;
+                                    if (t.isHiddenUnitInArea(obj.idx))
+                                        t.areas.live[num[obj.direction]].hidden = true;
                                     continue;
                                 }
 
-                                if (!t.isShelterInArea(each.idx) || t.hasGrayShelter(each.idx)) {
-                                    if (!t.isUnitInArea(each.idx)) {
-                                        t.areas.live[num[each.direction]].status = 'move';
+                                if (!t.isShelterInArea(obj.idx) || t.hasGrayShelter(obj.idx)) {
+                                    if (!t.isUnitInArea(obj.idx)) {
+                                        t.areas.live[num[obj.direction]].status = 'move';
                                     }
-                                    else if (t.isHiddenUnitInArea(each.idx)) {
-                                        t.areas.live[num[each.direction]].status = 'move';
-                                        t.areas.live[num[each.direction]].hidden = true;
+                                    else if (t.isHiddenUnitInArea(obj.idx)) {
+                                        t.areas.live[num[obj.direction]].status = 'move';
+                                        t.areas.live[num[obj.direction]].hidden = true;
                                     }
                                     continue;
                                 }
                             }
                             else {
-                                accessable[each.direction] = false;
+                                accessable[obj.direction] = false;
                             }
                         }
                     }
@@ -1278,9 +1278,9 @@ let app = new Vue({
         },
         isInShelterOrArea: function (i) {
             if (this.isUnitInArea(i)) {
-                let eachArea = this.areas.live[i];
-                let eachUnit = eachArea.unit;
-                return eachArea.owner === eachUnit.player || (this.isShelterInArea(i) && eachArea.shelter.player === eachUnit.player);
+                let area = this.areas.live[i];
+                let unit = area.unit;
+                return area.owner === unit.player || (this.isShelterInArea(i) && area.shelter.player === unit.player);
             }
 
             return false;
@@ -1349,8 +1349,8 @@ let app = new Vue({
 
             return returnValue;
         },
-        getVerticalNum: function (val, isRowNum) {
-            return Math.floor(val / (isRowNum ? this.base.rowNum : this.base.columnNum));
+        getVerticalNum: function (val, rowNum) {
+            return Math.floor(val / (rowNum ? this.base.rowNum : this.base.columnNum));
         },
         getBuffArr: function () {
             let buffArr = [];
@@ -1421,50 +1421,50 @@ let app = new Vue({
             }
         },
         setLevel: function (i) {
-            let eachUnit = this.areas.live[i].unit;
+            let unit = this.areas.live[i].unit;
 
-            if (eachUnit.name && eachUnit.level && eachUnit.exp >= eachUnit.maxExp && eachUnit.level < eachUnit.maxLevel) {
+            if (unit.name && unit.level && unit.exp >= unit.maxExp && unit.level < unit.maxLevel) {
                 let upLevel = 0;
 
-                while (eachUnit.exp >= eachUnit.maxExp) {
-                    if (eachUnit.level >= eachUnit.maxLevel)
+                while (unit.exp >= unit.maxExp) {
+                    if (unit.level >= unit.maxLevel)
                         break;
 
-                    eachUnit.exp -= eachUnit.maxExp;
-                    eachUnit.level += 1;
-                    eachUnit.maxExp += 1;
+                    unit.exp -= unit.maxExp;
+                    unit.level += 1;
+                    unit.maxExp += 1;
 
-                    if (eachUnit.farm)
-                        eachUnit.farm += 0.25;
+                    if (unit.farm)
+                        unit.farm += 0.25;
 
-                    if (eachUnit.move > 1) {
-                        eachUnit.move += 1;
+                    if (unit.move > 1) {
+                        unit.move += 1;
 
-                        if (eachUnit.move > eachUnit.maxMove)
-                            eachUnit.move = eachUnit.maxMove;
+                        if (unit.move > unit.maxMove)
+                            unit.move = unit.maxMove;
                     }
 
-                    if (eachUnit.distance > 1 && !eachUnit.ridable) {
-                        eachUnit.distance += 1;
+                    if (unit.distance > 1 && !unit.ridable) {
+                        unit.distance += 1;
 
-                        if (eachUnit.distance > eachUnit.maxDistance)
-                            eachUnit.distance = eachUnit.maxDistance;
+                        if (unit.distance > unit.maxDistance)
+                            unit.distance = unit.maxDistance;
                     }
 
-                    if (!eachUnit.ridable)
-                        eachUnit.attack += 1;
+                    if (!unit.ridable)
+                        unit.attack += 1;
 
-                    eachUnit.hp += 1;
-                    eachUnit.maxHp += 1;
-                    eachUnit.power += 1;
-                    eachUnit.maxPower += 1;
-                    eachUnit.defense += 1;
-                    eachUnit.restoreHp += 1;
+                    unit.hp += 1;
+                    unit.maxHp += 1;
+                    unit.power += 1;
+                    unit.maxPower += 1;
+                    unit.defense += 1;
+                    unit.restoreHp += 1;
 
-                    if (eachUnit.name === 'king') {
-                        this.status[eachUnit.player].incomeCrop += 10;
-                        this.status[eachUnit.player].maxCrop += 50;
-                        this.status[eachUnit.player].maxUnit += 100;
+                    if (unit.name === 'king') {
+                        this.status[unit.player].incomeCrop += 10;
+                        this.status[unit.player].maxCrop += 50;
+                        this.status[unit.player].maxUnit += 100;
                     }
 
                     upLevel += 1;
@@ -1524,14 +1524,14 @@ let app = new Vue({
         },
         counterAttack: function (delay) {
             let t = this;
-            let isBlackTurn = t.status.turn === 'black';
-            let i = isBlackTurn ? t.areas.live.length : 0;
+            let blackTurn = t.status.turn === 'black';
+            let i = blackTurn ? t.areas.live.length : 0;
 
             wloop:
-            while (isBlackTurn ? i > 0 : i < t.areas.live.length) {
+            while (blackTurn ? i > 0 : i < t.areas.live.length) {
                 let idx = Number(i);
-                let eachUnit;
-                i = i + (isBlackTurn ? -1 : 1);
+                let unit;
+                i = i + (blackTurn ? -1 : 1);
 
                 if (!t.isUnitInArea(idx))
                     continue;
@@ -1539,27 +1539,30 @@ let app = new Vue({
                 if (!t.isInCross(t.active.idx, idx))
                     continue;
 
-                eachUnit = t.areas.live[idx].unit;
+                unit = t.areas.live[idx].unit;
 
-                if (eachUnit.player === t.status.turn)
+                if (!unit.distance)
                     continue;
 
-                if (!eachUnit.distance)
+                if (unit.power <= 0)
                     continue;
 
-                if (!eachUnit.power)
+                if (unit.hp <= 0)
                     continue;
 
-                if (eachUnit.hidden)
+                if (unit.hidden)
+                    continue;
+
+                if (unit.player === t.status.turn)
                     continue;
 
                 if (t.isShelterInArea(t.active.idx))
                     continue;
 
-                for (let j = 0; j < eachUnit.distance + eachUnit.buffed['distance']; j += 1) {
+                for (let j = 0; j < unit.distance + unit.buffed['distance']; j += 1) {
                     let targetIdx = null;
 
-                    switch (eachUnit.direction) {
+                    switch (unit.direction) {
                         case 12:
                             targetIdx = idx - (t.base.columnNum * (j + 1));
 
@@ -1578,7 +1581,7 @@ let app = new Vue({
 
                         case 3:
                             targetIdx = idx + j + 1;
-                            
+
                             if (!t.isInHnum(idx, targetIdx))
                                 continue wloop;
 
@@ -1602,36 +1605,33 @@ let app = new Vue({
                     if (!t.isUnitInArea(targetIdx))
                         continue;
 
-                    if (eachUnit.player === t.areas.live[targetIdx].unit.player)
+                    if (unit.player === t.areas.live[targetIdx].unit.player)
                         continue;
 
                     if (t.areas.live[targetIdx].unit.hidden)
                         continue;
 
-                    if (t.areas.live[targetIdx].watchers.indexOf(eachUnit.player) < 0)
-                        continue;
-
-                    if (eachUnit.hp < 0)
+                    if (t.areas.live[targetIdx].watchers.indexOf(unit.player) < 0)
                         continue;
 
                     t.active.tempIdx = t.active.idx;
                     t.active.idx = idx;
 
-                    if (eachUnit.distance > 1) {
+                    if (unit.distance > 1) {
                         t.$set(t.areas.live[targetIdx], 'weapon', {
-                            name: eachUnit.weapon,
-                            direction: eachUnit.direction,
+                            name: unit.weapon,
+                            direction: unit.direction,
                             status: null,
                             style: {}
                         });
 
                         t.animate(idx, targetIdx, 'weapon');
 
-                        if (eachUnit.through) {
+                        if (unit.through) {
                             let attackArr = [];
 
-                            for (let x = 0; x < eachUnit.distance + eachUnit.buffed['distance']; x += 1) {
-                                switch (eachUnit.direction) {
+                            for (let x = 0; x < unit.distance + unit.buffed['distance']; x += 1) {
+                                switch (unit.direction) {
                                     case 12:
                                         attackArr.push(idx - (t.base.columnNum * (x + 1)));
                                         break;
@@ -1657,11 +1657,11 @@ let app = new Vue({
                             t.attack(targetIdx, true, true);
                         }
 
-                        eachUnit.power -= 0.5;
+                        unit.power -= 0.5;
                     }
                     else {
                         t.attack(targetIdx, true, delay);
-                        eachUnit.power -= 0.5;
+                        unit.power -= 0.5;
                     }
 
                     t.active.idx = t.active.tempIdx;
@@ -1672,7 +1672,7 @@ let app = new Vue({
             let t = this;
             let targetArea = t.areas.live[targetIdx];
             let activeArea = t.areas.live[t.active.idx];
-            let isAlive = true;
+            let alive = true;
 
             if (t.isUnitInArea(t.active.idx)) {
                 if (!t.hasGrayShelter(targetIdx) && (t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player)) {
@@ -1689,7 +1689,7 @@ let app = new Vue({
                     if (t.isShelterInArea(targetIdx)) {
                         demage += accelDemage;
                         targetArea.shelter.subHp += demage;
-                        isAlive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.isUnitInArea(targetIdx);
+                        alive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.isUnitInArea(targetIdx);
 
                         setTimeout(function () {
                             t.showUp('attack', targetIdx, demage, true);
@@ -1722,7 +1722,7 @@ let app = new Vue({
                             demage = 0;
 
                         targetArea.unit.subHp += demage;
-                        isAlive = targetArea.unit.hp - targetArea.unit.subHp > 0;
+                        alive = targetArea.unit.hp - targetArea.unit.subHp > 0;
 
                         if (activeArea.unit.hp - activeArea.unit.subHp <= 0) {
                             activeArea.unit.hp = -100;
@@ -1773,12 +1773,12 @@ let app = new Vue({
                         t.checkFinished();
                     }, delay ? t.base.time.animate : 0);
 
-                    if (!isAlive)
+                    if (!alive)
                         t.showUnitForSeconds(targetIdx, renewedTargetUnit);
                 }
             }
 
-            return isAlive;
+            return alive;
         },
         showUnitForSeconds: function (idx, unit) {
             let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
@@ -1800,8 +1800,8 @@ let app = new Vue({
                 });
             }, this.base.time.animate);
         },
-        showUp: function (act, idx, val, isImportant) {
-            let visible = val || isImportant;
+        showUp: function (act, idx, val, important) {
+            let visible = val || important;
 
             if (act === 'attack') {
                 let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
@@ -1920,56 +1920,56 @@ let app = new Vue({
                 this.setLabel("It's your turn!");
             }
             else {
-                this.setLabel("It's " + player + " player's turn");
+                this.setLabel("It's " + player + "'s turn");
             }
 
             for (let i in this.areas.live) {
-                let eachUnit = this.areas.live[i].unit;
+                let unit = this.areas.live[i].unit;
 
-                if (eachUnit.name) {
-                    if (eachUnit.player === player) {
+                if (unit.name) {
+                    if (unit.player === player) {
                         let inInBuffArr = false;
                         let restoreHp = 0;
-                        let isInShelterOrArea = this.isInShelterOrArea(i);
+                        let inShelterOrArea = this.isInShelterOrArea(i);
 
                         for (let j in buffArr) {
-                            if (Number(i) === Number(buffArr[j].idx) && eachUnit.player === buffArr[j].player) {
+                            if (Number(i) === Number(buffArr[j].idx) && unit.player === buffArr[j].player) {
                                 inInBuffArr = true;
                                 break;
                             }
                         }
 
                         // 파워
-                        if (eachUnit.restorePower && eachUnit.power < eachUnit.maxPower) {
-                            eachUnit.power += eachUnit.restorePower;
+                        if (unit.restorePower && unit.power < unit.maxPower) {
+                            unit.power += unit.restorePower;
 
-                            if (eachUnit.power > eachUnit.maxPower)
-                                eachUnit.power = eachUnit.maxPower;
+                            if (unit.power > unit.maxPower)
+                                unit.power = unit.maxPower;
                         }
 
                         // 경험
-                        if (eachUnit.level) {
+                        if (unit.level) {
                             if (inInBuffArr)
-                                eachUnit.exp += 1;
+                                unit.exp += 1;
 
-                            if (isInShelterOrArea)
-                                eachUnit.exp += 1;
+                            if (inShelterOrArea)
+                                unit.exp += 1;
                         }
 
                         // 추가 농작물
-                        if (eachUnit.farm)
-                            crop += eachUnit.farm + eachUnit.buffed['farm'];
+                        if (unit.farm)
+                            crop += unit.farm + unit.buffed['farm'];
 
                         // 추가 체력
-                        if (eachUnit.restoreHp && eachUnit.hp < eachUnit.maxHp) {
-                            if (isInShelterOrArea || inInBuffArr)
-                                restoreHp = eachUnit.restoreHp + (eachUnit.buffed['restoreHp']);
+                        if (unit.restoreHp && unit.hp < unit.maxHp) {
+                            if (inShelterOrArea || inInBuffArr)
+                                restoreHp = unit.restoreHp + (unit.buffed['restoreHp']);
 
-                            eachUnit.hp += restoreHp;
+                            unit.hp += restoreHp;
                             this.showUp('restoreHp', i, restoreHp);
 
-                            if (eachUnit.hp > eachUnit.maxHp)
-                                eachUnit.hp = eachUnit.maxHp;
+                            if (unit.hp > unit.maxHp)
+                                unit.hp = unit.maxHp;
                         }
                     }
                 }
@@ -2053,7 +2053,7 @@ let app = new Vue({
                 }
             }, 1000);
         },
-        checkOwn: function (idx, isRunned) {
+        checkOwn: function (idx, runned) {
             if (this.isUnitInArea(idx) && this.areas.live[idx].unit.name === 'king') {
                 let kingUnit = this.areas.live[idx].unit;
                 let startIdx = (Math.floor(idx / this.base.columnNum) * this.base.columnNum) + (this.base.columnNum * (kingUnit.player === 'black' ? -1 : 1));
@@ -2061,34 +2061,33 @@ let app = new Vue({
                 let anotherKingIdx = null;
 
                 for (let i in this.areas.live) {
-                    let eachArea = this.areas.live[i];
+                    let area = this.areas.live[i];
                     let idx = Number(i);
-                    let eachCond = kingUnit.player === 'black' ? idx >= startIdx : idx <= endIdx;
 
-                    if (eachCond) {
-                        if (!eachArea.owner && !eachArea.ownOnly)
-                            eachArea.owner = kingUnit.player;
+                    if (kingUnit.player === 'black' ? idx >= startIdx : idx <= endIdx) {
+                        if (!area.owner && !area.ownOnly)
+                            area.owner = kingUnit.player;
                     }
-                    else if (eachArea.owner === kingUnit.player && !eachArea.ownOnly) {
-                        eachArea.owner = null;
+                    else if (area.owner === kingUnit.player && !area.ownOnly) {
+                        area.owner = null;
                     }
 
-                    if (this.isUnitInArea(idx) && eachArea.unit.name === 'king' && eachArea.unit.player !== kingUnit.player)
+                    if (this.isUnitInArea(idx) && area.unit.name === 'king' && area.unit.player !== kingUnit.player)
                         anotherKingIdx = idx;
                 }
 
-                if (!isRunned && anotherKingIdx != null)
+                if (!runned && anotherKingIdx != null)
                     this.checkOwn(anotherKingIdx, true);
             }
 
             for (let i in this.areas.live) {
-                let eachArea = this.areas.live[i];
+                let area = this.areas.live[i];
 
-                if (eachArea.shelter && eachArea.shelter.name) {
-                    eachArea.shelter.player = 'gray';
+                if (area.shelter && area.shelter.name) {
+                    area.shelter.player = 'gray';
 
-                    if (eachArea.unit && eachArea.unit.name)
-                        eachArea.shelter.player = eachArea.unit.player;
+                    if (area.unit && area.unit.name)
+                        area.shelter.player = area.unit.player;
                 }
             }
         },
@@ -2097,40 +2096,39 @@ let app = new Vue({
 
             for (let i in this.areas.live) {
                 if (this.isUnitInArea(i)) {
-                    let eachArea = this.areas.live[i];
-                    let eachUnit = eachArea.unit;
-                    let inInBuffArr = false;
+                    let unit = this.areas.live[i].unit;
+                    let inBuffArr = false;
 
                     for (let j in buffArr) {
-                        if (Number(i) === Number(buffArr[j].idx) && eachUnit.player === buffArr[j].player) {
-                            inInBuffArr = true;
+                        if (Number(i) === Number(buffArr[j].idx) && unit.player === buffArr[j].player) {
+                            inBuffArr = true;
                             break;
                         }
                     }
 
-                    if (inInBuffArr) {
-                        eachUnit.buffed['attack'] = 1;
-                        eachUnit.buffed['defense'] = 1;
+                    if (inBuffArr) {
+                        unit.buffed['attack'] = 1;
+                        unit.buffed['defense'] = 1;
 
-                        if (eachUnit.farm > 0)
-                            eachUnit.buffed['farm'] = 0.25;
+                        if (unit.farm > 0)
+                            unit.buffed['farm'] = 0.25;
 
-                        if (eachUnit.move > 1)
-                            eachUnit.buffed['move'] = 1;
+                        if (unit.move > 1)
+                            unit.buffed['move'] = 1;
 
-                        if (eachUnit.distance > 1)
-                            eachUnit.buffed['distance'] = 1;
+                        if (unit.distance > 1)
+                            unit.buffed['distance'] = 1;
 
-                        if (eachUnit.maxDistance > 1)
-                            eachUnit.buffed['maxDistance'] = 1;
+                        if (unit.maxDistance > 1)
+                            unit.buffed['maxDistance'] = 1;
 
-                        if (eachUnit.restoreHp > 0)
-                            eachUnit.buffed['restoreHp'] = 1;
+                        if (unit.restoreHp > 0)
+                            unit.buffed['restoreHp'] = 1;
 
                         this.setLevel(i);
                     }
                     else {
-                        eachUnit.buffed = appLib.renew(this.base.buffed);
+                        unit.buffed = appLib.renew(this.base.buffed);
                     }
                 }
             }
