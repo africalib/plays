@@ -418,7 +418,9 @@ button {
 }
 
 .app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit,
-.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter {
+.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter,
+.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .unit,
+.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .shelter {
     background: none !important;
 }
 

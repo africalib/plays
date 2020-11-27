@@ -566,6 +566,11 @@ let app = new Vue({
 
             socket.on('connect', function () {
                 socket.emit('enter', t.my.room.name ? t.my.room.name : '');
+
+                if (t.status.started) {
+                    t.setMessage(t.my.player, '재연결을 시도하는 중입니다. 잠시만 기다려주세요.', t.base.time.message);
+                    t.request('reconnect', t.my.player);
+                }
             });
 
             socket.on('update', function (res) {
@@ -595,12 +600,21 @@ let app = new Vue({
                             };
                             break;
 
+                        case 'reconnect':
+                            alert('reconn');
+                            clearTimeout(t.timer['disconnect']);
+                            break;
+
                         case 'disconnect':
                             if (t.status.started && !t.status.finished) {
-                                socket.disconnect();
-                                t.status.finished = true;
-                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
-                                window.onbeforeunload = null;
+                                t.setMessage(t.my.player, '상대편의 네트워크에 문제가 있거나 경기에서 나갔습니다. 잠시만 기다려주세요.', t.base.time.message);
+
+                                t.timer['disconnect'] = setTimeout(function () {
+                                    socket.disconnect();
+                                    t.status.finished = true;
+                                    alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                                    window.onbeforeunload = null;
+                                }, 5000);
                                 //window.location.href = 'index.html';
                             }
                             break;
@@ -1253,6 +1267,12 @@ let app = new Vue({
         isInCross: function (i, j) {
             return this.areas.live[i] && this.areas.live[j] && (this.areas.live[i].vnum === this.areas.live[j].vnum || this.areas.live[i].hnum === this.areas.live[j].hnum);
         },
+        isInVnum: function (i, j) {
+            return this.areas.live[i] && this.areas.live[j] && this.areas.live[i].vnum === this.areas.live[j].vnum;
+        },
+        isInHnum: function (i, j) {
+            return this.areas.live[i] && this.areas.live[j] && this.areas.live[i].hnum === this.areas.live[j].hnum;
+        },
         isMine: function (i) {
             return this.isTurnUnit(i) || this.hasShelter(i);
         },
@@ -1506,109 +1526,149 @@ let app = new Vue({
             let t = this;
             let isBlackTurn = t.status.turn === 'black';
             let i = isBlackTurn ? t.areas.live.length : 0;
+            let iii = 0;
 
+            wloop:
             while (isBlackTurn ? i > 0 : i < t.areas.live.length) {
                 let idx = Number(i);
-                let eachArea = t.areas.live[idx];
-
-                if (t.isUnitInArea(idx) && eachArea.unit.player !== t.status.turn && eachArea.unit.distance && eachArea.unit.power) {
-                    let eachUnit = eachArea.unit;
-
-                    for (let j = 0; j < eachUnit.distance + eachUnit.buffed['distance']; j += 1) {
-                        let targetIdx = null;
-                        let lineCond = false;
-
-                        switch (eachUnit.direction) {
-                            case 12:
-                                targetIdx = idx - (t.base.columnNum * (j + 1));
-                                lineCond = t.areas.live[targetIdx] && eachArea.vnum === t.areas.live[targetIdx].vnum;
-                                break;
-
-                            case 6:
-                                targetIdx = idx + (t.base.columnNum * (j + 1));
-                                lineCond = t.areas.live[targetIdx] && eachArea.vnum === t.areas.live[targetIdx].vnum;
-                                break;
-
-                            case 3:
-                                targetIdx = idx + j + 1;
-                                lineCond = t.areas.live[targetIdx] && eachArea.hnum === t.areas.live[targetIdx].hnum;
-                                break;
-
-                            case 9:
-                                targetIdx = idx - (j + 1);
-                                lineCond = t.areas.live[targetIdx] && eachArea.hnum === t.areas.live[targetIdx].hnum;
-                                break;
-                        }
-
-                        lineCond = lineCond && t.isInCross(idx, targetIdx);
-
-                        if (targetIdx && lineCond && !t.isShelterInArea(targetIdx) && targetIdx === t.active.idx && targetIdx >= 0 && t.isUnitInArea(targetIdx) && eachUnit.player !== t.areas.live[targetIdx].unit.player) {
-                            if (t.areas.live[targetIdx].unit.hidden)
-                                continue;
-                            else if (eachArea.unit.hidden)
-                                continue;
-                            else if (t.areas.live[targetIdx].watchers.indexOf(eachUnit.player) < 0)
-                                continue;
-
-                            t.active.tempIdx = t.active.idx;
-                            t.active.idx = idx;
-
-                            if (eachUnit.hp < 0)
-                                continue;
-
-                            if (eachUnit.distance > 1) {
-                                t.$set(t.areas.live[targetIdx], 'weapon', {
-                                    name: eachUnit.weapon,
-                                    direction: eachUnit.direction,
-                                    status: null,
-                                    style: {}
-                                });
-
-                                t.animate(idx, targetIdx, 'weapon');
-
-                                if (eachUnit.through) {
-                                    let attackArr = [];
-
-                                    for (let x = 0; x < eachUnit.distance + eachUnit.buffed['distance']; x += 1) {
-                                        switch (eachUnit.direction) {
-                                            case 12:
-                                                attackArr.push(idx - (t.base.columnNum * (x + 1)));
-                                                break;
-
-                                            case 6:
-                                                attackArr.push(idx + (t.base.columnNum * (x + 1)));
-                                                break;
-
-                                            case 3:
-                                                attackArr.push(idx + x + 1);
-                                                break;
-
-                                            case 9:
-                                                attackArr.push(idx - (x + 1));
-                                                break;
-                                        }
-                                    }
-
-                                    for (let y in attackArr)
-                                        t.attack(attackArr[y], true, true);
-                                }
-                                else {
-                                    t.attack(targetIdx, true, true);
-                                }
-
-                                eachUnit.power -= 0.5;
-                            }
-                            else {
-                                t.attack(targetIdx, true, delay);
-                                eachUnit.power -= 0.5;
-                            }
-
-                            t.active.idx = t.active.tempIdx;
-                        }
-                    }
-                }
-
+                let eachUnit;
                 i = i + (isBlackTurn ? -1 : 1);
+
+                if (!t.isUnitInArea(idx))
+                    continue;
+
+                if (!t.isInCross(t.active.idx, idx))
+                    continue;
+
+                eachUnit = t.areas.live[idx].unit;
+
+                if (eachUnit.player === t.status.turn)
+                    continue;
+
+                if (!eachUnit.distance)
+                    continue;
+
+                if (!eachUnit.power)
+                    continue;
+
+                if (eachUnit.hidden)
+                    continue;
+
+                if (t.isShelterInArea(t.active.idx))
+                    continue;
+
+                for (let j = 0; j < eachUnit.distance + eachUnit.buffed['distance']; j += 1) {
+                    let targetIdx = null;
+                    console.log(iii++)
+                    console.log(eachUnit.direction)
+
+                    switch (eachUnit.direction) {
+                        case 12:
+                            targetIdx = idx - (t.base.columnNum * (j + 1));
+
+                            if (!t.isInVnum(idx, targetIdx))
+                                continue wloop;
+
+                            break;
+
+                        case 6:
+                            targetIdx = idx + (t.base.columnNum * (j + 1));
+
+                            if (!t.isInVnum(idx, targetIdx))
+                                continue wloop;
+
+                            break;
+
+                        case 3:
+                            targetIdx = idx + j + 1;
+                            
+                            if (!t.isInHnum(idx, targetIdx))
+                                continue wloop;
+
+                            break;
+
+                        case 9:
+                            targetIdx = idx - (j + 1);
+
+                            if (!t.isInHnum(idx, targetIdx))
+                                continue wloop;
+
+                            break;
+
+                        default:
+                            continue wloop;
+                    }
+
+                    if (targetIdx !== t.active.idx)
+                        continue;
+
+                    if (!t.isUnitInArea(targetIdx))
+                        continue;
+
+                    if (eachUnit.player === t.areas.live[targetIdx].unit.player)
+                        continue;
+
+                    if (t.areas.live[targetIdx].unit.hidden)
+                        continue;
+
+                    if (t.areas.live[targetIdx].watchers.indexOf(eachUnit.player) < 0)
+                        continue;
+
+                    if (eachUnit.hp < 0)
+                        continue;
+
+                    t.active.tempIdx = t.active.idx;
+                    t.active.idx = idx;
+
+                    if (eachUnit.distance > 1) {
+                        t.$set(t.areas.live[targetIdx], 'weapon', {
+                            name: eachUnit.weapon,
+                            direction: eachUnit.direction,
+                            status: null,
+                            style: {}
+                        });
+
+                        t.animate(idx, targetIdx, 'weapon');
+
+                        if (eachUnit.through) {
+                            let attackArr = [];
+
+                            for (let x = 0; x < eachUnit.distance + eachUnit.buffed['distance']; x += 1) {
+                                switch (eachUnit.direction) {
+                                    case 12:
+                                        attackArr.push(idx - (t.base.columnNum * (x + 1)));
+                                        break;
+
+                                    case 6:
+                                        attackArr.push(idx + (t.base.columnNum * (x + 1)));
+                                        break;
+
+                                    case 3:
+                                        attackArr.push(idx + x + 1);
+                                        break;
+
+                                    case 9:
+                                        attackArr.push(idx - (x + 1));
+                                        break;
+                                }
+                            }
+
+                            for (let y in attackArr)
+                                t.attack(attackArr[y], true, true);
+                        }
+                        else {
+                            t.attack(targetIdx, true, true);
+                        }
+
+                        eachUnit.power -= 0.5;
+                    }
+                    else {
+                        t.attack(targetIdx, true, delay);
+                        eachUnit.power -= 0.5;
+                    }
+
+                    t.active.idx = t.active.tempIdx;
+                }
             }
         },
         attack: function (targetIdx, stay, delay, runDistance) {
