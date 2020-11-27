@@ -566,9 +566,8 @@ let app = new Vue({
             socket.on('connect', function () {
                 if (t.status.started) {
                     socket.disconnect();
-                    t.status.finished = true;
+                    t.closeRoom();
                     alert('네트워크 문제가 발생하였습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
-                    window.onbeforeunload = null;
                 }
                 else {
                     socket.emit('enter', t.my.room.name ? t.my.room.name : '');
@@ -600,19 +599,24 @@ let app = new Vue({
                             window.onbeforeunload = function () {
                                 return true;
                             };
-                            break;
 
-                        case 'reconnect':
-                            alert('reconn');
-                            clearTimeout(t.timer['disconnect']);
+                            if (!t.status.replay) {
+                                setTimeout(function () {
+                                    t.closeRoom();
+                                    alert('경기 시작 후 한 시간이 지나 무승부 처리되었습니다. \n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+
+                                    setTimeout(function () {
+                                        socket.disconnect();
+                                    }, 1000 * 30);
+                                }, 1000 * 60 * 60);
+                            }
                             break;
 
                         case 'disconnect':
                             if (t.status.started && !t.status.finished) {
                                 socket.disconnect();
-                                t.status.finished = true;
+                                t.closeRoom();
                                 alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
-                                window.onbeforeunload = null;
                             }
                             break;
 
@@ -2202,21 +2206,15 @@ let app = new Vue({
                     let winner = !king.white ? 'Black' : 'White';
                     t.setLabel(winner + ' player won', 0);
                     t.setMessage(t.my.player, t.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
-                    t.initGrab();
-                    t.initActive();
-                    t.initAreas();
-                    clearInterval(t.interval['timer']);
+                    t.closeRoom();
 
                     for (let i in t.areas.live)
                         t.areas.live[i].owner = winner;
 
-                    t.status.finished = true;
-                    window.onbeforeunload = null;
-
                     if (!t.status.replay) {
                         setTimeout(function () {
                             socket.disconnect();
-                        }, 30000);
+                        }, 1000 * 30);
                     }
                 }
             }
@@ -2227,6 +2225,16 @@ let app = new Vue({
                 info: {},
                 type: null
             };
+        },
+        closeRoom: function () {
+            this.status.finished = true;
+
+            this.initGrab();
+            this.initActive();
+            this.initAreas();
+
+            clearInterval(this.interval['timer']);
+            window.onbeforeunload = null;
         }
     },
     created: function () {
