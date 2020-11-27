@@ -564,11 +564,14 @@ let app = new Vue({
             });
 
             socket.on('connect', function () {
-                socket.emit('enter', t.my.room.name ? t.my.room.name : '');
-
                 if (t.status.started) {
-                    t.setMessage(t.my.player, '재연결을 시도하는 중입니다. 잠시만 기다려주세요.', t.base.time.message);
-                    t.request('reconnect', t.my.player);
+                    socket.disconnect();
+                    t.status.finished = true;
+                    alert('네트워크 문제가 발생하였습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                    window.onbeforeunload = null;
+                }
+                else {
+                    socket.emit('enter', t.my.room.name ? t.my.room.name : '');
                 }
             });
 
@@ -606,15 +609,10 @@ let app = new Vue({
 
                         case 'disconnect':
                             if (t.status.started && !t.status.finished) {
-                                t.setMessage(t.my.player, '상대편의 네트워크에 문제가 있거나 경기에서 나갔습니다. 잠시만 기다려주세요.', t.base.time.message);
-
-                                t.timer['disconnect'] = setTimeout(function () {
-                                    socket.disconnect();
-                                    t.status.finished = true;
-                                    alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
-                                    window.onbeforeunload = null;
-                                }, 5000);
-                                //window.location.href = 'index.html';
+                                socket.disconnect();
+                                t.status.finished = true;
+                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                                window.onbeforeunload = null;
                             }
                             break;
 
