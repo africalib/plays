@@ -73,13 +73,13 @@ button {
     height: 100%;
     position: relative;
     font-size: 0;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .app > .wrapper > .area .area-wrapper {
     position: relative;
     height: 100%;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .app > .wrapper > .area .area-wrapper .each-area {

@@ -439,7 +439,7 @@ let app = new Vue({
             for (let i in this.base.units)
                 this.base.units[i].buffed = appLib.renew(this.base.buffed);
 
-            for (let i = 0; i < 150; i += 1) {
+            for (let i = 0; i < this.base.columnNum * this.base.rowNum; i += 1) {
                 let area = appLib.renew(this.base.area);
                 let remain = i % this.base.columnNum;
                 let hnum = this.getVerticalNum(i);
@@ -905,7 +905,6 @@ let app = new Vue({
                 if (targetArea.unit.power > 0) {
                     let attackable = targetArea.unit.power >= 1 ? true : false;
                     let movePoint = targetArea.unit.power >= 1 ? targetArea.unit.move + targetArea.unit.buffed['move'] : 1;
-
                     let accessable = {
                         up: true,
                         down: true,
@@ -1039,7 +1038,7 @@ let app = new Vue({
             }
             else if (targetArea.status === 'attack' || targetArea.status === 'move') {
                 let obj = {
-                    loopArr: [],
+                    loops: [],
                     compare: null,
                     addedNum: 0,
                     destIdx: 0,
@@ -1058,11 +1057,11 @@ let app = new Vue({
 
                     if (obj.gap > 0) {
                         for (let i = t.active.idx; i <= obj.gap + t.active.idx; i += 1)
-                            obj.loopArr.push(i);
+                            obj.loops.push(i);
                     }
                     else {
                         for (let i = t.active.idx; i >= obj.gap + t.active.idx; i -= 1)
-                            obj.loopArr.push(i);
+                            obj.loops.push(i);
                     }
                 }
                 else if (activeArea.vnum === targetArea.vnum) {
@@ -1070,19 +1069,19 @@ let app = new Vue({
 
                     if (obj.gap > 0) {
                         for (let i = t.active.idx; i <= obj.gap + t.active.idx; i += t.base.columnNum)
-                            obj.loopArr.push(i);
+                            obj.loops.push(i);
                     }
                     else {
                         for (let i = t.active.idx; i >= obj.gap + t.active.idx; i -= t.base.columnNum)
-                            obj.loopArr.push(i);
+                            obj.loops.push(i);
                     }
                 }
 
                 if (t.areas.live[t.active.idx].unit.distance === 1 || (t.areas.live[t.active.idx].unit.distance > 1 && targetArea.status === 'move')) {
                     let teamUnits = [];
 
-                    for (let i in obj.loopArr) {
-                        let loopIdx = obj.loopArr[i];
+                    for (let i in obj.loops) {
+                        let loopIdx = obj.loops[i];
                         let loopArea = t.areas.live[loopIdx];
                         activeArea = t.areas.live[t.active.idx];
                         activeArea.unit.direction = t.getDirection(idx, t.active.idx);
@@ -1100,8 +1099,8 @@ let app = new Vue({
                                     t.active.idx = loopIdx;
                                 }
                                 else if (t.attack(loopIdx, false, i > 1, i)) {
-                                    let removeIdx = obj.loopArr.indexOf(loopIdx);
-                                    obj.loopArr.splice(removeIdx, obj.loopArr.length - removeIdx);
+                                    let removeIdx = obj.loops.indexOf(loopIdx);
+                                    obj.loops.splice(removeIdx, obj.loops.length - removeIdx);
                                     break;
                                 }
                             }
@@ -1110,7 +1109,7 @@ let app = new Vue({
                                 activeArea.unit = {};
                                 t.active.idx = loopIdx;
 
-                                if (obj.loopArr.length === 2)
+                                if (obj.loops.length === 2)
                                     obj.powerUse = 0.5;
                             }
                         }
@@ -1120,7 +1119,7 @@ let app = new Vue({
 
                     for (let i in teamUnits) {
                         if (t.isUnitInArea(teamUnits[i].idx)) {
-                            let objArr = appLib.renew(obj.loopArr);
+                            let objArr = appLib.renew(obj.loops);
                             objArr.reverse();
 
                             for (let j in objArr) {
@@ -1149,11 +1148,11 @@ let app = new Vue({
                     });
 
                     if (activeArea.unit.through) {
-                        for (let i in obj.loopArr) {
-                            if (i > 0 && !t.isMine(obj.loopArr[i])) {
-                                let tardirection = t.getDirection(t.active.idx, obj.loopArr[i]);
-                                t.attack(obj.loopArr[i], true, true);
-                                t.autoRotateArr.push({ idx: obj.loopArr[i], direction: tardirection })
+                        for (let i in obj.loops) {
+                            if (i > 0 && !t.isMine(obj.loops[i])) {
+                                let tardirection = t.getDirection(t.active.idx, obj.loops[i]);
+                                t.attack(obj.loops[i], true, true);
+                                t.autoRotateArr.push({ idx: obj.loops[i], direction: tardirection })
                             }
                         }
                     }
