@@ -1526,7 +1526,6 @@ let app = new Vue({
             let t = this;
             let isBlackTurn = t.status.turn === 'black';
             let i = isBlackTurn ? t.areas.live.length : 0;
-            let iii = 0;
 
             wloop:
             while (isBlackTurn ? i > 0 : i < t.areas.live.length) {
@@ -1559,8 +1558,6 @@ let app = new Vue({
 
                 for (let j = 0; j < eachUnit.distance + eachUnit.buffed['distance']; j += 1) {
                     let targetIdx = null;
-                    console.log(iii++)
-                    console.log(eachUnit.direction)
 
                     switch (eachUnit.direction) {
                         case 12:
