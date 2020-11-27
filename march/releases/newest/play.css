@@ -73,12 +73,14 @@ button {
     height: 100%;
     position: relative;
     font-size: 0;
+
     /* overflow: hidden; */
 }
 
 .app > .wrapper > .area .area-wrapper {
     position: relative;
     height: 100%;
+
     /* overflow: hidden; */
 }
 
@@ -871,6 +873,10 @@ button {
 
 .app[data-device=mobile] > .landscape > .wrapper span {
     font-size: 20px;
+}
+
+div[data-name=mojs-shape] {
+    z-index: 75;
 }
 
 @media (min-width: 1024px) {
