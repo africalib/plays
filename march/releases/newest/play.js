@@ -1529,7 +1529,7 @@ let app = new Vue({
             let i = blackTurn ? t.areas.live.length : 0;
 
             wloop:
-            while (blackTurn ? i > 0 : i < t.areas.live.length) {
+            while (blackTurn ? i >= 0 : i < t.areas.live.length) {
                 let idx = Number(i);
                 let unit;
                 i = i + (blackTurn ? -1 : 1);
