@@ -544,6 +544,14 @@ let app = new Vue({
                         t.modal.info.exp = exp;
                     });
                 }
+
+                if (t.modal.info.power !== undefined) {
+                    let power = t.modal.info.power;
+                    t.modal.info.power = 0;
+                    setTimeout(function () {
+                        t.modal.info.power = power;
+                    });
+                }
             });
 
             t.setLabel("You are the " + t.my.player, 2500);
