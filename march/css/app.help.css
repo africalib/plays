@@ -1,5 +1,6 @@
 ﻿.app .run > .contents {
     line-height: 1.8;
+    padding-bottom: 10px;;
 }
 
 .app .run > .contents .dots {
