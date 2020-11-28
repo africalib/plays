@@ -1,4 +1,6 @@
-﻿html, body {
+﻿@import url("https://fonts.googleapis.com/css2?family=Orbitron&display=swap");
+
+html, body {
     touch-action: manipulation;
 }
 
@@ -149,9 +151,9 @@ button {
 
 .run > .title > div {
     font-size: 25px;
-    font-style: italic;
     display: inline-block;
     font-weight: bold;
+    font-family: 'Orbitron', sans-serif;
     margin-top: 25px;
 }
 
