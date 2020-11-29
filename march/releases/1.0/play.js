@@ -689,6 +689,11 @@ let app = new Vue({
         },
         play: function () {
             let t = this;
+            let time = 1000 / t.replay.speed;
+            t.base.time.animate = time;
+
+            if (t.base.time.animate < 100)
+                t.base.time.animate = 100;
 
             if (t.replay.status === 'stop') {
                 this.refresh();
@@ -707,7 +712,7 @@ let app = new Vue({
                 else {
                     t.replay.idx += 1;
                 }
-            }, 1000 / t.replay.speed);
+            }, time);
         },
         pause: function () {
             this.replay.status = 'pause';
