@@ -326,36 +326,43 @@ button {
     opacity: 0.5;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .power {
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .power {
     bottom: 0;
     left: 0;
     transform: rotate(180deg);
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .level {
-    color: #000;
+.app[data-player=white]> .wrapper > .area .area-wrapper .each-area .unit .level {
     top: 5px;
     right: 0;
-    background: rgba(255, 255, 255, 0.75);
     transform: rotate(180deg);
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .exp {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .level {
+    color: #000;
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .exp {
     right: 0;
     top: 0;
     padding-bottom: 0;
     padding-top: 5px;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .exp .status {
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .exp .status {
     top: 0;
     right: 0;
+}
+
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .hp,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .shelter .hp {
+    top: 0;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .hp,
 .app > .wrapper > .area .area-wrapper .each-area .shelter[data-player=white] .hp {
     background: #000;
-    top: 0;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white][data-direction='3'][data-rotate='90'] img {
@@ -377,25 +384,31 @@ button {
     filter: invert(0);
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .power {
-    color: #fff;
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .power {
     top: 0;
     right: 0;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .level {
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .power {
     color: #fff;
-    bottom: 5px;
-    left: 0px;
-    background: rgba(0, 0, 0, 0.5);
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .exp {
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .level {
+    bottom: 5px;
+    left: 0px;
+}
+
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .level {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .exp {
     left: 0;
     bottom: 0;
 }
 
-.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .exp .status {
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .exp .status {
     bottom: 0;
     left: 0;
 }
@@ -403,6 +416,10 @@ button {
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .hp,
 .app > .wrapper > .area .area-wrapper .each-area .shelter[data-player=black] .hp {
     background: #fff;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .hp,
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .shelter .hp {
     bottom: 0;
 }
 
