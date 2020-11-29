@@ -1928,6 +1928,7 @@ let app = new Vue({
             let buffArr = this.getBuffArr();
 
             this.status.turn = player;
+            this.checkBuff();
 
             if (player === this.my.player) {
                 this.areas.prev = appLib.renew(this.areas.live);
@@ -1997,7 +1998,6 @@ let app = new Vue({
             if (this.status[player].crop > this.status[player].maxCrop)
                 this.status[player].crop = this.status[player].maxCrop;
 
-            this.checkBuff();
             this.checkLevel();
             this.initAreas();
             this.initActive();
@@ -2125,7 +2125,7 @@ let app = new Vue({
                         unit.buffed['defense'] = 1;
 
                         if (unit.farm > 0)
-                            unit.buffed['farm'] = 0.25;
+                            unit.buffed['farm'] = 1;
 
                         if (unit.move > 1)
                             unit.buffed['move'] = 1;
