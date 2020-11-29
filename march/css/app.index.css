@@ -36,6 +36,14 @@
     vertical-align: middle;
 }
 
+.app > .top > a.youtube {
+    margin-left: 0;
+    color: red;
+    font-size: 21px;
+    line-height: 0;
+    float: left;
+}
+
 .app > .top > a > img {
     height: 2rem;
 }
