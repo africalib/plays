@@ -171,6 +171,8 @@ button {
     max-height: 100%;
     background-color: #215da9;
     position: absolute;
+    bottom: 0;
+    left: 0;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit .level:before {
@@ -179,11 +181,14 @@ button {
 
 .app > .wrapper > .area .area-wrapper .each-area .unit .hp {
     position: absolute;
-    left: 0;
-    bottom: 0;
     width: 100%;
     height: 5px;
     overflow: hidden;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .hp {
+    left: 0;
+    bottom: 0;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit .hp .remain {
@@ -332,14 +337,13 @@ button {
     transform: rotate(180deg);
 }
 
-.app[data-player=white]> .wrapper > .area .area-wrapper .each-area .unit .level {
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .level {
     top: 5px;
     right: 0;
     transform: rotate(180deg);
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .level {
-    color: #000;
     background: rgba(255, 255, 255, 0.75);
 }
 
@@ -348,16 +352,14 @@ button {
     top: 0;
     padding-bottom: 0;
     padding-top: 5px;
-}
-
-.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .exp .status {
-    top: 0;
-    right: 0;
+    transform: rotate(180deg);
 }
 
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .hp,
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area .shelter .hp {
     top: 0;
+    right: 0;
+    transform: rotate(180deg);
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .hp,
@@ -391,6 +393,11 @@ button {
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .power {
     color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.app > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] .power {
+    background: rgba(255, 255, 255, 0.75);
 }
 
 .app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .level {
@@ -406,11 +413,6 @@ button {
 .app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .exp {
     left: 0;
     bottom: 0;
-}
-
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit .exp .status {
-    bottom: 0;
-    left: 0;
 }
 
 .app > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] .hp,

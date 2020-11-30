@@ -434,7 +434,7 @@ let app = new Vue({
                 this.status[player].maxCrop = this.base.status.player.maxCrop;
             }
 
-            this.status['white']['crop'] += 5;
+            this.status['white']['crop'] += 10
 
             for (let i in this.base.units)
                 this.base.units[i].buffed = appLib.renew(this.base.buffed);
@@ -1928,6 +1928,7 @@ let app = new Vue({
             let buffArr = this.getBuffArr();
 
             this.status.turn = player;
+            this.checkBuff();
 
             if (player === this.my.player) {
                 this.areas.prev = appLib.renew(this.areas.live);
@@ -1997,7 +1998,6 @@ let app = new Vue({
             if (this.status[player].crop > this.status[player].maxCrop)
                 this.status[player].crop = this.status[player].maxCrop;
 
-            this.checkBuff();
             this.checkLevel();
             this.initAreas();
             this.initActive();
