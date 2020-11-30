@@ -434,7 +434,7 @@ let app = new Vue({
                 this.status[player].maxCrop = this.base.status.player.maxCrop;
             }
 
-            this.status['white']['crop'] += 5;
+            this.status['white']['crop'] += 10
 
             for (let i in this.base.units)
                 this.base.units[i].buffed = appLib.renew(this.base.buffed);
@@ -2125,7 +2125,7 @@ let app = new Vue({
                         unit.buffed['defense'] = 1;
 
                         if (unit.farm > 0)
-                            unit.buffed['farm'] = 1;
+                            unit.buffed['farm'] = 0.25;
 
                         if (unit.move > 1)
                             unit.buffed['move'] = 1;
