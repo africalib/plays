@@ -75,8 +75,18 @@ let app = new Vue({
                 this.replay.list.splice(idx, 1);
                 localStorage.setItem('replays', JSON.stringify(this.replay.list));
             }
+            else {
+                $.ajax({
+                    url: 'https://africalib.gabia.io/save/',
+                    type: 'POST',
+                    data: { replay: JSON.stringify(this.replay.list[idx]) },
+                    success: function (res) {
+                        console.log(res);
+                    }
+                });
+            }
 
-            t.load();
+            this.load();
         },
         clear: function () {
             if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
@@ -86,11 +96,14 @@ let app = new Vue({
             }
         },
         write: function () {
-            this.touchCnt += 1;
-
-            if (this.touchCnt % 10 === 0) {
-                $(document.body).append('<hr />')
-                $(document.body).append('<textarea class="form-control">' + localStorage.getItem('replays') + '</textarea>');
+            if (++this.touchCnt % 5 === 0) {
+                $.ajax({
+                    url: 'https://africalib.gabia.io/replays/',
+                    type: 'GET',
+                    success: function (res) {
+                        console.log(res);
+                    }
+                });
             }
         }
     },
