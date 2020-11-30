@@ -18,7 +18,7 @@ let app = new Vue({
             location.href = 'releases/newest/play.html' + (name ? '#/' + name : '');
         },
         view: function (replay) {
-            var arr = replay.version.split('.');
+            let arr = replay.version.split('.');
             arr.splice(arr.length - 1);
             location.href = 'releases/' + arr.join('.') + '/play.html#/' + replay.name;
         },
@@ -40,7 +40,8 @@ let app = new Vue({
             t.replay.loaded = false;
 
             if (replays) {
-                t.replay.list = JSON.parse(replays)
+                t.replay.list = JSON.parse(replays);
+                console.log(t.replay.list);
                 t.replay.list.sort(function (a, b) {
                     if (a.date < b.date)
                         return 1;
@@ -74,19 +75,18 @@ let app = new Vue({
             if (confirm('삭제하시겠습니까?')) {
                 this.replay.list.splice(idx, 1);
                 localStorage.setItem('replays', JSON.stringify(this.replay.list));
+                this.load();
             }
-            else {
-                $.ajax({
-                    url: 'https://africalib.gabia.io/save/',
-                    type: 'POST',
-                    data: { replay: JSON.stringify(this.replay.list[idx]) },
-                    success: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
-
-            this.load();
+            // else {
+            //     $.ajax({
+            //         url: 'https://africalib.gabia.io/save/',
+            //         type: 'POST',
+            //         data: { replay: JSON.stringify(this.replay.list[idx]) },
+            //         success: function (res) {
+            //             console.log(res);
+            //         }
+            //     });
+            // }
         },
         clear: function () {
             if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
@@ -96,15 +96,20 @@ let app = new Vue({
             }
         },
         write: function () {
-            if (++this.touchCnt % 5 === 0) {
-                $.ajax({
-                    url: 'https://africalib.gabia.io/replays/',
-                    type: 'GET',
-                    success: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
+            // let t = this;
+            // if (++t.touchCnt % 5 === 0) {
+            //     $.ajax({
+            //         url: 'https://africalib.gabia.io/replays/',
+            //         type: 'GET',
+            //         success: function (res) {
+            //             let replays  = [];
+            //             let replay =  JSON.parse(res)["0"];
+            //             replay = JSON.parse(replay);
+            //             replays.push(replay);
+            //             localStorage.setItem('replays', JSON.stringify(replays));
+            //         }
+            //     });
+            // }
         }
     },
     created: function () {
