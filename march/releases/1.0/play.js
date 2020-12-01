@@ -1787,14 +1787,19 @@ let app = new Vue({
                         t.checkFinished();
                     }, delay ? t.base.time.animate : 0);
 
-                    if (!alive)
-                        t.showUnitForSeconds(targetIdx, renewedTargetUnit);
+                    if (!alive) {
+                        if (t.my.player !== renewedTargetUnit.player)
+                            t.showUnitForSeconds(targetIdx, renewedTargetUnit);
+                        else
+                            t.showUnitForSeconds(t.active.idx, t.active.unit);
+                    }
                 }
             }
 
             return alive;
         },
         showUnitForSeconds: function (idx, unit) {
+            console.log(idx, unit)
             let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
             let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="../../img/' + unit.player + '/' + unit.name + '.png"></div>');
             let delay = unit.status === 'move';
