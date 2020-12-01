@@ -1787,12 +1787,8 @@ let app = new Vue({
                         t.checkFinished();
                     }, delay ? t.base.time.animate : 0);
 
-                    if (!alive) {
-                        if (t.my.player !== renewedTargetUnit.player)
-                            t.showUnitForSeconds(targetIdx, renewedTargetUnit);
-                        else
-                            t.showUnitForSeconds(t.active.idx, t.active.unit);
-                    }
+                    if (!alive && t.my.player !== renewedTargetUnit.player)
+                        t.showUnitForSeconds(targetIdx, renewedTargetUnit);
                 }
             }
 
