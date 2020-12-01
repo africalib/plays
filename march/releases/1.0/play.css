@@ -255,9 +255,16 @@ button {
     -webkit-transition: background-image 0.5s;
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=black]) > *,
-.app[data-player=white] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=white]) > * {
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=black]) > .unit,
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=black]) > .shelter,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=white]) > .unit,
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area:not([data-watchers*=white]) > .shelter {
     display: none;
+}
+
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area > .unit[data-player=black],
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area > .unit[data-player=white] {
+    display: inline-block;
 }
 
 .app[data-player=black] > .wrapper > .area .area-wrapper .each-area[data-watchers*="black:0.3"]:after {

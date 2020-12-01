@@ -480,7 +480,7 @@ let app = new Vue({
             }
 
             this.areas.prev = appLib.renew(this.areas.live);
-            this.checkVisible();
+            this.checkWatchers();
         },
         start: function () {
             let t = this;
@@ -1113,7 +1113,7 @@ let app = new Vue({
                                     t.areas.live[t.active.idx].unit = {};
                                     t.active.idx = loopIdx;
                                 }
-                                else if (t.attack(loopIdx, false, i > 1, i)) {
+                                else if (t.attack(loopIdx, false, i)) {
                                     let removeIdx = obj.loops.indexOf(loopIdx);
                                     obj.loops.splice(removeIdx, obj.loops.length - removeIdx);
                                     break;
@@ -1166,14 +1166,14 @@ let app = new Vue({
                         for (let i in obj.loops) {
                             if (i > 0 && !t.isMine(obj.loops[i])) {
                                 let tardirection = t.getDirection(t.active.idx, obj.loops[i]);
-                                t.attack(obj.loops[i], true, true);
+                                t.attack(obj.loops[i], true);
                                 t.autoRotateArr.push({ idx: obj.loops[i], direction: tardirection })
                             }
                         }
                     }
                     else {
                         let tardirection = t.getDirection(t.active.idx, idx);
-                        t.attack(idx, true, true);
+                        t.attack(idx, true);
                         t.autoRotateArr.push({ idx: idx, direction: tardirection })
                     }
                 }
@@ -1182,23 +1182,17 @@ let app = new Vue({
                 t.initAreas();
 
                 t.animate(obj.startIdx, obj.endIdx, obj.aniType, function () {
-                    let delay = obj.gap !== null && Math.abs(obj.gap) > t.base.columnNum;
-
                     t.checkOwn(t.active.idx);
                     t.checkBuff();
-
-                    if (t.status.turn === t.my.player)
-                        t.checkVisible();
-
-                    t.counterAttack(delay);
-                    t.checkLevel();
+                    t.counterAttack();
+                    t.checkLevel(); 
                     t.rotateAuto();
                     t.initActive();
                     t.initGrab();
 
                     setTimeout(function () {
-                        t.checkVisible();
-                    }, 2500);
+                        t.checkWatchers();
+                    }, t.base.time.animate);
                 });
             }
             else if (targetArea.status === 'enter') {
@@ -1509,7 +1503,6 @@ let app = new Vue({
                         break;
                 }
 
-                //t.status.touchable = false;
                 unit.status = 'move';
                 t.$set(unit, 'style', { top: 0, left: 0 });
 
@@ -1525,7 +1518,6 @@ let app = new Vue({
                     setTimeout(function () {
                         unit.status = null;
                         unit.style = {};
-                        //t.status.touchable = true;
 
                         if (type === 'weapon')
                             delete t.areas.live[endIdx]['weapon'];
@@ -1539,7 +1531,7 @@ let app = new Vue({
                 func();
             }
         },
-        counterAttack: function (delay) {
+        counterAttack: function () {
             let t = this;
             let blackTurn = t.status.turn === 'black';
             let i = blackTurn ? t.areas.live.length : 0;
@@ -1668,16 +1660,16 @@ let app = new Vue({
                             }
 
                             for (let y in attackArr)
-                                t.attack(attackArr[y], true, true);
+                                t.attack(attackArr[y], true);
                         }
                         else {
-                            t.attack(targetIdx, true, true);
+                            t.attack(targetIdx, true);
                         }
 
                         unit.power -= 0.5;
                     }
                     else {
-                        t.attack(targetIdx, true, delay);
+                        t.attack(targetIdx, true);
                         unit.power -= 0.5;
                     }
 
@@ -1685,7 +1677,7 @@ let app = new Vue({
                 }
             }
         },
-        attack: function (targetIdx, stay, delay, runDistance) {
+        attack: function (targetIdx, stay, runDistance) {
             let t = this;
             let targetArea = t.areas.live[targetIdx];
             let activeArea = t.areas.live[t.active.idx];
@@ -1710,7 +1702,7 @@ let app = new Vue({
 
                         setTimeout(function () {
                             t.showUp('attack', targetIdx, demage, true);
-                        }, delay ? t.base.time.animate : 0);
+                        }, t.base.time.animate);
 
                         if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
                             activeArea.unit.destory += 1;
@@ -1765,7 +1757,7 @@ let app = new Vue({
 
                         setTimeout(function () {
                             t.showUp('attack', targetIdx, demage, true);
-                        }, delay ? t.base.time.animate : 0);
+                        }, t.base.time.animate);
                     }
 
                     setTimeout(function () {
@@ -1788,7 +1780,7 @@ let app = new Vue({
                         }
 
                         t.checkFinished();
-                    }, delay ? t.base.time.animate : 0);
+                    }, t.base.time.animate);
 
                     if (!alive && t.my.player !== renewedTargetUnit.player)
                         t.showUnitForSeconds(targetIdx, renewedTargetUnit);
@@ -2002,6 +1994,7 @@ let app = new Vue({
                 this.status[player].crop = this.status[player].maxCrop;
 
             this.checkLevel();
+            this.checkWatchers();
             this.initAreas();
             this.initActive();
             this.initGrab();
@@ -2150,7 +2143,7 @@ let app = new Vue({
                 }
             }
         },
-        checkVisible: function () {
+        checkWatchers: function () {
             let hnum = null;
             let players = ['black', 'white'];
 
