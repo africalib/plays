@@ -405,6 +405,9 @@ let app = new Vue({
             type: null
         },
         dots: '.',
+        time: {
+            animate: null
+        },
         timer: {},
         interval: {},
         autoRotateArr: [],
@@ -690,10 +693,7 @@ let app = new Vue({
         play: function () {
             let t = this;
             let time = 1000 / t.replay.speed;
-            t.base.time.animate = time;
-
-            if (t.base.time.animate < 100)
-                t.base.time.animate = 100;
+            t.time.animate = time < t.time.animate ? 100 : t.base.time.animate;
 
             if (t.replay.status === 'stop') {
                 this.refresh();
@@ -1114,7 +1114,30 @@ let app = new Vue({
                                     t.active.idx = loopIdx;
                                 }
                                 else if (t.attack(loopIdx, false, i)) {
+                                    let $unit = $('#app .each-area[data-idx=' + t.active.idx + '] > .unit');
                                     let removeIdx = obj.loops.indexOf(loopIdx);
+
+                                    if (Number(i) === 1) {
+                                        let key = 'marginTop';
+                                        let value = '50%';
+
+                                        if (t.isInHnum(t.active.idx, loopIdx))
+                                            key = 'marginLeft';
+
+                                        if (t.active.idx < loopIdx)
+                                            value = '-' + value;
+
+                                        $unit.css(key, value).css('zIndex', Number($unit.css('zIndex')) - 1);
+
+                                        setTimeout(function () {
+                                            $unit.css(key, 0);
+
+                                            setTimeout(function () {
+                                                $unit.removeAttr('style');
+                                            });
+                                        }, t.time.animate - 100);
+                                    }
+
                                     obj.loops.splice(removeIdx, obj.loops.length - removeIdx);
                                     break;
                                 }
@@ -1185,14 +1208,14 @@ let app = new Vue({
                     t.checkOwn(t.active.idx);
                     t.checkBuff();
                     t.counterAttack();
-                    t.checkLevel(); 
+                    t.checkLevel();
                     t.rotateAuto();
                     t.initActive();
                     t.initGrab();
 
                     setTimeout(function () {
                         t.checkWatchers();
-                    }, t.base.time.animate);
+                    }, t.time.animate);
                 });
             }
             else if (targetArea.status === 'enter') {
@@ -1521,7 +1544,7 @@ let app = new Vue({
 
                         if (type === 'weapon')
                             delete t.areas.live[endIdx]['weapon'];
-                    }, t.base.time.animate - 100);
+                    }, t.time.animate - 100);
                 }, 100);
 
                 if (typeof func === 'function')
@@ -1702,7 +1725,7 @@ let app = new Vue({
 
                         setTimeout(function () {
                             t.showUp('attack', targetIdx, demage, true);
-                        }, t.base.time.animate);
+                        }, t.time.animate);
 
                         if (targetArea.shelter.hp - targetArea.shelter.subHp <= 0)
                             activeArea.unit.destory += 1;
@@ -1757,7 +1780,7 @@ let app = new Vue({
 
                         setTimeout(function () {
                             t.showUp('attack', targetIdx, demage, true);
-                        }, t.base.time.animate);
+                        }, t.time.animate);
                     }
 
                     setTimeout(function () {
@@ -1780,7 +1803,7 @@ let app = new Vue({
                         }
 
                         t.checkFinished();
-                    }, t.base.time.animate);
+                    }, t.time.animate);
 
                     if (!alive && t.my.player !== renewedTargetUnit.player)
                         t.showUnitForSeconds(targetIdx, renewedTargetUnit);
@@ -1797,7 +1820,7 @@ let app = new Vue({
             if (delay) {
                 setTimeout(function () {
                     $area.append($clone);
-                }, this.base.time.animate);
+                }, this.time.animate);
             }
             else {
                 $area.append($clone);
@@ -1807,7 +1830,7 @@ let app = new Vue({
                 $clone.fadeOut(1000, function () {
                     $clone.remove();
                 });
-            }, this.base.time.animate);
+            }, this.time.animate);
         },
         showUp: function (act, idx, val, important) {
             let visible = val || important;
@@ -2251,6 +2274,7 @@ let app = new Vue({
         let t = this;
         let name = location.hash ? location.hash.replace('#/', '') : '';
         let replays = localStorage.getItem('replays');
+        t.time.animate = t.base.time.animate;
 
         if (navigator.platform !== 'Win32') {
             $(document).on('contextmenu', function (e) {

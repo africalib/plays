@@ -119,6 +119,11 @@ button {
     z-index: 10;
 }
 
+.app > .wrapper > .area .area-wrapper .each-area .unit {
+    transition: margin 0.1s;
+    -webkit-transition: margin 0.1s;
+}
+
 .app > .wrapper > .area .area-wrapper .each-area .unit + .unit {
     display: none;
 }
