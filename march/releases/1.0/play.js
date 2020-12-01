@@ -1114,10 +1114,10 @@ let app = new Vue({
                                     t.active.idx = loopIdx;
                                 }
                                 else if (t.attack(loopIdx, false, i)) {
-                                    let $unit = $('#app .each-area[data-idx=' + t.active.idx + '] > .unit');
                                     let removeIdx = obj.loops.indexOf(loopIdx);
 
                                     if (Number(i) === 1) {
+                                        let $unit = $('#app .each-area[data-idx=' + t.active.idx + '] > .unit');
                                         let key = 'marginTop';
                                         let value = '50%';
 
