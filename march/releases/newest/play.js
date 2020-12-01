@@ -1120,7 +1120,8 @@ let app = new Vue({
                                         let $unit = $('#app .each-area[data-idx=' + t.active.idx + '] > .unit');
                                         let key = 'marginTop';
                                         let value = '50%';
-                                        let time = t.time.animate - 100;
+                                        let transitionTime = 100;
+                                        let time = t.time.animate - transitionTime;
 
                                         if (t.isInHnum(t.active.idx, loopIdx))
                                             key = 'marginLeft';
@@ -1135,7 +1136,7 @@ let app = new Vue({
 
                                             setTimeout(function () {
                                                 $unit.removeAttr('style');
-                                            }, time);
+                                            }, transitionTime);
                                         }, time);
                                     }
 
