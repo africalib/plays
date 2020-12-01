@@ -1186,7 +1186,10 @@ let app = new Vue({
 
                     t.checkOwn(t.active.idx);
                     t.checkBuff();
-                    t.checkVisible();
+
+                    if (t.status.turn === t.my.player)
+                        t.checkVisible();
+
                     t.counterAttack(delay);
                     t.checkLevel();
                     t.rotateAuto();
@@ -1795,7 +1798,6 @@ let app = new Vue({
             return alive;
         },
         showUnitForSeconds: function (idx, unit) {
-            console.log(idx, unit)
             let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
             let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="../../img/' + unit.player + '/' + unit.name + '.png"></div>');
             let delay = unit.status === 'move';
@@ -2150,12 +2152,13 @@ let app = new Vue({
         },
         checkVisible: function () {
             let hnum = null;
+            let players = ['black', 'white'];
 
             for (let i in this.areas.live)
                 this.areas.live[i].watchers = '';
 
-            for (let i = 0; i < 2; i += 1) {
-                let player = i === 0 ? 'black' : 'white';
+            for (let i in players) {
+                let player = players[i];
                 let black = player === 'black';
 
                 for (let i in this.areas.live) {
