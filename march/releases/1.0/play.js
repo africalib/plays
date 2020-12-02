@@ -718,11 +718,17 @@ let app = new Vue({
             this.replay.status = 'pause';
             clearInterval(this.interval['replay']);
         },
-        speed: function () {
-            if (this.replay.speed >= 9)
-                this.replay.speed = 0;
+        speed: function (down) {
+            if (down)
+                this.replay.speed -= 1;
+            else
+                this.replay.speed += 1;
 
-            this.replay.speed += 1;
+            if (this.replay.speed >= 10)
+                this.replay.speed = 1;
+
+            if (this.replay.speed <= 0)
+                this.replay.speed = 9;
 
             if (this.replay.status === 'play') {
                 this.pause();
@@ -2331,6 +2337,26 @@ let app = new Vue({
         }
     },
     mounted: function () {
-        $(this.$el).attr('data-device', appLib.isMobileDevice() ? 'mobile' : 'desktop');
+        let t = this;
+        $(t.$el).attr('data-device', appLib.isMobileDevice() ? 'mobile' : 'desktop');
+
+        $(document).on('keyup', function (e) {
+            switch (e.keyCode) {
+                case 32:
+                    if (t.replay.status === 'pause')
+                        t.play();
+                    else
+                        t.pause();
+                    break;
+
+                case 38:
+                    t.speed();
+                    break;
+
+                case 40:
+                    t.speed(true);
+                    break;
+            }
+        });
     }
 });

@@ -448,10 +448,14 @@ button {
     background: rgba(255, 203, 109, 76%);
 }
 
-.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit,
-.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter,
-.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .unit,
-.app[data-replay=Y] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .shelter {
+.app[data-replay=Y][data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit[data-player=white],
+.app[data-replay=Y][data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter[data-player=white],
+.app[data-replay=Y][data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .unit[data-player=white],
+.app[data-replay=Y][data-player=black][data-turn=black] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .shelter[data-player=white],
+.app[data-replay=Y][data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit[data-player=black],
+.app[data-replay=Y][data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter[data-player=black],
+.app[data-replay=Y][data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .unit[data-player=black],
+.app[data-replay=Y][data-player=white][data-turn=white] > .wrapper > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .shelter[data-player=black] {
     background: none !important;
 }
 
