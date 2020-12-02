@@ -1120,6 +1120,8 @@ let app = new Vue({
                                         let $unit = $('#app .each-area[data-idx=' + t.active.idx + '] > .unit');
                                         let key = 'marginTop';
                                         let value = '50%';
+                                        let transitionTime = 100;
+                                        let time = t.time.animate - transitionTime;
 
                                         if (t.isInHnum(t.active.idx, loopIdx))
                                             key = 'marginLeft';
@@ -1134,8 +1136,8 @@ let app = new Vue({
 
                                             setTimeout(function () {
                                                 $unit.removeAttr('style');
-                                            });
-                                        }, t.time.animate - 100);
+                                            }, transitionTime);
+                                        }, time);
                                     }
 
                                     obj.loops.splice(removeIdx, obj.loops.length - removeIdx);
@@ -1851,7 +1853,7 @@ let app = new Vue({
                 }).tune({ top: offset.top + $area.height() / 2, left: offset.left + $area.width() / 2 }).setSpeed(1).replay();
             }
             else if (this.areas.live[idx] && this.areas.live[idx].unit && this.areas.live[idx].unit.name) {
-                visible = visible && this.my.player === this.areas.live[idx].unit.player;
+                visible = visible && (this.my.player === this.areas.live[idx].unit.player || this.status.replay);
             }
 
             if (visible) {

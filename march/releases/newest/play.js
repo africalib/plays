@@ -1853,7 +1853,7 @@ let app = new Vue({
                 }).tune({ top: offset.top + $area.height() / 2, left: offset.left + $area.width() / 2 }).setSpeed(1).replay();
             }
             else if (this.areas.live[idx] && this.areas.live[idx].unit && this.areas.live[idx].unit.name) {
-                visible = visible && this.my.player === this.areas.live[idx].unit.player;
+                visible = visible && (this.my.player === this.areas.live[idx].unit.player || this.status.replay);
             }
 
             if (visible) {
