@@ -72,7 +72,7 @@ let app = new Vue({
             $(this.$refs.modal).modal('show');
         },
         remove: function (idx) {
-            if (confirm('삭제하시겠습니까?')) {
+            if (confirm('선택하신 리플레이를 삭제하시겠습니까?')) {
                 this.replay.list.splice(idx, 1);
                 localStorage.setItem('replays', JSON.stringify(this.replay.list));
                 this.load();
