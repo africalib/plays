@@ -79,7 +79,7 @@ let app = new Vue({
             }
             else {
                 $.ajax({
-                    url: 'https://africalib.gabia.io/save/',
+                    url: global.baseUrl + '/save/',
                     type: 'POST',
                     data: { replay: JSON.stringify(this.replay.list[idx]) },
                     success: function (res) {
@@ -99,7 +99,7 @@ let app = new Vue({
             let t = this;
             if (++t.touchCnt % 5 === 0) {
                 $.ajax({
-                    url: 'https://africalib.gabia.io/replays/',
+                    url: global.baseUrl + '/replays/',
                     type: 'GET',
                     success: function (res) {
                         let replays = [];
@@ -114,5 +114,6 @@ let app = new Vue({
     },
     created: function () {
         this.set();
+        $.get(global.baseUrl + '/visit/');
     }
 });
