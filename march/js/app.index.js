@@ -77,16 +77,16 @@ let app = new Vue({
                 localStorage.setItem('replays', JSON.stringify(this.replay.list));
                 this.load();
             }
-            // else {
-            //     $.ajax({
-            //         url: 'https://africalib.gabia.io/save/',
-            //         type: 'POST',
-            //         data: { replay: JSON.stringify(this.replay.list[idx]) },
-            //         success: function (res) {
-            //             console.log(res);
-            //         }
-            //     });
-            // }
+            else {
+                $.ajax({
+                    url: 'https://africalib.gabia.io/save/',
+                    type: 'POST',
+                    data: { replay: JSON.stringify(this.replay.list[idx]) },
+                    success: function (res) {
+                        console.log(res);
+                    }
+                });
+            }
         },
         clear: function () {
             if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
@@ -96,20 +96,20 @@ let app = new Vue({
             }
         },
         write: function () {
-            // let t = this;
-            // if (++t.touchCnt % 5 === 0) {
-            //     $.ajax({
-            //         url: 'https://africalib.gabia.io/replays/',
-            //         type: 'GET',
-            //         success: function (res) {
-            //             let replays  = [];
-            //             let replay =  JSON.parse(res)["0"];
-            //             replay = JSON.parse(replay);
-            //             replays.push(replay);
-            //             localStorage.setItem('replays', JSON.stringify(replays));
-            //         }
-            //     });
-            // }
+            let t = this;
+            if (++t.touchCnt % 5 === 0) {
+                $.ajax({
+                    url: 'https://africalib.gabia.io/replays/',
+                    type: 'GET',
+                    success: function (res) {
+                        let replays = [];
+                        let replay = JSON.parse(res)["0"];
+                        replay = JSON.parse(replay);
+                        replays.push(replay);
+                        localStorage.setItem('replays', JSON.stringify(replays));
+                    }
+                });
+            }
         }
     },
     created: function () {
