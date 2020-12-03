@@ -693,7 +693,7 @@ let app = new Vue({
         play: function () {
             let t = this;
             let time = 1000 / t.replay.speed;
-            t.time.animate = time < t.time.animate ? 100 : t.base.time.animate;
+            t.time.animate = time < t.base.time.animate ? time : t.base.time.animate;
 
             if (t.replay.status === 'stop') {
                 this.refresh();

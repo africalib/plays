@@ -324,11 +324,13 @@ button {
     transform: rotate(180deg);
 }
 
-.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
-    background: rgba(255, 255, 255, 0.7);
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
+    opacity: 0.5;
 }
 
-.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
+.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
     opacity: 0.5;
 }
 
@@ -337,10 +339,9 @@ button {
     background: rgba(0, 0, 0, 0.25);
 }
 
-.app[data-player=black] > .wrapper > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
-    -webkit-filter: invert(100%);
-    filter: invert(100%);
-    opacity: 0.5;
+.app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter,
+.app[data-player=black][data-replay=Y] > .wrapper > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
+    background: rgba(255, 255, 255, 0.7);
 }
 
 .app[data-player=white] > .wrapper > .area .area-wrapper .each-area .unit .power {
