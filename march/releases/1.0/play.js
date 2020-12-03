@@ -847,7 +847,7 @@ let app = new Vue({
 
                                 if (Object.keys(prev[j]).length && Object.keys(live[j]).length) {
                                     for (let k in prev[j]) {
-                                        if (typeof prev[j][k] === 'object') {
+                                        if (prev[j][k] && typeof prev[j][k] === 'object') {
                                             if (JSON.stringify(prev[j][k]) !== JSON.stringify(live[j][k]))
                                                 obj[j][k] = live[j][k];
                                         }
