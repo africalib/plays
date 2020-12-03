@@ -10,6 +10,7 @@ let app = new Vue({
                 message: 2500,
                 animate: 370,
             },
+            minFlowLength:25,
             fieldCount: 100,
             columnNum: 9,
             rowNum: 16,
@@ -650,6 +651,7 @@ let app = new Vue({
                         case 'disconnect':
                             if (t.status.started && !t.status.finished) {
                                 socket.disconnect();
+                                t.saveUser(true);
                                 t.closeRoom();
                                 alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
                             }
@@ -697,7 +699,12 @@ let app = new Vue({
             window.location.reload();
         },
         saveUser: function (win) {
-            let user = localStorage.getItem('user');
+            let user;
+
+            if (this.flows.length < this.base.minFlowLength)
+                return;
+
+            user  = localStorage.getItem('user');
 
             if (user) {
                 user = JSON.parse(user);
@@ -721,7 +728,7 @@ let app = new Vue({
         saveReplay: function () {
             let replays;
 
-            if (this.flows.length < 25)
+            if (this.flows.length < this.base.minFlowLength)
                 return;
 
             replays = localStorage.getItem('replays');
