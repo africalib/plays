@@ -82,7 +82,7 @@ button {
 
 .app > .play > .wrapper > .ground > .top .time {
     padding: 0 3px;
-    margin-left: 7px;
+    margin-left: 3px;
     vertical-align: middle;
     width: 76px;
     display: inline-block;
@@ -122,7 +122,7 @@ button {
 }
 
 .app > .play > .wrapper > .ground > .top .right > span.latest {
-    max-width: 100px;
+    max-width: 120px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -399,7 +399,7 @@ button {
 
 .app[data-replay=N] > .play > .wrapper > .ground > .top .turn {
     border-right: 1px solid #aaa;
-    padding-right: 15px;
+    padding-right: 10px;
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black] + .shelter,

@@ -29,8 +29,8 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td class="large">{{ user.wins }}</td>
-                            <td class="large">{{ user.losses }}</td>
+                            <td class="large">{{ user.data.wins }}</td>
+                            <td class="large">{{ user.data.losses }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -43,12 +43,12 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{{ user.lastGameDate }}</td>
-                            <td>{{ user.firstGameDate }}</td>
+                            <td>{{ user.data.lastGameDate }}</td>
+                            <td>{{ user.data.firstGameDate }}</td>
                         </tr>
                     </tbody>
                 </table>
-                </table>
+                <button class="btn-block btn" type="button" v-on:click="reset()">초기화</button>
             </div>
         </div>
     </div>
