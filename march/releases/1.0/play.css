@@ -78,8 +78,6 @@ button {
 
 .app > .play > .wrapper > .ground > .top .turn {
     vertical-align: middle;
-    border-right: 1px solid #aaa;
-    padding-right: 16px;
 }
 
 .app > .play > .wrapper > .ground > .top .time {
@@ -116,12 +114,11 @@ button {
     background: #d82916;
     color: #fff;
     vertical-align: middle;
-    border-radius: 50%;
     width: 13px;
     text-align: center;
     line-height: 13px;
     height: 13px;
-    margin-right: 2.5px;
+    margin-left: 2.5px;
 }
 
 .app > .play > .wrapper > .ground > .top .right > span.latest {
@@ -267,14 +264,6 @@ button {
     height: 100%;
 }
 
-/* .app > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-owner='white'] {
-    background: rgba(255, 255, 255, 0.76);
-}
-
-.app > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-owner='black'] {
-    background: rgba(253, 255, 241, 0.76);
-} */
-
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-direction='3'] img,
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .weapon[data-direction='3'] img {
     transform: rotate(90deg);
@@ -406,6 +395,11 @@ button {
     -webkit-filter: invert(100%);
     filter: invert(100%);
     opacity: 0.5;
+}
+
+.app[data-replay=N] > .play > .wrapper > .ground > .top .turn {
+    border-right: 1px solid #aaa;
+    padding-right: 15px;
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black] + .shelter,
@@ -753,10 +747,9 @@ button {
 
 .app > .play > .wrapper > .chat {
     background: #fff;
-    border-left: 1px solid #ddd;
     height: 100%;
-    width: 76%;
     padding: 25px 0 50px 0;
+    position: relative;
 }
 
 .app > .play > .wrapper > .chat > .top {

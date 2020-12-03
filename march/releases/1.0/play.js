@@ -576,16 +576,12 @@ let app = new Vue({
                         date: null
                     });
 
-                    t.swiper = new Swiper(t.$refs.swiper, {
-                        slidesPerView: 'auto',
-                        spaceBetween: 0,
-                        pagination: {
-                            clickable: true,
-                        }
-                    });
+                    t.swiper = new Swiper(t.$refs.swiper);
 
-                    t.swiper.on('transitionEnd', function () {
-                        if (t.swiper.translate !== 0)
+                    t.swiper.on('slideChange', function () {
+                        $(t.$refs.input).blur();
+
+                        if (t.swiper.activeIndex === 1)
                             t.message.count = 0;
                     });
                 });
@@ -668,10 +664,10 @@ let app = new Vue({
                                     text: text,
                                     date: appLib.now('yyyy-MM-dd HH:mm:ss')
                                 });
-                                
+
                                 t.message.latest = text;
 
-                                if (res.value.player !== t.my.player && t.swiper.translate === 0) {
+                                if (res.value.player !== t.my.player && t.swiper.activeIndex === 0) {
                                     t.message.count += 1;
 
                                     if (t.message.count > 9)
@@ -813,18 +809,8 @@ let app = new Vue({
 
             location.href = '../../index.html';
         },
-        goGround: function () {
-            if (!this.status.replay)
-                this.swiper.slideTo(0);
-        },
         goMessages: function () {
-            if (this.swiper.translate === 0) {
-                this.swiper.slideTo(1);
-                this.message.count = 0;
-            }
-            else {
-                this.swiper.slideTo(0);
-            }
+            this.swiper.slideTo(1);
         },
         scrollToEnd: function () {
             let t = this;

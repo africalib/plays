@@ -59,7 +59,7 @@
         </div>
         <div class="play swiper-container" ref="swiper" v-else>
             <div class="wrapper swiper-wrapper">
-                <div class="ground swiper-slide" v-on:click="goGround();">
+                <div class="ground swiper-slide">
                     <div class="top" v-if="status.started">
                         <span class="turn">
                             <span v-if="status.turn">{{ status.turn }} turn</span>
@@ -72,8 +72,8 @@
                             </span>
                             <div class="right" v-on:click.stop="goMessages()">
                                 <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                <span class="count" v-if="message.count">{{ message.count }}</span>
                                 <span class="latest">{{ message.latest }}</span>
+                                <span class="count" v-if="message.count">{{ message.count }}</span>
                             </div>
                         </template>
                     </div>
@@ -274,7 +274,7 @@
                     </div>
                     <div class="bottom">
                         <input type="text" class="form-control" placeholder="Type your message here." maxlength="255"
-                            v-on:keyup.enter="tell()" v-on:blue="scrollToEnd()" ref="input" />
+                            v-on:keyup.enter="tell()" v-on:focus="scrollToEnd()" ref="input" />
                         <i class="fa fa-paper-plane" aria-hidden="true" v-on:click="tell()"></i>
                     </div>
                 </div>
