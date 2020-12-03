@@ -1,0 +1,28 @@
+﻿.app .run > .contents {
+    line-height: 1.8;
+    padding-bottom: 10px;
+}
+
+.app .run > .contents .dots {
+    letter-spacing: -3px;
+}
+
+.app .run > .contents table {
+    margin-bottom: 40px;
+}
+
+.app .run > .contents table th,
+.app .run > .contents table td {
+    text-align: center;
+    font-size: 20px;
+    border: 0;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.app .run > .contents table th.half {
+    width: 50%;
+}
+
+.app .run > .contents table td.large {
+    font-size: 30px;
+}

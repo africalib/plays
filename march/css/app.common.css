@@ -181,3 +181,7 @@ button {
     margin-top: -5px;
     text-align: center;
 }
+
+[v-cloak] {
+    display: none;
+}

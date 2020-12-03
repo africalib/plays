@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>March of the King</title>
+    <meta property="og:image" content="img/common/home.cavalry.preview.png">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/app.common.css" rel="stylesheet" />
+    <link href="css/app.mypage.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app" class="app" v-cloak>
+        <div class="run">
+            <div class="title">
+                <img src="img/common/home.cavalry.png" />
+                <br />
+                <div>My Page</div>
+            </div>
+            <div class="contents">
+                <div class="dots">-----</div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th class="half">Wins</th>
+                            <th class="half">Losses</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="large">{{ user.wins }}</td>
+                            <td class="large">{{ user.losses }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>First</th>
+                            <th>Last</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>{{ user.lastGameDate }}</td>
+                            <td>{{ user.firstGameDate }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </table>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/app.global.js"></script>
+    <script src="js/app.library.js"></script>
+    <script src="js/app.mypage.js"></script>
+</body>
+</html>

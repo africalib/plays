@@ -1,0 +1,27 @@
+.component-top {
+    position: absolute;
+    text-align: right;
+    padding: 1.5rem;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.component-top > a {
+    margin-left: 1rem;
+    display: inline-block;
+    cursor: pointer;
+    vertical-align: middle;
+}
+
+.component-top > a.youtube {
+    margin-left: 0;
+    color: red;
+    font-size: 21px;
+    line-height: 0;
+    float: left;
+}
+
+.component-top > a > img {
+    height: 2rem;
+}

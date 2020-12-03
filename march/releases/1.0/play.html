@@ -61,16 +61,20 @@
             <div class="wrapper swiper-wrapper">
                 <div class="ground swiper-slide" v-on:click="goGround();">
                     <div class="top" v-if="status.started">
-                        <span>
+                        <span class="turn">
                             <span v-if="status.turn">{{ status.turn }} turn</span>
                             <span v-else>ready</span>
                         </span>
                         <template v-if="!status.replay">
-                            <span class="time">{{ status.time }} / {{ base.time.turn }}</span>
-                            <span class="right" v-on:click.stop="goMessages()">
-                                <i class="fa fa-envelope" aria-hidden="true"></i>
-                                <span v-if="message.count">{{ message.count }}</span>
+                            <span class="time">
+                                <img src="../../img/common/play.clock.svg" />
+                                <span>{{ status.time }} / {{ base.time.turn }}</span>
                             </span>
+                            <div class="right" v-on:click.stop="goMessages()">
+                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                <span class="count" v-if="message.count">{{ message.count }}</span>
+                                <span class="latest">{{ message.latest }}</span>
+                            </div>
                         </template>
                     </div>
                     <div class="area">
@@ -257,7 +261,7 @@
                     <div class="messages" ref="message">
                         <ul>
                             <li v-for="m in message.list"
-                                v-bind:class="[ m.player, m.player === my.player ? 'right' : 'left' ]">
+                                v-bind:class="[ m.player, m.player === my.player ? 'right' : m.player !== 'gray' ? 'left' : '' ]">
                                 <div class="wrapper">
                                     <span class="img" v-if="m.player !== 'gray'">
                                         <img v-bind:src="'../../img/' + m.player + '/king.png'" />
@@ -269,8 +273,8 @@
                         </ul>
                     </div>
                     <div class="bottom">
-                        <input type="text" class="form-control" placeholder="Type your message here."
-                            v-on:keyup.enter="tell()" ref="input" />
+                        <input type="text" class="form-control" placeholder="Type your message here." maxlength="255"
+                            v-on:keyup.enter="tell()" v-on:blue="scrollToEnd()" ref="input" />
                         <i class="fa fa-paper-plane" aria-hidden="true" v-on:click="tell()"></i>
                     </div>
                 </div>

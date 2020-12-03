@@ -661,11 +661,15 @@ let app = new Vue({
 
                         default:
                             if (res.value.name === 'message') {
+                                let text = res.value.val1;
+
                                 t.message.list.push({
                                     player: res.value.player,
-                                    text: res.value.val1,
+                                    text: text,
                                     date: appLib.now('yyyy-MM-dd HH:mm:ss')
                                 });
+                                
+                                t.message.latest = text;
 
                                 if (res.value.player !== t.my.player && t.swiper.translate === 0) {
                                     t.message.count += 1;
@@ -675,9 +679,7 @@ let app = new Vue({
                                 }
 
                                 t.$nextTick(function () {
-                                    $(t.$refs.message).animate({
-                                        scrollTop: $(t.$refs.message)[0].scrollHeight
-                                    });
+                                    t.scrollToEnd();
                                 });
                             }
                             else if (typeof t[res.value.name] === 'function') {
@@ -698,7 +700,29 @@ let app = new Vue({
         refresh: function () {
             window.location.reload();
         },
-        save: function () {
+        saveUser: function (win) {
+            let user = localStorage.getItem('user');
+
+            if (user) {
+                user = JSON.parse(user);
+            }
+            else {
+                user = {
+                    wins: 0,
+                    losses: 0,
+                    firstGameDate: appLib.now('yy-MM-dd'),
+                    lastGameDate: appLib.now('yy-MM-dd')
+                }
+            }
+
+            if (win)
+                user.wins += 1;
+            else
+                user.losses += 1;
+
+            localStorage.setItem('user', JSON.stringify(user));
+        },
+        saveReplay: function () {
             let replays;
 
             if (this.flows.length < 25)
@@ -785,7 +809,7 @@ let app = new Vue({
         },
         goHome: function () {
             if (!this.status.replay)
-                this.save();
+                this.saveReplay();
 
             location.href = '../../index.html';
         },
@@ -794,8 +818,19 @@ let app = new Vue({
                 this.swiper.slideTo(0);
         },
         goMessages: function () {
-            this.swiper.slideTo(1);
-            this.message.count = 0;
+            if (this.swiper.translate === 0) {
+                this.swiper.slideTo(1);
+                this.message.count = 0;
+            }
+            else {
+                this.swiper.slideTo(0);
+            }
+        },
+        scrollToEnd: function () {
+            let t = this;
+            $(t.$refs.message).stop().animate({
+                scrollTop: $(t.$refs.message)[0].scrollHeight
+            });
         },
         request: function (name, val1, val2) {
             if (name === 'touch' || name === 'grab') {
@@ -2300,8 +2335,8 @@ let app = new Vue({
                 }
 
                 if (!king.white || !king.black) {
-                    let winner = !king.white ? 'Black' : 'White';
-                    t.setLabel(winner + ' player won', 0);
+                    let winner = !king.white ? 'black' : 'white';
+                    t.setLabel(appLib.getFirstUpperCase(winner) + ' player won', 0);
                     t.setMessage(t.my.player, t.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
                     t.closeRoom();
 
@@ -2309,6 +2344,8 @@ let app = new Vue({
                         t.areas.live[i].owner = winner;
 
                     if (!t.status.replay) {
+                        t.saveUser(winner === t.my.player);
+
                         setTimeout(function () {
                             socket.disconnect();
                         }, 1000 * 30);

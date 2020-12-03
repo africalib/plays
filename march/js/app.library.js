@@ -121,6 +121,7 @@
         var HH = today.getHours();
         var mm = today.getMinutes();
         var ss = today.getSeconds();
+        var yy = yyyy.toString().substring(2);
 
         if (MM < 10)
             MM = '0' + MM;
@@ -138,6 +139,14 @@
             ss = '0' + ss
 
         switch (format) {
+            case 'yy-MM-dd':
+                today = yy + '-' + MM + '-' + dd;
+                break;
+
+            case 'yyyy-MM-dd':
+                today = yyyy + '-' + MM + '-' + dd;
+                break;
+
             case 'yyyy-MM-dd HH:mm:ss':
                 today = yyyy + '-' + MM + '-' + dd + ' ' + HH + ':' + mm + ':' + ss;
                 break;
@@ -148,6 +157,13 @@
         }
 
         return today;
+    },
+
+    getFirstUpperCase: function (val) {
+        if (val)
+            return val.substring(0, 1).toUpperCase() + val.substring(1);
+
+        return '';
     },
 
     loading: function (type, lazy) {
