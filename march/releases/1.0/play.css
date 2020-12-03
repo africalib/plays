@@ -431,8 +431,8 @@ button {
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit .exp {
     right: 0;
     top: 0;
-    padding-bottom: 0;
-    padding-top: 5px;
+    padding-top: 0;
+    padding-bottom: 5px;
     transform: rotate(180deg);
 }
 
