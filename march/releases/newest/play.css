@@ -5,6 +5,7 @@
 }
 
 body {
+    background: #000;
     position: relative;
     overflow: hidden;
 }
@@ -39,7 +40,7 @@ button {
 }
 
 .app > .play {
-    font-family: 'Orbitron', sans-serif;
+    background:#fff;
     height: 100%;
 }
 
@@ -52,6 +53,7 @@ button {
     height: 100%;
     position: relative;
     margin: 0 auto;
+    font-family: 'Orbitron', sans-serif;
 }
 
 .app > .play > .wrapper > .ground > .top {
@@ -282,8 +284,12 @@ button {
     transform: rotate(180deg);
 }
 
-.app[data-started=Y][data-device=desktop] > .play > .wrapper > .ground {
+.app[data-started=Y][data-device=desktop] {
     width: 768px;
+    margin: 0 auto;
+}
+
+.app[data-started=Y][data-device=desktop] > .play > .wrapper > .ground {
     max-width: 100%;
     text-align: left;
 }
@@ -712,6 +718,7 @@ button {
 }
 
 .app > .play > .wrapper > .chat {
+    background: #fff;
     height: 100%;
     width: 76%;
     padding: 25px 0 50px 0;
@@ -728,6 +735,7 @@ button {
     height: 25px;
     padding: 0 8px;
     line-height: 25px;
+    font-family: 'Orbitron', sans-serif;
 }
 
 .app > .play > .wrapper > .chat > .messages {
@@ -896,6 +904,11 @@ button {
     transform: rotate(180deg);
     background: rgba(255, 255, 255, 0.9);
     color: #333;
+}
+
+.app .run {
+    height: 100%;
+    background: #fff;
 }
 
 .app .run .title p {
