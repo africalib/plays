@@ -413,7 +413,10 @@ let app = new Vue({
         autoRotateArr: [],
         flows: [],
         swiper: {},
-        messages: [],
+        message: {
+            count: 0,
+            list: []
+        },
         replay: {
             idx: 0,
             status: null,
@@ -567,7 +570,7 @@ let app = new Vue({
 
             if (!t.status.replay) {
                 t.$nextTick(function () {
-                    t.messages.push({
+                    t.message.list.push({
                         player: 'gray',
                         text: 'Chat has started.',
                         date: null
@@ -579,6 +582,11 @@ let app = new Vue({
                         pagination: {
                             clickable: true,
                         }
+                    });
+
+                    t.swiper.on('transitionEnd', function () {
+                        if (t.swiper.translate !== 0)
+                            t.message.count = 0;
                     });
                 });
             }
@@ -653,11 +661,18 @@ let app = new Vue({
 
                         default:
                             if (res.value.name === 'message') {
-                                t.messages.push({
+                                t.message.list.push({
                                     player: res.value.player,
                                     text: res.value.val1,
                                     date: appLib.now('yyyy-MM-dd HH:mm:ss')
                                 });
+
+                                if (res.value.player !== t.my.player && t.swiper.translate === 0) {
+                                    t.message.count += 1;
+
+                                    if (t.message.count > 9)
+                                        t.message.count = 9;
+                                }
 
                                 t.$nextTick(function () {
                                     $(t.$refs.message).animate({
@@ -773,6 +788,14 @@ let app = new Vue({
                 this.save();
 
             location.href = '../../index.html';
+        },
+        goGround: function () {
+            if (!this.status.replay)
+                this.swiper.slideTo(0);
+        },
+        goMessages: function () {
+            this.swiper.slideTo(1);
+            this.message.count = 0;
         },
         request: function (name, val1, val2) {
             if (name === 'touch' || name === 'grab') {

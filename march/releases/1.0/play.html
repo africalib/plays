@@ -59,15 +59,19 @@
         </div>
         <div class="play swiper-container" ref="swiper" v-else>
             <div class="wrapper swiper-wrapper">
-                <div class="ground swiper-slide" v-on:click="swiper.slideTo(0)">
+                <div class="ground swiper-slide" v-on:click="goGround();">
                     <div class="top" v-if="status.started">
                         <span>
                             <span v-if="status.turn">{{ status.turn }} turn</span>
                             <span v-else>ready</span>
                         </span>
-                        <span class="pull-right">
-                            <span>time : {{ status.time }} / {{ base.time.turn }}</span>
-                        </span>
+                        <template v-if="!status.replay">
+                            <span class="time">{{ status.time }} / {{ base.time.turn }}</span>
+                            <span class="right" v-on:click.stop="goMessages()">
+                                <i class="fa fa-envelope" aria-hidden="true"></i>
+                                <span v-if="message.count">{{ message.count }}</span>
+                            </span>
+                        </template>
                     </div>
                     <div class="area">
                         <div class="area-wrapper">
@@ -252,7 +256,7 @@
                     <div class="top">messages</div>
                     <div class="messages" ref="message">
                         <ul>
-                            <li v-for="m in messages"
+                            <li v-for="m in message.list"
                                 v-bind:class="[ m.player, m.player === my.player ? 'right' : 'left' ]">
                                 <div class="wrapper">
                                     <span class="img" v-if="m.player !== 'gray'">
@@ -265,7 +269,8 @@
                         </ul>
                     </div>
                     <div class="bottom">
-                        <input type="text" class="form-control" placeholder="Type your message here." v-on:keyup.enter="tell()" ref="input" />
+                        <input type="text" class="form-control" placeholder="Type your message here."
+                            v-on:keyup.enter="tell()" ref="input" />
                         <i class="fa fa-paper-plane" aria-hidden="true" v-on:click="tell()"></i>
                     </div>
                 </div>

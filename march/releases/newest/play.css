@@ -75,6 +75,31 @@ button {
     font-size: 10px;
 }
 
+.app > .play > .wrapper > .ground > .top .time {
+    background: #eee;
+    color: #000;
+    padding: 0 3px;
+    margin-left: 7px;
+    vertical-align: middle;
+}
+
+.app > .play > .wrapper > .ground > .top .right {
+    float: right;
+}
+
+.app > .play > .wrapper > .ground > .top .right > span {
+    background: #d82916;
+    color: #fff;
+    vertical-align: middle;
+    border-radius: 50%;
+    width: 13px;
+    height: 13px;
+    display: inline-block;
+    padding: 0;
+    text-align: center;
+    line-height: 13px;
+}
+
 .app > .play > .wrapper > .ground > .area {
     width: 100%;
     height: 100%;
