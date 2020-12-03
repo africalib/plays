@@ -585,7 +585,9 @@ let app = new Vue({
                     });
 
                     t.swiper.on('transitionEnd', function () {
-                        if (t.swiper.translate !== 0)
+                        if (t.swiper.translate === 0)
+                            $(t.$refs.input).blur();
+                        else
                             t.message.count = 0;
                     });
                 });
@@ -668,7 +670,7 @@ let app = new Vue({
                                     text: text,
                                     date: appLib.now('yyyy-MM-dd HH:mm:ss')
                                 });
-                                
+
                                 t.message.latest = text;
 
                                 if (res.value.player !== t.my.player && t.swiper.translate === 0) {
