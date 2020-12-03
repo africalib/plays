@@ -412,6 +412,8 @@ let app = new Vue({
         interval: {},
         autoRotateArr: [],
         flows: [],
+        swiper: {},
+        messages: [],
         replay: {
             idx: 0,
             status: null,
@@ -562,6 +564,24 @@ let app = new Vue({
             setTimeout(function () {
                 t.setLabel("Let's march", 2000);
             }, 2500);
+
+            if (!t.status.replay) {
+                t.$nextTick(function () {
+                    t.messages.push({
+                        player: 'gray',
+                        text: 'Chat has started.',
+                        date: null
+                    });
+
+                    t.swiper = new Swiper(t.$refs.swiper, {
+                        slidesPerView: 'auto',
+                        spaceBetween: 0,
+                        pagination: {
+                            clickable: true,
+                        }
+                    });
+                });
+            }
         },
         enter: function () {
             let t = this;
@@ -632,7 +652,20 @@ let app = new Vue({
                             break;
 
                         default:
-                            if (typeof t[res.value.name] === 'function') {
+                            if (res.value.name === 'message') {
+                                t.messages.push({
+                                    player: res.value.player,
+                                    text: res.value.val1,
+                                    date: appLib.now('yyyy-MM-dd HH:mm:ss')
+                                });
+
+                                t.$nextTick(function () {
+                                    $(t.$refs.message).animate({
+                                        scrollTop: $(t.$refs.message)[0].scrollHeight
+                                    });
+                                });
+                            }
+                            else if (typeof t[res.value.name] === 'function') {
                                 if (res.value.name === 'touch' || res.value.name === 'grab')
                                     t.status.touchable = true;
 
@@ -2258,6 +2291,16 @@ let app = new Vue({
                         }, 1000 * 30);
                     }
                 }
+            }
+        },
+        tell: function () {
+            let t = this;
+            let $input = $(t.$refs.input);
+            let message = $input.val();
+
+            if (message && message.trim()) {
+                t.request('message', message);
+                $input.val('');
             }
         },
         closeModal: function () {

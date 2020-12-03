@@ -6,6 +6,7 @@
     <title>March of the King</title>
     <meta property="og:image" content="../../img/common/home.cavalry.preview.png">
     <link href="../../css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../../css/swiper-bundle.min.css" rel="stylesheet" />
     <link href="../../css/font-awesome.min.css" rel="stylesheet" />
     <link href="../../css/app.common.css" rel="stylesheet" />
     <link href="play.css?21" rel="stylesheet" />
@@ -15,220 +16,225 @@
     <div id="app" class="app" v-bind:data-started="status.started ? 'Y' : 'N'"
         v-bind:data-replay="status.replay ? 'Y' : 'N'" v-bind:data-finished="status.finished ? 'Y' : 'N'"
         v-bind:data-player="my.player" v-bind:data-turn="status.turn" v-cloak>
-        <div class="wrapper">
-            <div class="run" v-if="my.room && !status.started">
-                <div class="title">
-                    <img src="../../img/common/home.cavalry.png" />
-                    <br />
-                    <div>Waiting for Player</div>
-                </div>
-                <div class="contents">
-                    <template v-if="my.room.name">
-                        <div class="dots">{{ dots }}</div>
-                        <div class="room">방 이름 : {{ my.room.name }}</div>
-                        <template v-if="my.room.host">
-                            <div class="text">아래 주소를 복사하여 상대방을 초대하세요.</div>
-                            <div class="input-group">
-                                <input type="text" class="form-control" v-bind:value="my.room.url" ref="roomUrl"
-                                    readonly />
-                                <div class="input-group-btn">
-                                    <button class="btn btn-default" type="button" v-on:click="copyRoomUrl()">
-                                        <i class="fa fa-clone" aria-hidden="true"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="anchors">
-                                <a class="pointer" v-on:click="refresh()">다시 만들기</a>
-                                <a class="pointer" v-on:click="goHome()">홈으로</a>
-                            </div>
-                        </template>
-                        <template v-else>
-                            <div class="text">게임을 시작하시려면 아래 버튼을 눌러주세요.</div>
-                            <button class="btn-block btn" type="button" v-on:click="enter()">시작하기</button>
-                            <div class="anchors">
-                                <a class="pointer" v-on:click="goHome()">홈으로</a>
-                            </div>
-                        </template>
-                    </template>
-                    <template v-else-if="my.room.loaded">
-                        <div class="text">오류가 있습니다. 다시 시도해주세요.</div>
-                        <div class="anchors">
-                            <a class="pointer" v-on:click="goHome()">다시 시도</a>
-                        </div>
-                    </template>
-                </div>
+        <div class="run" v-if="my.room && !status.started">
+            <div class="title">
+                <img src="../../img/common/home.cavalry.png" />
+                <br />
+                <div>Waiting for Player</div>
             </div>
-            <template v-else>
-                <div class="top" v-if="status.started">
-                    <span>
-                        <span v-if="status.turn">{{ status.turn }} turn</span>
-                        <span v-else>ready</span>
-                    </span>
-                    <span class="pull-right">
-                        <span>time : {{ status.time }} / {{ base.time.turn }}</span>
-                    </span>
-                </div>
-                <div class="area">
-                    <div class="area-wrapper">
-                        <div class="each-area" v-bind:class="{'active' : active.idx === a.idx }"
-                            v-for="(a, idx) in areas.live" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
-                            v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
-                            v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
-                            v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden ? 'Y' : 'N'"
-                            v-bind:data-watchers="a.watchers" v-bind:data-opacity="a.opacity"
-                            v-on:click="touchable(idx) && request('touch', idx)">
-                            <div class="unit" v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"
-                                v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
-                                v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
-                                v-bind:data-hidden="a.unit.hidden ? 'Y' : 'N'" v-bind:data-status="a.unit.status" v-if="a.unit.name"
-                                v-bind:style="a.unit.style">
-                                <img v-bind:src="'../../img/' + a.unit.player + '/' + a.unit.name + '.png'" />
-                                <div class="power">{{ a.unit.power }}</div>
-                                <div class="exp" v-if="a.unit.level">
-                                    <div class="exp-wrapper">
-                                        <div class="status progress-bar progress-bar-striped"
-                                            v-bind:style="{ height : ((a.unit.exp) / a.unit.maxExp * 100) + '%' }">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hp" v-if="a.unit.hp && a.unit.maxHp">
-                                    <div class="remain progress-bar progress-bar-striped"
-                                        v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }">
-                                    </div>
-                                </div>
-                                <div class="level" v-if="a.unit.level">{{ a.unit.level }}</div>
-                            </div>
-                            <div class="shelter" v-bind:data-player="a.shelter.player" v-bind:data-name="a.shelter.name"
-                                v-if="a.shelter.name">
-                                <img v-bind:src="'../../img/gray/' + a.shelter.name + '.png'" />
-                            </div>
-                            <div class="weapon" v-bind:data-direction="a.weapon.direction"
-                                v-bind:data-status="a.weapon.status" v-bind:data-name="a.weapon.name"
-                                v-if="a.weapon && a.weapon.name" v-bind:style="a.weapon.style">
-                                <img v-bind:src="'../../img/common/weapon.' + a.weapon.name + '.png'" />
-                            </div>
-                            <img src="../../img/common/flag.png" class="flag" v-if="a.owner === my.player" />
-                        </div>
-                    </div>
-                    <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
-                        v-on:click="hideLabel()">
-                        <div>{{ label.message }}</div>
-                    </div>
-                </div>
-                <div class="bottom" v-if="status.started">
-                    <div class="status">
-                        <span>units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
-                        <span class="pull-right">crop : {{ status[my.player].crop }} /
-                            {{ status[my.player].maxCrop }}</span>
-                    </div>
-                    <div class="controls replay" v-if="status.replay">
-                        <div class="icos">
-                            <i class="fa fa-repeat" aria-hidden="true" v-on:click="replay.touchable && refresh()"></i>
-                            <i class="fa fa-pause" aria-hidden="true" v-on:click="replay.touchable && pause()"
-                                v-if="replay.status === 'play'"></i>
-                            <i class="fa fa-play" aria-hidden="true" v-on:click="replay.touchable && play()" v-else></i>
-                        </div>
-                        <div class="flow">
-                            {{ replay.idx + 1 }} / {{ flows.length }}
-                        </div>
-                        <div class="action">
-                            <button type="button" class="home" v-on:click="goHome()"
-                                v-if="status.finished">home</button>
-                            <button type="button" class="speed" v-on:click="speed()"
-                                v-else>&times;{{ replay.speed }}</button>
-                        </div>
-                    </div>
-                    <div class="controls play" v-else>
-                        <div class="units">
-                            <div class="each-unit" v-bind:data-name="u.name"
-                                v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
-                                v-for="u in base.units" v-bind:key="u.name"
-                                v-on:click="touchable() && request('grab', u.name)" v-if="u.crop">
-                                <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
-                                <img v-bind:src="'../../img/' + my.player + '/' + u.name + '.png'"
-                                    v-bind:data-rotate="u.rotate" />
+            <div class="contents">
+                <template v-if="my.room.name">
+                    <div class="dots">{{ dots }}</div>
+                    <div class="room">방 이름 : {{ my.room.name }}</div>
+                    <template v-if="my.room.host">
+                        <div class="text">아래 주소를 복사하여 상대방을 초대하세요.</div>
+                        <div class="input-group">
+                            <input type="text" class="form-control" v-bind:value="my.room.url" ref="roomUrl" readonly />
+                            <div class="input-group-btn">
+                                <button class="btn btn-default" type="button" v-on:click="copyRoomUrl()">
+                                    <i class="fa fa-clone" aria-hidden="true"></i>
+                                </button>
                             </div>
                         </div>
-                        <div class="action">
-                            <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
-                            <button type="button"
-                                v-on:click="request('pass', my.player === 'black' ? 'white' : 'black')"
-                                v-bind:disabled="!status.started || status.turn !== my.player">pass</button>
+                        <div class="anchors">
+                            <a class="pointer" v-on:click="refresh()">다시 만들기</a>
+                            <a class="pointer" v-on:click="goHome()">홈으로</a>
                         </div>
+                    </template>
+                    <template v-else>
+                        <div class="text">게임을 시작하시려면 아래 버튼을 눌러주세요.</div>
+                        <button class="btn-block btn" type="button" v-on:click="enter()">시작하기</button>
+                        <div class="anchors">
+                            <a class="pointer" v-on:click="goHome()">홈으로</a>
+                        </div>
+                    </template>
+                </template>
+                <template v-else-if="my.room.loaded">
+                    <div class="text">오류가 있습니다. 다시 시도해주세요.</div>
+                    <div class="anchors">
+                        <a class="pointer" v-on:click="goHome()">다시 시도</a>
                     </div>
-                </div>
-                <div class="modal-area" v-bind:data-player="modal.info.player" v-bind:data-turn="my.player"
-                    v-if="modal.info.name">
-                    <div class="img-part">
+                </template>
+            </div>
+        </div>
+        <div class="play swiper-container" ref="swiper" v-else>
+            <div class="wrapper swiper-wrapper">
+                <div class="ground swiper-slide" v-on:click="swiper.slideTo(0)">
+                    <div class="top" v-if="status.started">
                         <span>
-                            <img v-bind:src="'../../img/' + modal.info.player + '/' + modal.info.name + '.png'"
-                                v-bind:data-rotate="modal.info.rotate" />
+                            <span v-if="status.turn">{{ status.turn }} turn</span>
+                            <span v-else>ready</span>
+                        </span>
+                        <span class="pull-right">
+                            <span>time : {{ status.time }} / {{ base.time.turn }}</span>
                         </span>
                     </div>
-                    <div class="info-part">
-                        <div class="name">
-                            <span class="name">{{ modal.info.name }}</span>
-                            <span v-if="modal.type === 'unit'">Lv. {{ modal.info.level }}</span>
+                    <div class="area">
+                        <div class="area-wrapper">
+                            <div class="each-area" v-bind:class="{'active' : active.idx === a.idx }"
+                                v-for="(a, idx) in areas.live" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
+                                v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
+                                v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
+                                v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden ? 'Y' : 'N'"
+                                v-bind:data-watchers="a.watchers" v-bind:data-opacity="a.opacity"
+                                v-on:click="touchable(idx) && request('touch', idx)">
+                                <div class="unit"
+                                    v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"
+                                    v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
+                                    v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
+                                    v-bind:data-hidden="a.unit.hidden ? 'Y' : 'N'" v-bind:data-status="a.unit.status"
+                                    v-if="a.unit.name" v-bind:style="a.unit.style">
+                                    <img v-bind:src="'../../img/' + a.unit.player + '/' + a.unit.name + '.png'" />
+                                    <div class="power">{{ a.unit.power }}</div>
+                                    <div class="exp" v-if="a.unit.level">
+                                        <div class="exp-wrapper">
+                                            <div class="status progress-bar progress-bar-striped"
+                                                v-bind:style="{ height : ((a.unit.exp) / a.unit.maxExp * 100) + '%' }">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hp" v-if="a.unit.hp && a.unit.maxHp">
+                                        <div class="remain progress-bar progress-bar-striped"
+                                            v-bind:style="{ width : a.unit.hp ? (a.unit.hp / a.unit.maxHp * 100) + '%' : 0 }">
+                                        </div>
+                                    </div>
+                                    <div class="level" v-if="a.unit.level">{{ a.unit.level }}</div>
+                                </div>
+                                <div class="shelter" v-bind:data-player="a.shelter.player"
+                                    v-bind:data-name="a.shelter.name" v-if="a.shelter.name">
+                                    <img v-bind:src="'../../img/gray/' + a.shelter.name + '.png'" />
+                                </div>
+                                <div class="weapon" v-bind:data-direction="a.weapon.direction"
+                                    v-bind:data-status="a.weapon.status" v-bind:data-name="a.weapon.name"
+                                    v-if="a.weapon && a.weapon.name" v-bind:style="a.weapon.style">
+                                    <img v-bind:src="'../../img/common/weapon.' + a.weapon.name + '.png'" />
+                                </div>
+                                <img src="../../img/common/flag.png" class="flag" v-if="a.owner === my.player" />
+                            </div>
                         </div>
-                        <div class="bar">
-                            <table>
+                        <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
+                            v-on:click="hideLabel()">
+                            <div>{{ label.message }}</div>
+                        </div>
+                    </div>
+                    <div class="bottom" v-if="status.started">
+                        <div class="status">
+                            <span>units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
+                            <span class="pull-right">crop : {{ status[my.player].crop }} /
+                                {{ status[my.player].maxCrop }}</span>
+                        </div>
+                        <div class="controls replay" v-if="status.replay">
+                            <div class="icos">
+                                <i class="fa fa-repeat" aria-hidden="true"
+                                    v-on:click="replay.touchable && refresh()"></i>
+                                <i class="fa fa-pause" aria-hidden="true" v-on:click="replay.touchable && pause()"
+                                    v-if="replay.status === 'play'"></i>
+                                <i class="fa fa-play" aria-hidden="true" v-on:click="replay.touchable && play()"
+                                    v-else></i>
+                            </div>
+                            <div class="flow">
+                                {{ replay.idx + 1 }} / {{ flows.length }}
+                            </div>
+                            <div class="action">
+                                <button type="button" class="home" v-on:click="goHome()"
+                                    v-if="status.finished">home</button>
+                                <button type="button" class="speed" v-on:click="speed()"
+                                    v-else>&times;{{ replay.speed }}</button>
+                            </div>
+                        </div>
+                        <div class="controls play" v-else>
+                            <div class="units">
+                                <div class="each-unit" v-bind:data-name="u.name"
+                                    v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
+                                    v-for="u in base.units" v-bind:key="u.name"
+                                    v-on:click="touchable() && request('grab', u.name)" v-if="u.crop">
+                                    <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
+                                    <img v-bind:src="'../../img/' + my.player + '/' + u.name + '.png'"
+                                        v-bind:data-rotate="u.rotate" />
+                                </div>
+                            </div>
+                            <div class="action">
+                                <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
+                                <button type="button"
+                                    v-on:click="request('pass', my.player === 'black' ? 'white' : 'black')"
+                                    v-bind:disabled="!status.started || status.turn !== my.player">pass</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-area" v-bind:data-player="modal.info.player" v-bind:data-turn="my.player"
+                        v-if="modal.info.name">
+                        <div class="img-part">
+                            <span>
+                                <img v-bind:src="'../../img/' + modal.info.player + '/' + modal.info.name + '.png'"
+                                    v-bind:data-rotate="modal.info.rotate" />
+                            </span>
+                        </div>
+                        <div class="info-part">
+                            <div class="name">
+                                <span class="name">{{ modal.info.name }}</span>
+                                <span v-if="modal.type === 'unit'">Lv. {{ modal.info.level }}</span>
+                            </div>
+                            <div class="bar">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <td class="text">hp : {{ modal.info.hp }} / {{ modal.info.maxHp }}</td>
+                                            <td>
+                                                <div class="progress-bar progress-bar-striped progress-bar-danger active"
+                                                    v-bind:style="{ width : modal.info.hp ? (modal.info.hp / modal.info.maxHp * 100) + '%' : 0 }">
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <template v-if="modal.type === 'unit'">
+                                            <tr>
+                                                <td class="text">exp : {{ modal.info.exp }} / {{ modal.info.maxExp }}
+                                                </td>
+                                                <td>
+                                                    <div class="progress-bar progress-bar-striped active"
+                                                        v-bind:style="{ width : modal.info.exp ? (modal.info.exp / modal.info.maxExp * 100) + '%' : 0 }">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text">pwr : {{ modal.info.power }} /
+                                                    {{ modal.info.maxPower }}</td>
+                                                <td>
+                                                    <div class="progress-bar progress-bar-striped progress-bar-success active"
+                                                        v-bind:style="{ width : modal.info.power ? (modal.info.power / modal.info.maxPower * 100) + '%' : 0 }">
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </template>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <table class="table" v-if="modal.type === 'unit'">
                                 <tbody>
                                     <tr>
-                                        <td class="text">hp : {{ modal.info.hp }} / {{ modal.info.maxHp }}</td>
-                                        <td>
-                                            <div class="progress-bar progress-bar-striped progress-bar-danger active"
-                                                v-bind:style="{ width : modal.info.hp ? (modal.info.hp / modal.info.maxHp * 100) + '%' : 0 }">
-                                            </div>
-                                        </td>
+                                        <th>{{ getLang('ko', 'attack') }}</th>
+                                        <td>{{ getModalProp('attack') }}</td>
+                                        <th>{{ getLang('ko', 'defense') }}</th>
+                                        <td>{{ getModalProp('defense') }}</td>
                                     </tr>
-                                    <template v-if="modal.type === 'unit'">
-                                        <tr>
-                                            <td class="text">exp : {{ modal.info.exp }} / {{ modal.info.maxExp }}</td>
-                                            <td>
-                                                <div class="progress-bar progress-bar-striped active"
-                                                    v-bind:style="{ width : modal.info.exp ? (modal.info.exp / modal.info.maxExp * 100) + '%' : 0 }">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text">pwr : {{ modal.info.power }} / {{ modal.info.maxPower }}</td>
-                                            <td>
-                                                <div class="progress-bar progress-bar-striped progress-bar-success active"
-                                                    v-bind:style="{ width : modal.info.power ? (modal.info.power / modal.info.maxPower * 100) + '%' : 0 }">
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    </template>
-                                </tbody>
-                            </table>
-                        </div>
-                        <table class="table" v-if="modal.type === 'unit'">
-                            <tbody>
-                                <tr>
-                                    <th>{{ getLang('ko', 'attack') }}</th>
-                                    <td>{{ getModalProp('attack') }}</td>
-                                    <th>{{ getLang('ko', 'defense') }}</th>
-                                    <td>{{ getModalProp('defense') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'farm') }}</th>
-                                    <td>{{ getModalProp('farm') }}</td>
-                                    <th>{{ getLang('ko', 'destory') }}</th>
-                                    <td>{{ modal.info.destory }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'restorePower') }}</th>
-                                    <td>{{ modal.info.restorePower }}</td>
-                                    <th>{{ getLang('ko', 'restoreHp') }}</th>
-                                    <td>{{ getModalProp('restoreHp') }}</td>
-                                </tr>
-                                <tr>
-                                    <th>{{ getLang('ko', 'move') }}</th>
-                                    <td>{{ getModalProp('move') }}</td>
-                                    <th>{{ getLang('ko', 'distance') }}</th>
-                                    <td>{{ getModalProp('distance') }}</td>
-                                </tr>
-                                <!-- <tr>
+                                    <tr>
+                                        <th>{{ getLang('ko', 'farm') }}</th>
+                                        <td>{{ getModalProp('farm') }}</td>
+                                        <th>{{ getLang('ko', 'destory') }}</th>
+                                        <td>{{ modal.info.destory }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ getLang('ko', 'restorePower') }}</th>
+                                        <td>{{ modal.info.restorePower }}</td>
+                                        <th>{{ getLang('ko', 'restoreHp') }}</th>
+                                        <td>{{ getModalProp('restoreHp') }}</td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ getLang('ko', 'move') }}</th>
+                                        <td>{{ getModalProp('move') }}</td>
+                                        <th>{{ getLang('ko', 'distance') }}</th>
+                                        <td>{{ getModalProp('distance') }}</td>
+                                    </tr>
+                                    <!-- <tr>
                                     <th>{{ getLang('ko', 'accel') }}</th>
                                     <td>:</td>
                                     <td>{{ getLang('ko', modal.info.accel) }}</td>
@@ -236,12 +242,34 @@
                                     <td>:</td>
                                     <td>{{ getLang('ko', modal.info.through) }}</td>
                                 </tr> -->
-                            </tbody>
-                        </table>
+                                </tbody>
+                            </table>
+                        </div>
+                        <span class="close-btn" v-on:click="closeModal()">&times;</span>
                     </div>
-                    <span class="close-btn" v-on:click="closeModal()">&times;</span>
                 </div>
-            </template>
+                <div class="chat swiper-slide" v-if="!status.replay">
+                    <div class="top">messages</div>
+                    <div class="messages" ref="message">
+                        <ul>
+                            <li v-for="m in messages"
+                                v-bind:class="[ m.player, m.player === my.player ? 'right' : 'left' ]">
+                                <div class="wrapper">
+                                    <span class="img" v-if="m.player !== 'gray'">
+                                        <img v-bind:src="'../../img/' + m.player + '/king.png'" />
+                                    </span>
+                                    <span class="txt">{{ m.text }}</span>
+                                    <div class="date" v-if="m.date">{{ m.date }}</div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bottom">
+                        <input type="text" class="form-control" placeholder="Type your message here." v-on:keyup.enter="tell()" ref="input" />
+                        <i class="fa fa-paper-plane" aria-hidden="true" v-on:click="tell()"></i>
+                    </div>
+                </div>
+            </div>
         </div>
         <div class="landscape">
             <div class="wrapper">
@@ -258,6 +286,7 @@
     <script src="../../js/hammer.min.js"></script>
     <script src="../../js/jquery-3.2.1.min.js"></script>
     <script src="../../js/vue.js"></script>
+    <script src="../../js/swiper-bundle.min.js"></script>
     <script src="../../js/app.global.js"></script>
     <script src="../../js/app.library.js"></script>
     <script src="play.js?21"></script>
