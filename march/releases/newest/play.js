@@ -10,7 +10,7 @@ let app = new Vue({
                 message: 2500,
                 animate: 370,
             },
-            minFlowLength:25,
+            minFlowLength: 25,
             fieldCount: 100,
             columnNum: 9,
             rowNum: 16,
@@ -395,6 +395,7 @@ let app = new Vue({
             player: null,
             room: {
                 name: null,
+                hash: null,
                 url: null,
                 host: false,
                 loaded: false
@@ -573,18 +574,30 @@ let app = new Vue({
                 t.$nextTick(function () {
                     t.message.list.push({
                         player: 'gray',
-                        text: 'Chat has started.',
-                        date: null
+                        text: 'A chat room has been opened.',
+                        date: appLib.now('yyyy-MM-dd HH:mm:ss')
                     });
 
                     t.swiper = new Swiper(t.$refs.swiper);
 
                     t.swiper.on('slideChange', function () {
+                        let hash = t.my.room.hash;
                         $(t.$refs.input).blur();
 
-                        if (t.swiper.activeIndex === 1)
+                        if (t.swiper.activeIndex === 1) {
                             t.message.count = 0;
+                            hash += '/messages';
+                        }
+
+                        window.location.hash = hash;
                     });
+
+                    window.onhashchange = function () {
+                        if (window.location.hash.indexOf('/messages') < 0)
+                            t.swiper.slideTo(0);
+                        else
+                            t.swiper.slideTo(1);
+                    }
                 });
             }
         },
@@ -617,8 +630,8 @@ let app = new Vue({
                             if (!t.my.player) {
                                 t.my.player = res.player;
                                 t.my.room.name = res.room;
+                                t.my.room.hash = window.location.hash;
                                 t.my.room.url = window.location.href + '#/' + res.room;
-                                //t.label.player = res.turn;
                             }
                             break;
 
@@ -704,7 +717,7 @@ let app = new Vue({
             if (this.flows.length < this.base.minFlowLength)
                 return;
 
-            user  = localStorage.getItem('user');
+            user = localStorage.getItem('user');
 
             if (user) {
                 user = JSON.parse(user);
@@ -815,6 +828,9 @@ let app = new Vue({
                 this.saveReplay();
 
             location.href = '../../index.html';
+        },
+        goGround: function () {
+            this.swiper.slideTo(0);
         },
         goMessages: function () {
             this.swiper.slideTo(1);

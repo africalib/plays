@@ -120,10 +120,6 @@
                                 <img src="../../img/common/flag.png" class="flag" v-if="a.owner === my.player" />
                             </div>
                         </div>
-                        <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
-                            v-on:click="hideLabel()">
-                            <div>{{ label.message }}</div>
-                        </div>
                     </div>
                     <div class="bottom" v-if="status.started">
                         <div class="status">
@@ -257,14 +253,23 @@
                     </div>
                 </div>
                 <div class="chat swiper-slide" v-if="!status.replay">
-                    <div class="top">messages</div>
+                    <div class="top">
+                        <span v-on:click="goGround()">
+                            <i class="fa fa-angle-left"></i>
+                            <span>&nbsp;</span>
+                            <span>back</span>
+                        </span>
+                        <span class="times" v-on:click="goGround()">&times;</span>
+                    </div>
                     <div class="messages" ref="message">
                         <ul>
                             <li v-for="m in message.list"
-                                v-bind:class="[ m.player, m.player === my.player ? 'right' : m.player !== 'gray' ? 'left' : '' ]">
+                                v-bind:class="[ m.player, m.player === my.player ? 'right' : 'left' ]">
                                 <div class="wrapper">
-                                    <span class="img" v-if="m.player !== 'gray'">
-                                        <img v-bind:src="'../../img/' + m.player + '/king.png'" />
+                                    <span class="img">
+                                        <img v-bind:src="'../../img/' + m.player + '/king.png'"
+                                            v-if="m.player !== 'gray'" />
+                                        <img src="../../img/common/flag.png" v-else />
                                     </span>
                                     <span class="txt">{{ m.text }}</span>
                                     <div class="date" v-if="m.date">{{ m.date }}</div>
@@ -278,6 +283,10 @@
                         <i class="fa fa-paper-plane" aria-hidden="true" v-on:click="tell()"></i>
                     </div>
                 </div>
+            </div>
+            <div id="labelArea" class="label-area" v-bind:data-player="label.player" v-if="label.message"
+                v-on:click="hideLabel()">
+                <div>{{ label.message }}</div>
             </div>
         </div>
         <div class="landscape">

@@ -64,7 +64,7 @@ button {
     font-size: 10px;
     width: 100%;
     height: 25px;
-    padding: 0 8px;
+    padding: 0 4px 0 8px;
     line-height: 25px;
 }
 
@@ -766,6 +766,17 @@ button {
     font-family: 'Orbitron', sans-serif;
 }
 
+.app > .play > .wrapper > .chat > .top > span {
+    cursor: pointer;
+}
+
+.app > .play > .wrapper > .chat > .top > span.times {
+    font-size: 21px;
+    line-height: 1;
+    font-family: initial;
+    float: right;
+}
+
 .app > .play > .wrapper > .chat > .messages {
     background: #f7f7f7;
     height: 100%;
@@ -836,11 +847,9 @@ button {
     background: #000;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .img {
+.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .img,
+.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .img {
     border-color: #aaa;
-}
-
-.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .img {
     background: #fff;
 }
 
@@ -858,23 +867,15 @@ button {
     line-break: anywhere;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .txt {
-    background: #eee;
-}
-
 .app > .play > .wrapper > .chat > .messages ul > li.black > .wrapper .txt {
     background: #000;
     border-color: #000;
     color: #fff;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .txt {
-    background: #fff;
-}
-
+.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .txt,
 .app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .txt {
-    width: 100%;
-    text-align: center;
+    background: #fff;
 }
 
 .app > .play > .wrapper > .chat > .messages ul > li > .wrapper .date {
@@ -914,10 +915,11 @@ button {
 }
 
 .app .label-area {
-    position: absolute;
+    position: fixed;
     left: 0;
     width: 100%;
     background: rgba(0, 0, 0, 0.76);
+    border: 1px solid rgba(0, 0, 0, 0.76);
     font-size: 16px;
     color: #fff;
     text-align: center;
@@ -930,8 +932,8 @@ button {
 }
 
 .app .label-area[data-player=white] {
-    transform: rotate(180deg);
     background: rgba(255, 255, 255, 0.9);
+    border-color: #ddd;
     color: #333;
 }
 
