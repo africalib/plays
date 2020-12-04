@@ -727,6 +727,10 @@ button {
     height: 100%;
 }
 
+.app > .play > .wrapper > .ground > .bottom > .controls.replay .action > button.home {
+    font-size: 15px;
+}
+
 .app > .play > .wrapper > .ground > .bottom > .controls.replay .action > button.speed {
     font-size: 20px;
 }

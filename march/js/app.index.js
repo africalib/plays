@@ -13,6 +13,9 @@ let app = new Vue({
         enter: function (name) {
             location.href = 'releases/newest/play.html' + (name ? '#/' + name : '');
         },
+        refresh: function () {
+            window.location.reload();
+        },
         set: function () {
             let t = this;
             t.room.loaded = false;

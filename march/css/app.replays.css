@@ -13,10 +13,6 @@
     top: 9px;
 }
 
-.app .run > .contents .list-group > .list-group-item > .label {
-    float: right;
-}
-
 .app .run > .contents .dots {
     letter-spacing: -3px;
 }

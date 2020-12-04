@@ -35,3 +35,7 @@
     padding: 0 5px 15px 5px;
     font-weight: bold;
 }
+
+.app .run .rooms .list-group > .list-group-item > .label {
+    float: right;
+}
