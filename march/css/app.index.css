@@ -26,10 +26,6 @@
     height: 2rem;
 }
 
-.app .run > .contents .dots {
-    letter-spacing: -3px;
-}
-
 .app .run .rooms > .title {
     font-size: 13px;
     padding: 0 5px 15px 5px;

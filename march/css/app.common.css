@@ -141,11 +141,11 @@ button {
 }
 
 .run {
-    padding: 0 20px;
+    padding: 20px;
 }
 
 .run > .title {
-    padding: 75px 10px 50px 10px;
+    padding: 50px 10px 50px 10px;
     text-align: center;
 }
 
@@ -174,12 +174,17 @@ button {
     cursor: pointer;
 }
 
-.run > .contents .dots {
+.run > .contents .dots,
+.run > .contents .line {
     line-height: 0;
     margin-bottom: 55px;
     font-size: 30px;
     margin-top: -5px;
     text-align: center;
+}
+
+.run > .contents .line {
+    letter-spacing: -4px;
 }
 
 .run > .contents .no-data {

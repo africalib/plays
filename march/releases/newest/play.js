@@ -717,19 +717,7 @@ let app = new Vue({
             if (this.flows.length < this.base.minFlowLength)
                 return;
 
-            user = localStorage.getItem('user');
-
-            if (user) {
-                user = JSON.parse(user);
-            }
-            else {
-                user = {
-                    wins: 0,
-                    losses: 0,
-                    firstGameDate: appLib.now('yy-MM-dd'),
-                    lastGameDate: appLib.now('yy-MM-dd')
-                }
-            }
+            user = appLib.getUser();
 
             if (win)
                 user.wins += 1;

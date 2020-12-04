@@ -220,5 +220,35 @@
 
     isMobileDevice: function () {
         return navigator.userAgent.match(/(iPad)|(iPhone)|(iPod)|(android)|(webOS)/i)
+    },
+    getUser: function () {
+        let user = localStorage.getItem('user');
+
+        if (user) {
+            user = JSON.parse(user);
+        }
+        else {
+            let alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            let name = null;
+            let names = ['Peter', 'Andrew', 'James', 'John', 'Philip', 'Bartholomew', 'Matthew', 'Thomas', 'Simon', 'Paul', 'Barnabas', 'David', 'Solomon', 'Noah', 'Enoch', 'Jonathan'];
+            let nameArr = [];
+            
+            nameArr.push(alphabets[Math.floor(Math.random() * alphabets.length)]);
+            nameArr.push(alphabets[Math.floor(Math.random() * alphabets.length)]);
+            nameArr.push(names[Math.floor(Math.random() * names.length)]);
+            name = nameArr.join('. ');
+
+            user = {
+                name: name,
+                wins: 0,
+                losses: 0,
+                firstGameDate: appLib.now('yy-MM-dd'),
+                lastGameDate: appLib.now('yy-MM-dd')
+            }
+
+            localStorage.setItem('user', JSON.stringify(user));
+        }
+
+        return user;
     }
 }

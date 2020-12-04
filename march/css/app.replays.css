@@ -13,10 +13,6 @@
     top: 9px;
 }
 
-.app .run > .contents .dots {
-    letter-spacing: -3px;
-}
-
 .app .run > .contents > button {
     border-radius: 0;
     margin-top: 30px;

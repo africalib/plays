@@ -19,32 +19,38 @@
                 <div>My Page</div>
             </div>
             <div class="contents">
-                <div class="dots">-----</div>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="half">Wins</th>
-                            <th class="half">Losses</th>
-                        </tr>
-                    </thead>
+                <div class="line">-----</div>
+                <table class="table table-bordered">
                     <tbody>
                         <tr>
-                            <td class="large">{{ user.data.wins }}</td>
-                            <td class="large">{{ user.data.losses }}</td>
+                            <th>Name</th>
+                        </tr>
+                        <tr>
+                            <td>{{ user.name }}</td>
                         </tr>
                     </tbody>
                 </table>
-                <table class="table">
-                    <thead>
+                <table class="table table-bordered">
+                    <tbody>
+                        <tr>
+                            <th>Wins</th>
+                            <th>Losses</th>
+                        </tr>
+                        <tr>
+                            <td>{{ user.wins }}</td>
+                            <td>{{ user.losses }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <table class="table table-bordered">
+                    <tbody>
                         <tr>
                             <th>First</th>
                             <th>Last</th>
                         </tr>
-                    </thead>
-                    <tbody>
                         <tr>
-                            <td>{{ user.data.lastGameDate }}</td>
-                            <td>{{ user.data.firstGameDate }}</td>
+                            <td>{{ user.lastGameDate }}</td>
+                            <td>{{ user.firstGameDate }}</td>
                         </tr>
                     </tbody>
                 </table>

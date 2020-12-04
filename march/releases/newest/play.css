@@ -774,13 +774,6 @@ button {
     cursor: pointer;
 }
 
-.app > .play > .wrapper > .chat > .top > span.times {
-    font-size: 21px;
-    line-height: 1;
-    font-family: initial;
-    float: right;
-}
-
 .app > .play > .wrapper > .chat > .messages {
     background: #f7f7f7;
     height: 100%;
