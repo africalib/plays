@@ -20,11 +20,11 @@
             <a href="./mypage.html">
                 <img src="img/common/index.user.svg" />
             </a>
-            <a class="pointer" v-on:click="open()">
+            <a href="./replays.html">
                 <img src="img/common/index.replay.svg" />
             </a>
-            <a href="./help.html">
-                <img src="img/common/index.help.svg" />
+            <a href="./guide.html">
+                <img src="img/common/index.guide.svg" />
             </a>
         </div>
         <div class="run">
@@ -55,41 +55,6 @@
                     <div class="anchors">
                         <a v-on:click="enter()">생성하기</a>
                         <a v-on:click="refresh()">새로고침</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="modal fade" role="dialog" ref="modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">Replays</h4>
-                    </div>
-                    <div class="modal-body">
-                        <ul class="list-group mb-0" v-if="replay.list.length">
-                            <li class="list-group-item" v-for="(r, idx) in replay.list" v-on:click="view(r)">
-                                <p>
-                                    <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }}
-                                        player</span>
-                                    <span class="label label-danger" v-if="r.flows">{{ r.flows.length }} flows</span>
-                                    <span class="label label-default" v-if="r.name !== 'preview'">{{ r.date }}</span>
-                                </p>
-                                <span>{{ r.name }}</span>
-                                <button type="button" class="close" v-on:click.stop="remove(idx)"
-                                    v-if="r.name !== 'preview'">×</button>
-                            </li>
-                        </ul>
-                        <div class="no-data" v-else-if="replay.loaded">
-                            <br />
-                            <span>저장된 리플레이가 없습니다.</span>
-                            <br /><br />
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default pull-left" v-on:click="clear()"
-                            v-if="replay.list.length">초기화</button>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
                     </div>
                 </div>
             </div>

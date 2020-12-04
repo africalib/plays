@@ -182,6 +182,10 @@ button {
     text-align: center;
 }
 
+.run > .contents .no-data {
+    text-align: center;
+}
+
 [v-cloak] {
     display: none;
 }

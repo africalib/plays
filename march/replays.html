@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>March of the King</title>
+    <meta property="og:image" content="img/common/home.cavalry.preview.png">
+    <link href="css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/font-awesome.min.css" rel="stylesheet" />
+    <link href="css/app.common.css" rel="stylesheet" />
+    <link href="css/app.replays.css" rel="stylesheet" />
+</head>
+<body>
+    <div id="app" class="app" v-cloak>
+        <div class="run">
+            <div class="title">
+                <img src="img/common/home.cavalry.png" />
+                <br />
+                <div>Replays</div>
+            </div>
+            <div class="contents">
+                <div class="dots">-----</div>
+                <div class="replays">
+                    <ul class="list-group mb-0" v-if="replay.list.length">
+                        <li class="list-group-item" v-for="(r, idx) in replay.list" v-on:click="view(r)">
+                            <p>
+                                <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }}
+                                    player</span>
+                                <span class="label label-danger" v-if="r.flows">{{ r.flows.length }} flows</span>
+                                <span class="label label-default" v-if="r.name !== 'preview'">{{ r.date }}</span>
+                            </p>
+                            <span>{{ r.name }}</span>
+                            <button type="button" class="close" v-on:click.stop="remove(idx)"
+                                v-if="r.name !== 'preview'">×</button>
+                        </li>
+                    </ul>
+                    <div class="no-data" v-else-if="replay.loaded">
+                        <br />
+                        <span>저장된 리플레이가 없습니다.</span>
+                        <br /><br />
+                    </div>
+                </div>
+                <button class="btn-block btn" type="button" v-on:click="reset()">초기화</button>
+            </div>
+        </div>
+    </div>
+    <script src="js/jquery-3.2.1.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/vue.js"></script>
+    <script src="js/app.global.js"></script>
+    <script src="js/app.library.js"></script>
+    <script src="js/app.replays.js"></script>
+</body>
+</html>

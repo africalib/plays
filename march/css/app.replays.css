@@ -1,0 +1,34 @@
+﻿.app .run > .contents {
+    line-height: 1.8;
+    padding-bottom: 30px;
+}
+
+.app .run > .contents .list-group > .list-group-item {
+    padding: 10px;
+}
+
+.app .run > .contents .list-group > .list-group-item .close {
+    position: absolute;
+    right: 9px;
+    top: 9px;
+}
+
+.app .run > .contents .list-group > .list-group-item > .label {
+    float: right;
+}
+
+.app .run > .contents .dots {
+    letter-spacing: -3px;
+}
+
+.app .run > .contents > button {
+    border-radius: 0;
+    margin-top: 30px;
+    padding: 0;
+    height: 42px;
+    line-height: 42px;
+    background-color: rgba(0, 0, 0, 0.9);
+    border: 0;
+    color: #fff;
+    font-size: 13px;
+}

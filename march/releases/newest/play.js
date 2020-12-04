@@ -581,15 +581,15 @@ let app = new Vue({
                     t.swiper = new Swiper(t.$refs.swiper);
 
                     t.swiper.on('slideChange', function () {
-                        let hash = t.my.room.hash;
                         $(t.$refs.input).blur();
 
                         if (t.swiper.activeIndex === 1) {
                             t.message.count = 0;
-                            hash += '/messages';
+                            window.location.hash = t.my.room.hash + '/messages';
                         }
-
-                        window.location.hash = hash;
+                        else if (window.location.hash.indexOf('/messages') >= 0) {
+                            window.history.back();
+                        }
                     });
 
                     window.onhashchange = function () {
@@ -829,8 +829,8 @@ let app = new Vue({
 
             location.href = '../../index.html';
         },
-        goGround: function () {
-            this.swiper.slideTo(0);
+        goBack: function () {
+            window.history.back();
         },
         goMessages: function () {
             this.swiper.slideTo(1);
