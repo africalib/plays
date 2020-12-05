@@ -25,47 +25,81 @@
             </div>
             <div class="contents">
                 <div class="line">-----</div>
-                <label class="label label-black">유튜브</label>
-                <p>
-                    <a href="https://www.youtube.com/playlist?list=PLfdRUV_yaFWD7mt418U0Z3PsvJfVdbwfq"
-                        target="_blank">https://www.youtube.com/playlist?list=PLfdRUV_yaFWD7mt418U0Z3PsvJfVdbwfq</a>
-                </p>
-                <br />
-                <label class="label label-black">게임 소개</label>
-                <p>마치 오브 더 킹은 왕의 진군이라는 뜻입니다. 게임의 배경은 왕정 시대이며, 왕을 중심으로 하는 국가 간의 전투를 그린 게임입니다.</p>
-                <p>턴제 게임으로 대기 방을 생성하여 온라인으로 상대방과 실시간 대결이 가능합니다.</p>
-                <br />
-                <label class="label label-black">승리 조건</label>
-                <p>유닛을 활용하여 상대편의 왕을 잡으면 승리하게 됩니다.</p>
-                <br />
-                <label class="label label-black">이동 방법</label>
-                <p>파워가 0.5 이상이면 이동이 가능하며, 유닛을 터치한 후 이동하고자 하는 필드를 다시 터치하면 이동합니다. 유닛에 따라 이동 할 수 있는 거리가 제한되어 있습니다. 한 칸 이동 시
-                    파워가 0.5가 소모되며, 두 칸 이상 시 1이 소모됩니다.</p>
-                <br />
-                <label class="label label-black">공격 방법</label>
-                <p>파워가 1 이상이면 공격이 가능하며, 유닛을 터치한 후 유효 거리 이내의 상대편의 유닛을 터치하면 됩니다.</p>
-                <p>근거리 유닛은 적군의 근처 1칸 이내에서 적군을 공격할 수 있습니다. 원거리 유닛은 2칸 이상에서 적군을 공격할 수 있습니다.</p>
-                <br />
-                <label class="label label-black">자동 반격</label>
-                <p>공격/이동 시 상대편이 반격할 수 있는 방향/거리/파워가 되면, 상대편이 나의 유닛을 반격하며, 상대편의 파워가 0.5 감소됩니다.</p>
-                <br />
-                <label class="label label-black">효과적인 공격 방법</label>
-                <p>상대편의 방향 정면을 공격하는 것보다 측면이나 후면을 공격하는 것이 효과적입니다. 정면을 공격할 시 상대방에 따라 반격을 맞을 수도 있기 때문입니다. 또 측면을 공격할 때 1.5배,
-                    후면을 공격할 때 3배의 데미지를 줄 수 있습니다.</p>
-                <br />
-                <label class="label label-black">왕의 버프</label>
-                <p>왕의 근처(8칸) 안에 있으면 버프 효과가 있습니다. 버프는 공격력, 방어력, 경험치 등이 일시적으로 상승하는 효과를 말합니다.</p>
-                <br />
-                <label class="label label-black">레벨 업</label>
-                <p>각 유닛은 상대편의 유닛을 잡을 때마다 경험치가 상승하게 되며, 경험치가 기준 경험치를 넘어서는 경우에 레벨 업을 하게 됩니다. 레벨이 올라갈 수록 공격력, 방어력, 이동 거리 등이
-                    상승할 수 있습니다.</p>
-                <p>상대편의 고급 유닛(혹은 높은 레벨)의 유닛을 잡는 것이 더 많은 경험치를 쌓게 해줍니다.</p>
-                <br />
-                <label class="label label-black">개발/문의</label>
-                <p>
-                    <span>아프리카도서관</span>
-                    <a href="mailto:africalibrary21@gmail.com">africalibrary21@gmail.com</span>
-                </p>
+                <ul class="nav nav-tabs">
+                    <li class="active">
+                        <a data-toggle="tab" href="#menu1">게임<br />소개</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#menu2">유닛<br />소개</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#menu2">조작<br />방법</a>
+                    </li>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#menu2">전략<br />전술</a>
+                    </li>
+                    <li>
+                        <a data-toggle="tab" href="#menu2">진형<br />배치</a>
+                    </li>
+                </ul>
+                <div class="tab-content">
+                    <div id="menu1" class="tab-pane fade in active">
+                        <label class="label label-black">유튜브</label>
+                        <p>
+                            <a href="https://www.youtube.com/playlist?list=PLfdRUV_yaFWD7mt418U0Z3PsvJfVdbwfq"
+                                target="_blank">https://www.youtube.com/playlist?list=PLfdRUV_yaFWD7mt418U0Z3PsvJfVdbwfq</a>
+                        </p>
+                        <br />
+                        <label class="label label-black">게임 소개</label>
+                        <p>마치 오브 더 킹은 왕의 진군이라는 뜻입니다. 게임의 배경은 왕정 시대이며, 왕을 중심으로 하는 국가 간의 전투를 그린 게임입니다.</p>
+                        <p>턴제 게임으로 대기 방을 생성하여 온라인으로 상대방과 실시간 대결이 가능합니다.</p>
+                        <br />
+                        <label class="label label-black">승리 조건</label>
+                        <p>유닛을 활용하여 상대편의 왕을 잡으면 승리하게 됩니다.</p>
+                        <br />
+                        <label class="label label-black">이동 방법</label>
+                        <p>
+                            파워가 0.5 이상이면 이동이 가능하며, 유닛을 터치한 후 이동하고자 하는 필드를 다시 터치하면 이동합니다. 유닛에 따라 이동 할 수 있는 거리가 제한되어 있습니다.
+                            한 칸 이동 시
+                            파워가 0.5가 소모되며, 두 칸 이상 시 1이 소모됩니다.
+                        </p>
+                        <br />
+                        <label class="label label-black">공격 방법</label>
+                        <p>파워가 1 이상이면 공격이 가능하며, 유닛을 터치한 후 유효 거리 이내의 상대편의 유닛을 터치하면 됩니다.</p>
+                        <p>근거리 유닛은 적군의 근처 1칸 이내에서 적군을 공격할 수 있습니다. 원거리 유닛은 2칸 이상에서 적군을 공격할 수 있습니다.</p>
+                        <br />
+                        <label class="label label-black">자동 반격</label>
+                        <p>공격/이동 시 상대편이 반격할 수 있는 방향/거리/파워가 되면, 상대편이 나의 유닛을 반격하며, 상대편의 파워가 0.5 감소됩니다.</p>
+                        <br />
+                        <label class="label label-black">효과적인 공격 방법</label>
+                        <p>
+                            상대편의 방향 정면을 공격하는 것보다 측면이나 후면을 공격하는 것이 효과적입니다. 정면을 공격할 시 상대방에 따라 반격을 맞을 수도 있기 때문입니다. 또 측면을
+                            공격할
+                            때 1.5배,
+                            후면을 공격할 때 3배의 데미지를 줄 수 있습니다.
+                        </p>
+                        <br />
+                        <label class="label label-black">왕의 버프</label>
+                        <p>왕의 근처(8칸) 안에 있으면 버프 효과가 있습니다. 버프는 공격력, 방어력, 경험치 등이 일시적으로 상승하는 효과를 말합니다.</p>
+                        <br />
+                        <label class="label label-black">레벨 업</label>
+                        <p>
+                            각 유닛은 상대편의 유닛을 잡을 때마다 경험치가 상승하게 되며, 경험치가 기준 경험치를 넘어서는 경우에 레벨 업을 하게 됩니다. 레벨이 올라갈 수록 공격력, 방어력,
+                            이동 거리 등이
+                            상승할 수 있습니다.
+                        </p>
+                        <p>상대편의 고급 유닛(혹은 높은 레벨)의 유닛을 잡는 것이 더 많은 경험치를 쌓게 해줍니다.</p>
+                        <br />
+                        <label class="label label-black">개발/문의</label>
+                        <p>
+                            <span>아프리카도서관</span>
+                            <a href="mailto:africalibrary21@gmail.com">africalibrary21@gmail.com</a>
+                        </p>
+                    </div>
+                    <div id="menu2" class="tab-pane fade">준비 중</div>
+                </div>
+
             </div>
         </div>
     </div>
