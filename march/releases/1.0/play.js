@@ -976,6 +976,25 @@ let app = new Vue({
 
             return '';
         },
+        share: function (c) {
+            let url = encodeURIComponent(this.my.room.url);
+
+            switch (c) {
+                case 'kakao':
+                    Kakao.Link.sendScrap({
+                        requestUrl: url
+                    });
+                    break;
+
+                case 'naver':
+                    window.open('https://share.naver.com/web/shareView.nhn?url=' + encodeURI(url) + '&title=' + document.title);
+                    break;
+
+                case 'band':
+                    window.open('http://www.band.us/plugin/share?body=' + url + '&route=' + url, 'share_band', 'width=410, height=540, resizable=no');
+                    break;
+            }
+        },
         copyRoomUrl: function () {
             if (this.$refs.roomUrl) {
                 this.$refs.roomUrl.select();
@@ -2475,5 +2494,7 @@ let app = new Vue({
                     break;
             }
         });
+
+        Kakao.init('fb4a9c0a364de118a9f13fd200c26e47');
     }
 });

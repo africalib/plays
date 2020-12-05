@@ -42,6 +42,16 @@
                             </div>
                         </div>
                         <div class="anchors">
+                            <button class="kakao" type="button" v-on:click="share('kakao')">
+                                <img src="../../img/common/play.kakaotalk.png" />
+                            </button>
+                            <button class="naver" type="button" v-on:click="share('naver')">
+                                <img src="../../img/common/play.naver.png" />
+                            </button>
+                            <button class="band" type="button" v-on:click="share('band')">
+                                <img src="../../img/common/play.band.png" />
+                            </button>
+                            <hr />
                             <a class="pointer" v-on:click="refresh()">다시 만들기</a>
                             <a class="pointer" v-on:click="goHome()">홈으로</a>
                         </div>
@@ -315,6 +325,7 @@
             </div>
         </div>
     </div>
+    <script src="//developer.kakao.com/sdk/js/kakao.min.js"></script>
     <script src="../../js/mo.min.js"></script>
     <script src="../../js/hammer.min.js"></script>
     <script src="../../js/jquery-3.2.1.min.js"></script>
