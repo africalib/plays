@@ -400,6 +400,7 @@ let app = new Vue({
             prev: [],
             live: []
         },
+        user: {},
         my: {
             player: null,
             room: {
@@ -580,11 +581,14 @@ let app = new Vue({
             }, 2500);
 
             if (!t.status.replay) {
+                t.user = appLib.getUser();
+
                 t.$nextTick(function () {
                     t.message.list.push({
+                        user: 'Gray',
                         player: 'gray',
                         text: 'A chat room has been opened.',
-                        date: appLib.now('yyyy-MM-dd HH:mm:ss')
+                        date: appLib.now('HH:mm:ss')
                     });
 
                     t.swiper = new Swiper(t.$refs.swiper);
@@ -681,12 +685,14 @@ let app = new Vue({
 
                         default:
                             if (res.value.name === 'message') {
-                                let text = res.value.val1;
+                                let user = res.value.val1;
+                                let text = res.value.val2;
 
                                 t.message.list.push({
+                                    user: user,
                                     player: res.value.player,
                                     text: text,
-                                    date: appLib.now('yyyy-MM-dd HH:mm:ss')
+                                    date: appLib.now('HH:mm:ss')
                                 });
 
                                 t.message.latest = text;
@@ -721,19 +727,15 @@ let app = new Vue({
             window.location.reload();
         },
         saveUser: function (win) {
-            let user;
-
             if (this.flows.length < this.base.minFlowLength)
                 return;
 
-            user = appLib.getUser();
-
             if (win)
-                user.wins += 1;
+                this.user.wins += 1;
             else
-                user.losses += 1;
+                this.user.losses += 1;
 
-            localStorage.setItem('user', JSON.stringify(user));
+            localStorage.setItem('user', JSON.stringify(this.user));
         },
         saveReplay: function () {
             let replays;
@@ -2367,10 +2369,11 @@ let app = new Vue({
         tell: function () {
             let t = this;
             let $input = $(t.$refs.input);
+            let user = t.user.name;
             let message = $input.val();
 
             if (message && message.trim()) {
-                t.request('message', message);
+                t.request('message', user, message);
                 $input.val('');
             }
         },

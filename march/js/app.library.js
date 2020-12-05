@@ -114,13 +114,13 @@
     },
 
     now: function (format) {
-        var today = new Date();
-        var yyyy = today.getFullYear();
-        var MM = today.getMonth() + 1;
-        var dd = today.getDate();
-        var HH = today.getHours();
-        var mm = today.getMinutes();
-        var ss = today.getSeconds();
+        var now = new Date();
+        var yyyy = now.getFullYear();
+        var MM = now.getMonth() + 1;
+        var dd = now.getDate();
+        var HH = now.getHours();
+        var mm = now.getMinutes();
+        var ss = now.getSeconds();
         var yy = yyyy.toString().substring(2);
 
         if (MM < 10)
@@ -139,24 +139,28 @@
             ss = '0' + ss
 
         switch (format) {
+            case 'HH:mm:ss':
+                now =  HH + ':' + mm + ':' + ss;
+                break;
+                
             case 'yy-MM-dd':
-                today = yy + '-' + MM + '-' + dd;
+                now = yy + '-' + MM + '-' + dd;
                 break;
 
             case 'yyyy-MM-dd':
-                today = yyyy + '-' + MM + '-' + dd;
+                now = yyyy + '-' + MM + '-' + dd;
                 break;
 
             case 'yyyy-MM-dd HH:mm:ss':
-                today = yyyy + '-' + MM + '-' + dd + ' ' + HH + ':' + mm + ':' + ss;
+                now = yyyy + '-' + MM + '-' + dd + ' ' + HH + ':' + mm + ':' + ss;
                 break;
 
             default:
-                today = yyyy + '' + MM + '' + dd + '' + HH + '' + mm + '' + ss;
+                now = yyyy + '' + MM + '' + dd + '' + HH + '' + mm + '' + ss;
                 break;
         }
 
-        return today;
+        return now;
     },
 
     getFirstUpperCase: function (val) {

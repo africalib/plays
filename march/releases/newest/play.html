@@ -48,6 +48,22 @@
                             <a class="pointer" v-on:click="goHome()">홈으로</a>
                         </div>
                     </template>
+                    <div class="hide">
+                        <img src="../../img/common/play.bg.sand.jpg" />
+                        <img src="../../img/common/play.clock.svg" />
+                        <img src="../../img/common/play.flag.png" />
+                        <img src="../../img/common/play.gradient00.png" />
+                        <img src="../../img/common/play.gradient4d33.png" />
+                        <img src="../../img/common/play.gradient4d33-180.png" />
+                        <img src="../../img/common/play.gradient66.png" />
+                        <img src="../../img/common/play.gradient664d.png" />
+                        <img src="../../img/common/play.gradient664d-180.png" />
+                        <img src="../../img/common/play.gradient3300.png" />
+                        <img src="../../img/common/play.gradient3300-180.png" />
+                        <img src="../../img/common/play.weapon.arrow.png" />
+                        <img src="../../img/common/play.weapon.ball.png" />
+                        <img src="../../img/common/play.weapon.spear.png" />
+                    </div>
                 </template>
                 <template v-else-if="my.room.loaded">
                     <div class="text">오류가 있습니다. 다시 시도해주세요.</div>
@@ -115,9 +131,9 @@
                                 <div class="weapon" v-bind:data-direction="a.weapon.direction"
                                     v-bind:data-status="a.weapon.status" v-bind:data-name="a.weapon.name"
                                     v-if="a.weapon && a.weapon.name" v-bind:style="a.weapon.style">
-                                    <img v-bind:src="'../../img/common/weapon.' + a.weapon.name + '.png'" />
+                                    <img v-bind:src="'../../img/common/play.weapon.' + a.weapon.name + '.png'" />
                                 </div>
-                                <img src="../../img/common/flag.png" class="flag" v-if="a.owner === my.player" />
+                                <img src="../../img/common/play.flag.png" class="flag" v-if="a.owner === my.player" />
                             </div>
                         </div>
                     </div>
@@ -260,10 +276,13 @@
                                     <span class="img">
                                         <img v-bind:src="'../../img/' + m.player + '/king.png'"
                                             v-if="m.player !== 'gray'" />
-                                        <img src="../../img/common/flag.png" v-else />
+                                        <img src="../../img/common/play.flag.png" v-else />
                                     </span>
                                     <span class="txt">{{ m.text }}</span>
-                                    <div class="date" v-if="m.date">{{ m.date }}</div>
+                                </div>
+                                <div class="bottom">
+                                    <span class="user">{{ m.user }}</span>
+                                    <span class="date" v-if="m.date">{{ m.date }}</span>
                                 </div>
                             </li>
                         </ul>

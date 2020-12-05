@@ -104,6 +104,7 @@ button {
 .app > .play > .wrapper > .ground > .top .right {
     cursor: pointer;
     float: right;
+    white-space: nowrap;
 }
 
 .app > .play > .wrapper > .ground > .top .right > span {
@@ -318,7 +319,7 @@ button {
 }
 
 .app[data-player] > .play > .wrapper > .ground > .area .area-wrapper .each-area:after {
-    background-image: url(../../img/common/gradient66.png);
+    background-image: url(../../img/common/play.gradient66.png);
     background-size: 100% 100%;
     transition: background-image 0.5s;
     -webkit-transition: background-image 0.5s;
@@ -337,32 +338,32 @@ button {
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.3"]:after {
-    background-image: url(../../img/common/gradient664d.png);
+    background-image: url(../../img/common/play.gradient664d.png);
 }
 
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.3"]:after {
-    background-image: url(../../img/common/gradient664d-180.png);
+    background-image: url(../../img/common/play.gradient664d-180.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.2"]:after {
-    background-image: url(../../img/common/gradient4d33.png);
+    background-image: url(../../img/common/play.gradient4d33.png);
 }
 
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.2"]:after {
-    background-image: url(../../img/common/gradient4d33-180.png);
+    background-image: url(../../img/common/play.gradient4d33-180.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.1"]:after {
-    background-image: url(../../img/common/gradient3300.png);
+    background-image: url(../../img/common/play.gradient3300.png);
 }
 
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.1"]:after {
-    background-image: url(../../img/common/gradient3300-180.png);
+    background-image: url(../../img/common/play.gradient3300-180.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.0"]:after,
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.0"]:after {
-    background-image: url(../../img/common/gradient00.png);
+    background-image: url(../../img/common/play.gradient00.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]),
@@ -371,7 +372,7 @@ button {
 }
 
 .app[data-started=Y] > .play > .wrapper > .ground {
-    background: url(../../img/common/bg.sand.jpg) 100% 100%;
+    background: url(../../img/common/play.bg.sand.jpg) 100% 100%;
     padding: 25px 0 75px 0;
 }
 
@@ -854,6 +855,10 @@ button {
     height: 20px;
 }
 
+.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .img > img {
+    height: 10px;
+}
+
 .app > .play > .wrapper > .chat > .messages ul > li > .wrapper .txt {
     display: inline-block;
     border: 1px solid #aaa;
@@ -875,8 +880,22 @@ button {
     background: #fff;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li > .wrapper .date {
+.app > .play > .wrapper > .chat > .messages ul > li .bottom {
     margin-top: 5px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li .bottom .user {
+    font-weight: bold;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.left .bottom .user {
+    float: left;
+    margin-right: 5px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.right .bottom .user {
+    float: right;
+    margin-left: 5px;
 }
 
 .app > .play > .wrapper > .chat > .bottom {
