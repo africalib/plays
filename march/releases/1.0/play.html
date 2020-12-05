@@ -17,6 +17,11 @@
         v-bind:data-replay="status.replay ? 'Y' : 'N'" v-bind:data-finished="status.finished ? 'Y' : 'N'"
         v-bind:data-player="my.player" v-bind:data-turn="status.turn" v-cloak>
         <div class="run" v-if="my.room && !status.started">
+            <div class="top">
+                <a class="home" href="../../index.html">
+                    <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                </a>
+            </div>
             <div class="title">
                 <img src="../../img/common/home.cavalry.png" />
                 <br />

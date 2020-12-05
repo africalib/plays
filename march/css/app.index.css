@@ -1,20 +1,13 @@
-﻿.app > .top {
-    position: absolute;
+﻿.app > .run > .top {
     text-align: right;
-    padding: 1.5rem;
-    width: 100%;
-    top: 0;
-    left: 0;
 }
 
-.app > .top > a {
+.app > .run > .top > a {
     margin-left: 1rem;
-    display: inline-block;
-    cursor: pointer;
     vertical-align: middle;
 }
 
-.app > .top > a.youtube {
+.app > .run > .top > a.youtube {
     margin-left: 0;
     color: red;
     font-size: 21px;
@@ -22,7 +15,7 @@
     float: left;
 }
 
-.app > .top > a > img {
+.app > .run > .top > a > img {
     height: 2rem;
 }
 

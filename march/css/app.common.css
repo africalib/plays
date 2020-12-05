@@ -144,6 +144,20 @@ button {
     padding: 20px;
 }
 
+.run > .top {
+    position: absolute;
+    padding: 1.5rem;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+.run > .top a {
+    color: #3a3a3a;
+    display: inline-block;
+    cursor: pointer;
+}
+
 .run > .title {
     padding: 50px 10px 50px 10px;
     text-align: center;

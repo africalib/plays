@@ -140,9 +140,9 @@
 
         switch (format) {
             case 'HH:mm:ss':
-                now =  HH + ':' + mm + ':' + ss;
+                now = HH + ':' + mm + ':' + ss;
                 break;
-                
+
             case 'yy-MM-dd':
                 now = yy + '-' + MM + '-' + dd;
                 break;
@@ -234,9 +234,9 @@
         else {
             let alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             let name = null;
-            let names = ['Peter', 'Andrew', 'James', 'John', 'Philip', 'Bartholomew', 'Matthew', 'Thomas', 'Simon', 'Paul', 'Barnabas', 'David', 'Solomon', 'Noah', 'Enoch', 'Jonathan'];
+            let names = ['Peter', 'Andrew', 'James', 'John', 'Philip', 'Bartholomew', 'Matthew', 'Thomas', 'Simon', 'Paul', 'Timothy', 'Barnabas', 'David', 'Joshua', 'Caleb', 'Solomon', 'Noah', 'Enoch', 'Abraham', 'Isaac', 'Jacob', 'Joseph', 'Moses', 'Aaron', 'Jonathan', 'Mark', 'Luke', 'Isaiah', 'Samuel', 'Nehemiah', 'Micah', 'Jeremiah', 'Elijah', 'Elisha', 'Asa', 'Jehoshaphat', 'Hezekiah', 'Phinehas', 'Lazarus', 'Joel', 'Amos', 'Samson'];
             let nameArr = [];
-            
+
             nameArr.push(alphabets[Math.floor(Math.random() * alphabets.length)]);
             nameArr.push(alphabets[Math.floor(Math.random() * alphabets.length)]);
             nameArr.push(names[Math.floor(Math.random() * names.length)]);
