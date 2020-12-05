@@ -81,15 +81,15 @@ button {
 }
 
 .app > .play > .wrapper > .ground > .top .time {
-    padding: 0 3px;
     margin-left: 3px;
     vertical-align: middle;
     width: 76px;
     display: inline-block;
     text-align: center;
-    padding-left: 20px;
+    padding-left: 15px;
     line-height: 15px;
     position: relative;
+    white-space: nowrap;
 }
 
 .app > .play > .wrapper > .ground > .top .time img {
