@@ -188,6 +188,11 @@ button {
     cursor: pointer;
 }
 
+.run > .contents .anchors hr {
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+
 .run > .contents .dots,
 .run > .contents .line {
     line-height: 0;
