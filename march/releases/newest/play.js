@@ -64,6 +64,7 @@ let app = new Vue({
                     defense: 0,
                     distance: 1,
                     maxDistance: 1,
+                    bomb: false,
                     through: false,
                     hp: 1,
                     maxHp: 1,
@@ -96,6 +97,7 @@ let app = new Vue({
                     defense: 0,
                     distance: 1,
                     maxDistance: 1,
+                    bomb: false,
                     through: false,
                     hp: 5,
                     maxHp: 5,
@@ -128,6 +130,7 @@ let app = new Vue({
                     defense: 0,
                     distance: 5,
                     maxDistance: 10,
+                    bomb: false,
                     through: false,
                     hp: 5,
                     maxHp: 5,
@@ -160,6 +163,7 @@ let app = new Vue({
                     defense: 2,
                     distance: 2,
                     maxDistance: 4,
+                    bomb: false,
                     through: true,
                     hp: 15,
                     maxHp: 15,
@@ -192,6 +196,7 @@ let app = new Vue({
                     defense: 0,
                     distance: 1,
                     maxDistance: 1,
+                    bomb: false,
                     through: false,
                     hp: 4,
                     maxHp: 4,
@@ -224,6 +229,7 @@ let app = new Vue({
                     defense: 0,
                     distance: 1,
                     maxDistance: 1,
+                    bomb: false,
                     through: false,
                     hp: 10,
                     maxHp: 10,
@@ -256,6 +262,7 @@ let app = new Vue({
                     defense: 0,
                     distance: 1,
                     maxDistance: 1,
+                    bomb: false,
                     through: false,
                     hp: 20,
                     maxHp: 20,
@@ -288,6 +295,7 @@ let app = new Vue({
                     defense: 0,
                     distance: 10,
                     maxDistance: 20,
+                    bomb: true,
                     through: false,
                     hp: 5,
                     maxHp: 5,
@@ -320,6 +328,7 @@ let app = new Vue({
                     defense: 1,
                     distance: 1,
                     maxDistance: 1,
+                    bomb: false,
                     through: false,
                     hp: 100,
                     maxHp: 100,
@@ -1796,7 +1805,7 @@ let app = new Vue({
                 }
             }
         },
-        attack: function (targetIdx, stay, runDistance) {
+        attack: function (targetIdx, stay, distance) {
             let t = this;
             let targetArea = t.areas.live[targetIdx];
             let activeArea = t.areas.live[t.active.idx];
@@ -1805,17 +1814,22 @@ let app = new Vue({
             if (t.isUnitInArea(t.active.idx)) {
                 if (!t.hasGrayShelter(targetIdx) && (t.isShelterInArea(targetIdx) && targetArea.shelter.player !== activeArea.unit.player) || (t.isUnitInArea(targetIdx) && targetArea.unit.player !== activeArea.unit.player)) {
                     let demage = activeArea.unit.attack + activeArea.unit.buffed['attack'];
-                    let accelDemage = 0;
                     let activeDirection = t.getDirection(targetIdx, t.active.idx);
                     let renewedTargetUnit = appLib.renew(targetArea.unit);
 
                     activeArea.unit.direction = activeDirection;
 
-                    if (activeArea.unit.accel && Number(runDistance))
-                        accelDemage = Number(runDistance);
+                    if (activeArea.unit.accel) {
+                        distance = Number(distance);
+
+                        if (distance)
+                            demage += distance;
+                    }
 
                     if (t.isShelterInArea(targetIdx)) {
-                        demage += accelDemage;
+                        if (activeArea.unit.bomb)
+                            demage *= 3;
+
                         targetArea.shelter.subHp += demage;
                         alive = targetArea.shelter.hp - targetArea.shelter.subHp > 0 || t.isUnitInArea(targetIdx);
 
@@ -1844,7 +1858,7 @@ let app = new Vue({
                         else
                             defense = targetArea.unit.defense + targetArea.unit.buffed['defense'];
 
-                        demage = demage * critical + accelDemage - defense;
+                        demage = demage * critical - defense;
 
                         if (demage < 0)
                             demage = 0;

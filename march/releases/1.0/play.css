@@ -918,6 +918,7 @@ button {
     background: rgba(0, 0, 0, 0.76);
     border: 1px solid rgba(0, 0, 0, 0.76);
     font-size: 16px;
+    font-style: italic;
     color: #fff;
     text-align: center;
     top: 50%;
@@ -1109,7 +1110,7 @@ button {
 
 .app[data-device=mobile] > .landscape {
     display: none;
-    background: url(../../img/common/tile.zigzag.png);
+    background: #fff;
     text-align: center;
     width: 100%;
     position: fixed;
@@ -1119,22 +1120,21 @@ button {
     z-index: 1000;
 }
 
-.app[data-device=mobile] > .landscape > .play > .wrapper > .ground {
+.app[data-device=mobile] > .landscape > .wrapper {
     display: table-row;
-    background: rgba(255, 255, 255, 0.76);
 }
 
-.app[data-device=mobile] > .landscape > .play > .wrapper > .ground > .play > .wrapper > .ground {
+.app[data-device=mobile] > .landscape > .wrapper > .wrapper {
     display: table-cell;
     vertical-align: middle;
 }
 
-.app[data-device=mobile] > .landscape > .play > .wrapper > .ground > .play > .wrapper > .ground i {
+.app[data-device=mobile] > .landscape > .wrapper > .wrapper > p > i {
     font-size: 90px;
     margin-bottom: 30px;
 }
 
-.app[data-device=mobile] > .landscape > .play > .wrapper > .ground span {
+.app[data-device=mobile] > .landscape > .wrapper .wrapper > span {
     font-size: 20px;
 }
 
@@ -1185,7 +1185,7 @@ div[data-name=mojs-shape] {
 }
 
 @media (orientation: landscape) {
-    .app[data-device=mobile] > .play > .wrapper > .ground {
+    .app[data-device=mobile] > .play {
         display: none;
     }
 
