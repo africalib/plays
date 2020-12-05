@@ -981,9 +981,6 @@ let app = new Vue({
 
             switch (c) {
                 case 'kakao':
-                    if (!Kakao.Link)
-                        Kakao.init('fb4a9c0a364de118a9f13fd200c26e47');
-
                     Kakao.Link.sendScrap({
                         requestUrl: url
                     });
@@ -2476,6 +2473,8 @@ let app = new Vue({
             t.my.room.loaded = true;
             t.enter();
         }
+
+        Kakao.init('fb4a9c0a364de118a9f13fd200c26e47');
     },
     mounted: function () {
         let t = this;
