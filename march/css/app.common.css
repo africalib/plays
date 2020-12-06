@@ -308,20 +308,6 @@ button {
     text-align: center;
 }
 
-.run > .logo {
-    position: fixed;
-    right: 15px;
-    bottom: 15px;
-}
-
-.run > .logo a {
-    background: #fff;
-}
-
-.run > .logo a img {
-    height: 30px;
-}
-
 [v-cloak] {
     display: none;
 }
