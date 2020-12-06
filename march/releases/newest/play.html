@@ -87,6 +87,11 @@
                     </div>
                 </template>
             </div>
+            <div class="logo">
+                <a href="https://africalib.github.io/">
+                    <img src="https://africalib.github.io/img/logo.book.svg" />
+                </a>
+            </div>
         </div>
         <div class="play swiper-container" ref="swiper" v-else>
             <div class="wrapper swiper-wrapper">
@@ -102,7 +107,8 @@
                                 <span>{{ status.time }} / {{ base.time.turn }}</span>
                             </span>
                             <div class="right" v-on:click.stop="goMessages()">
-                                <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                <i class="fa fa-envelope-o" v-bind:class="{ 'shake' : message.count }"
+                                    aria-hidden="true"></i>
                                 <span class="latest">{{ message.latest }}</span>
                                 <span class="count" v-if="message.count">{{ message.count }}</span>
                             </div>
