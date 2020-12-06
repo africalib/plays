@@ -8,9 +8,7 @@
     },
     methods: {
         view: function (replay) {
-            let arr = replay.version.split('.');
-            arr.splice(arr.length - 1);
-            location.href = 'releases/' + arr.join('.') + '/play.html#/' + replay.name;
+            location.href = 'releases/' + replay.version + '/play.html#/' + replay.name;
         },
         remove: function (idx) {
             if (confirm('선택하신 리플레이를 삭제하시겠습니까?')) {
