@@ -988,7 +988,7 @@ let app = new Vue({
             switch (c) {
                 case 'kakaotalk':
                     if (!Kakao.Link)
-                        Kakao.init('fb4a9c0a364de118a9f13fd200c26e47');
+                        Kakao.init('a44ae210d0d0acee79d54e864dc0168e');
 
                     Kakao.Link.sendScrap({
                         requestUrl: url
