@@ -114,7 +114,7 @@
                     <div class="area">
                         <div class="area-wrapper">
                             <div class="each-area" v-bind:class="{'active' : active.idx === a.idx }"
-                                v-for="(a, idx) in areas.live" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
+                                v-for="(a, idx) in areas" v-bind:data-idx="a.idx" v-bind:data-owner="a.owner"
                                 v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
                                 v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
                                 v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden ? 'Y' : 'N'"
