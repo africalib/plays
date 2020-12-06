@@ -434,6 +434,10 @@ let app = new Vue({
             status: null,
             touchable: false,
             speed: 2
+        },
+        share: {
+            list: ['kakaotalk', 'naver', 'band'],
+            loaded: true
         }
     },
     methods: {
@@ -645,6 +649,7 @@ let app = new Vue({
                                 t.my.room.name = res.room;
                                 t.my.room.hash = window.location.hash;
                                 t.my.room.url = window.location.href + '#/' + res.room;
+                                t.my.room.loaded = true;
                             }
                             break;
 
@@ -967,7 +972,6 @@ let app = new Vue({
             }
             else if (this.modal.info.buffed && this.modal.info.buffed[prop] !== undefined) {
                 if (this.modal.info.name) {
-
                     let buff = this.modal.info.buffed[prop];
                     let unitProp = this.modal.info[prop] + buff;
                     return unitProp + (buff ? ' (+' + buff + ' buff)' : '');
@@ -976,11 +980,13 @@ let app = new Vue({
 
             return '';
         },
-        share: function (c) {
-            let url = this.my.room.url;
+        shareSns: function (c) {
+            let t = this;
+            let url = t.my.room.url;
+            t.share.loaded = false;
 
             switch (c) {
-                case 'kakao':
+                case 'kakaotalk':
                     if (!Kakao.Link)
                         Kakao.init('fb4a9c0a364de118a9f13fd200c26e47');
 
@@ -999,6 +1005,10 @@ let app = new Vue({
                     window.open('http://www.band.us/plugin/share?body=' + url + '&route=' + url, 'share_band', 'width=410, height=540, resizable=no');
                     break;
             }
+
+            setTimeout(function () {
+                t.share.loaded = true;
+            }, 5000);
         },
         copyRoomUrl: function () {
             if (this.$refs.roomUrl) {
@@ -2471,9 +2481,7 @@ let app = new Vue({
             });
         }
         else {
-            t.my.room.name = name;
             t.my.room.host = true;
-            t.my.room.loaded = true;
             t.enter();
         }
     },

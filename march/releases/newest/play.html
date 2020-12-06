@@ -42,15 +42,12 @@
                             </div>
                         </div>
                         <div class="anchors">
-                            <button class="kakao" type="button" v-on:click="share('kakao')">
-                                <img src="../../img/common/play.kakaotalk.png" />
-                            </button>
-                            <button class="naver" type="button" v-on:click="share('naver')">
-                                <img src="../../img/common/play.naver.png" />
-                            </button>
-                            <button class="band" type="button" v-on:click="share('band')">
-                                <img src="../../img/common/play.band.png" />
-                            </button>
+                            <template v-if="share.loaded">
+                                <button v-bind:class="s" type="button" v-on:click="shareSns(s)" v-for="s in share.list">
+                                    <img v-bind:src="'../../img/common/play.' + s + '.png'" />
+                                </button>
+                            </template>
+                            <div class="loading" v-else></div>
                             <hr />
                             <a class="pointer" v-on:click="refresh()">다시 만들기</a>
                             <a class="pointer" v-on:click="goHome()">홈으로</a>
@@ -121,8 +118,7 @@
                                 v-bind:data-player="a.player" v-bind:data-vidx="a.vidx" v-bind:data-hidx="a.hidx"
                                 v-bind:data-vnum="a.vnum" v-bind:data-hnum="a.hnum" v-bind:data-status="a.status"
                                 v-bind:data-shelter="a.shelter.name" v-bind:data-hidden="a.hidden ? 'Y' : 'N'"
-                                v-bind:data-watchers="a.watchers" v-bind:data-opacity="a.opacity"
-                                v-on:click="touchable(idx) && request('touch', idx)">
+                                v-bind:data-watchers="a.watchers" v-on:click="touchable(idx) && request('touch', idx)">
                                 <div class="unit"
                                     v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"
                                     v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
