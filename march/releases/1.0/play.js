@@ -28,19 +28,19 @@ let app = new Vue({
                 end: 98
             },
             area: {
-                status: '',
                 unit: {},
                 shelter: {},
-                weapon: {},
                 watchers: '',
+                player: '',
+                owner: '',
+                weapon: {},
+                hidden: false,
                 vidx: 0,
                 hidx: 0,
                 vnum: 0,
                 hnum: 0,
-                player: '',
-                owner: '',
-                ownOnly: false,
-                hidden: false
+                status: '',
+                ownOnly: false
             },
             shelters: {
                 fortress: {
@@ -397,7 +397,7 @@ let app = new Vue({
             }
         },
         areas: {
-            prev: [],
+            keys: ['unit', 'shelter', 'watchers', 'player', 'owner', 'hidden'],
             live: []
         },
         user: {},
@@ -503,7 +503,6 @@ let app = new Vue({
                     this.setUnit('white', 'farmer', i, true);
             }
 
-            this.areas.prev = appLib.renew(this.areas.live);
             this.checkWatchers();
         },
         start: function () {
@@ -852,46 +851,16 @@ let app = new Vue({
             else if (name === 'pass') {
                 let areas = [];
 
-                for (let i in this.areas.prev) {
-                    let prev = this.areas.prev[i];
-                    let live = this.areas.live[i];
+                for (let i in this.areas.live) {
                     let obj = {};
 
-                    if (live.status === undefined)
-                        live.status = '';
-
-                    for (let j in prev) {
-                        if (prev[j] && live[j] && typeof prev[j] === 'object' && typeof live[j] === 'object') {
-                            if (JSON.stringify(prev[j]) !== JSON.stringify(live[j])) {
-                                obj[j] = {};
-
-                                if (Object.keys(prev[j]).length && Object.keys(live[j]).length) {
-                                    for (let k in prev[j]) {
-                                        if (prev[j][k] && typeof prev[j][k] === 'object') {
-                                            if (JSON.stringify(prev[j][k]) !== JSON.stringify(live[j][k]))
-                                                obj[j][k] = live[j][k];
-                                        }
-                                        else if (prev[j][k] !== live[j][k]) {
-                                            obj[j][k] = live[j][k];
-                                        }
-                                    }
-                                }
-                                else {
-                                    obj[j] = live[j];
-                                }
-                            }
-                        }
-                        else if (prev[j] !== live[j]) {
-                            obj[j] = live[j];
-                        }
+                    for (let j in this.areas.keys) {
+                        let key = this.areas.keys[j];
+                        let val = this.areas.live[i][key];
+                        obj[key] = val;
                     }
 
-                    if (Object.keys(obj).length) {
-                        areas.push({
-                            idx: Number(i),
-                            val: obj
-                        });
-                    }
+                    areas.push(obj);
                 }
 
                 this.request('deploy', JSON.stringify(areas));
@@ -988,7 +957,7 @@ let app = new Vue({
             switch (c) {
                 case 'kakaotalk':
                     if (!Kakao.Link)
-                        Kakao.init('a44ae210d0d0acee79d54e864dc0168e');
+                        Kakao.init('fb4a9c0a364de118a9f13fd200c26e47');
 
                     Kakao.Link.sendScrap({
                         requestUrl: url
@@ -1021,17 +990,9 @@ let app = new Vue({
             let areas = JSON.parse(val);
 
             for (let i in areas) {
-                let idx = areas[i].idx;
-                let val = areas[i].val;
-
-                for (let j in val) {
-                    if (val[j] && typeof val[j] === 'object' && Object.keys(val[j]).length) {
-                        for (let k in val[j])
-                            this.areas.live[idx][j][k] = val[j][k];
-                    }
-                    else {
-                        this.areas.live[idx][j] = val[j];
-                    }
+                for (let j in this.areas.keys) {
+                    let key = this.areas.keys[j];
+                    this.areas.live[i][key] = areas[i][key];
                 }
             }
         },
@@ -2095,7 +2056,6 @@ let app = new Vue({
             this.checkBuff();
 
             if (player === this.my.player) {
-                this.areas.prev = appLib.renew(this.areas.live);
                 this.setLabel("It's your turn!");
             }
             else {
