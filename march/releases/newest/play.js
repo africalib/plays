@@ -2384,9 +2384,6 @@ let app = new Vue({
         }
     },
     created: function () {
-        if(!window.io)
-        return;
-        
         let t = this;
         let name = location.hash ? location.hash.replace('#/', '') : '';
         let replays = localStorage.getItem('replays');
