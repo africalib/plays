@@ -8,7 +8,7 @@ let app = new Vue({
                 name: 'king',
                 title: '왕(king)',
                 rotate: false,
-                desc: '이 게임에서 가장 중요하고 중심이 되며 승패를 가를 수 있는 유일한 유닛입니다.'
+                desc: '이 게임에서 가장 중요하고 중심이 되며 승패의 기준이 되는 유일한 유닛입니다.'
             },
             {
                 name: 'farmer',
