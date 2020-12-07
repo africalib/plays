@@ -58,7 +58,9 @@
                         <br />
                         <label class="label label-black">게임 소개</label>
                         <p>마치 오브 더 킹은 왕의 진군이라는 뜻입니다. 게임의 배경은 왕정 시대이며, 왕을 중심으로 하는 국가 간의 전투를 그린 게임입니다.</p>
-                        <p>턴제 게임으로 대기 방을 생성하여 온라인으로 상대방과 실시간 대결이 가능합니다.</p>
+                        <br />
+                        <label class="label label-black">게임 형태</label>
+                        <p>턴제 게임으로 온라인으로 실시간 대결이 가능합니다.</p>
                         <br />
                         <label class="label label-black">개발/문의</label>
                         <p>
@@ -74,7 +76,7 @@
                         <p>블랙 플레이어가 먼저 시작하며 한 턴씩 돌아가며 진행합니다.</p>
                         <br />
                         <label class="label label-black">시간 제한</label>
-                        <p>한 턴에 120초의 시간이 주어지며 시간이 지나게 되면 턴을 상대방에게 넘깁니다.</p>
+                        <p>한 턴에 120초의 시간이 주어지며 시간을 모두 쓰게 되면 턴을 상대방에게 넘기게 됩니다.</p>
                         <br />
                         <label class="label label-black">레벨 업</label>
                         <p>
@@ -85,11 +87,21 @@
                         <p>상대편의 고급 유닛(혹은 높은 레벨)의 유닛을 잡는 것이 더 많은 경험치를 쌓게 해줍니다.</p>
                     </div>
                     <div id="menu3" class="tab-pane fade">
+                        <label class="label label-black">수행 가능한 작업</label>
+                        <p>내 턴이 되었을 때는 다음과 같은 작업을 할 수 있습니다.</p>
+                        <ul>
+                            <li>유닛 생산 : 하단에 있는 유닛을 터치하고 필드에 배치</li>
+                            <li>유닛 이동 : 필드에 있는 유닛을 터치한 후 이동</li>
+                            <li>유닛 공격 : 필드에 있는 유닛을 터치한 후 상대방 유닛을 터치하여 공격</li>
+                        </ul>
+                        <br />
+                        <label class="label label-black">턴 넘기기</label>
+                        <p>작업을 마친 후에는 우측 하단의 PASS 버튼을 터치하여 턴을 넘길 수 있습니다.</p>
+                        <br />
                         <label class="label label-black">이동 방법</label>
                         <p>
                             파워가 0.5 이상이면 이동이 가능하며, 유닛을 터치한 후 이동하고자 하는 필드를 다시 터치하면 이동합니다. 유닛에 따라 이동 할 수 있는 거리가 제한되어 있습니다.
-                            한 칸 이동 시
-                            파워가 0.5가 소모되며, 두 칸 이상 시 1이 소모됩니다.
+                            한 칸 이동 시 파워가 0.5가 소모되며, 두 칸 이상 이동 시 1이 소모됩니다.
                         </p>
                         <br />
                         <label class="label label-black">공격 방법</label>
@@ -99,14 +111,24 @@
                         <label class="label label-black">자동 반격</label>
                         <p>공격/이동 시 상대편이 반격할 수 있는 방향/거리/파워가 되면, 상대편이 나의 유닛을 반격하며, 상대편의 파워가 0.5 감소됩니다.</p>
                     </div>
-                    <div id="menu4" class="tab-pane fade">준비 중</div>
+                    <div id="menu4" class="tab-pane fade">
+                        <div class="units">
+                            <div class="panel panel-default" v-for="u in units">
+                                <div class="panel-heading">{{ u.title }}</div>
+                                <div class="panel-body">
+                                    <img v-bind:src="'img/white/' + u.name + '.png'"
+                                        v-bind:style="{ transform: u.rotate ? 'rotate(90deg)' : '' }" />
+                                </div>
+                                <div class="panel-footer">{{ u.desc }}</div>
+                            </div>
+                        </div>
+                    </div>
                     <div id="menu5" class="tab-pane fade">
                         <label class="label label-black">효과적인 공격 방법</label>
                         <p>
-                            상대편의 방향 정면을 공격하는 것보다 측면이나 후면을 공격하는 것이 효과적입니다. 정면을 공격할 시 상대방에 따라 반격을 맞을 수도 있기 때문입니다. 또 측면을
-                            공격할
-                            때 1.5배,
-                            후면을 공격할 때 3배의 데미지를 줄 수 있습니다.
+                            상대편의 방향 정면을 공격하는 것보다 측면이나 후면을 공격하는 것이 효과적입니다.
+                            측면을 공격할 때는 공격력의 1.5배, 후면을 공격할 때는 공격력의 3배의 데미지를 줄 수 있습니다.
+                            또 정면을 공격할 시 상대방에 따라 반격을 맞을 수도 있기 떄문에 정면 공격은 가급적 피하는 것이 좋습니다.
                         </p>
                         <br />
                         <label class="label label-black">왕의 버프</label>
@@ -114,12 +136,21 @@
                     </div>
                     <div id="menu6" class="tab-pane fade">
                         <label class="label label-black">방패 전진 일자진</label>
+                        <p>
+                            <img src="img/common/guide.formation1.png" />
+                        </p>
                         <p>방패병을 가장 앞 상단에 일렬로 배치하여 적이 나의 진영으로 들어오는 것을 막는 일반적인 진형입니다. 이 방어 진형이 뚫릴 경우, 후방 공격을 받가 쉽습니다.</p>
                         <br />
                         <label class="label label-black">방패 후진 일자진</label>
+                        <p>
+                            <img src="img/common/guide.formation2.png" />
+                        </p>
                         <p>상대방이 검병 등으로 급하게 몰아부치는 공격이 예상될 경우, 방패병을 가장 후방에 배치하여 방어하는 진형입니다. 상대편이 나의 후방을 공격할 여지가 줄어듭니다.</p>
                         <br />
                         <label class="label label-black">방패 삼각진</label>
+                        <p>
+                            <img src="img/common/guide.formation3.png" />
+                        </p>
                         <p>상대방이 검병 등으로 급하게 몰아부치는 공격이 예상될 경우, 앞이 뾰족한 정삼각형의 진형을 만들어 방어하는 진형입니다. 왕은 중앙에 있어 방패병에게 방어 버프 효과를
                             줄 수 있고 양 측면의 방패병은 거리가 멀어 공격하기 까다롭게 만드는 진형입니다.</p>
                     </div>
