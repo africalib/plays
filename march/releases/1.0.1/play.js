@@ -397,6 +397,7 @@ let app = new Vue({
             }
         },
         areas: [],
+        prevAreas: [],
         user: {},
         my: {
             player: null,
@@ -653,8 +654,10 @@ let app = new Vue({
                             t.start();
 
                             if (t.my.player === 'black') {
+                                let indexes = t.getRandomShelterIndexes();
+                                t.request('setShelters', JSON.stringify(indexes));
+
                                 setTimeout(function () {
-                                    t.setRandomShelter();
                                     t.request('pass', 'black');
                                 }, 3500);
                             }
@@ -710,8 +713,28 @@ let app = new Vue({
                                 });
                             }
                             else if (typeof t[res.value.name] === 'function') {
-                                if (res.value.name === 'touch' || res.value.name === 'grab')
+                                if (res.value.name === 'touch' || res.value.name === 'grab') {
                                     t.status.touchable = true;
+                                }
+                                else if (res.value.name === 'deploy') {
+                                    let areas = JSON.parse(res.value.val1);
+                                    let same = true;
+
+                                    loop: for (let i in areas) {
+                                        for (let j in areas[i]) {
+                                            let orgins = JSON.stringify(t.areas[Number(i)][j]);
+                                            let tossed = JSON.stringify(areas[i][j]);
+
+                                            if (orgins !== tossed) {
+                                                same = false;
+                                                break loop;
+                                            }
+                                        }
+                                    }
+
+                                    if (same)
+                                        return;
+                                }
 
                                 t.runFunc(res.value);
                                 t.flows.push(res.value);
@@ -846,19 +869,23 @@ let app = new Vue({
                 this.status.touchable = false;
             }
             else if (name === 'pass') {
-                let areas = [];
-                let keys = ['unit', 'shelter', 'watchers', 'player', 'owner', 'hidden'];
+                let areas = {};
+                let keys = ['unit', 'shelter', 'player', 'owner', 'hidden'];
 
-                for (let i in this.areas) {
-                    let obj = {};
+                for (let i in this.prevAreas) {
+                    let prev = JSON.stringify(this.prevAreas[i]);
+                    let news = JSON.stringify(this.areas[i]);
 
-                    for (let j in keys) {
-                        let key = keys[j];
-                        let val = this.areas[i][key];
-                        obj[key] = val;
+                    if (prev !== news) {
+                        let obj = appLib.renew(this.areas[i]);
+
+                        for (let j in obj) {
+                            if (keys.indexOf(j) < 0)
+                                delete obj[j];
+                        }
+
+                        areas[i] = obj;
                     }
-
-                    areas.push(obj);
                 }
 
                 this.request('deploy', JSON.stringify(areas));
@@ -987,7 +1014,7 @@ let app = new Vue({
 
             for (let i in areas) {
                 for (let j in areas[i])
-                    this.areas[i][j] = areas[i][j];
+                    this.areas[Number(i)][j] = areas[i][j];
             }
         },
         touch: function (idx) {
@@ -1525,9 +1552,16 @@ let app = new Vue({
             shelter.player = player;
             this.areas[idx].shelter = shelter;
         },
-        setRandomShelter: function () {
+        setShelters: function (val) {
+            let indexes = JSON.parse(val);
+
+            for (let i in indexes)
+                this.setShelter('gray', 'fortress', indexes[i]);
+        },
+        getRandomShelterIndexes: function () {
             let t = this;
             let shelterCount = 1;
+            let indexes = [];
 
             for (n = 0; n < 2; n += 1) {
                 let shelterEmptyArr = [];
@@ -1546,9 +1580,11 @@ let app = new Vue({
                     }
 
                     for (let i = 0; i < shelterRandomArr.length; i += 1)
-                        t.setShelter('gray', 'fortress', Number(shelterRandomArr[i]));
+                        indexes.push(Number(shelterRandomArr[i]));
                 }
             }
+
+            return indexes;
         },
         setLevel: function (i) {
             let unit = this.areas[i].unit;
@@ -2050,6 +2086,7 @@ let app = new Vue({
             this.checkBuff();
 
             if (player === this.my.player) {
+                this.prevAreas = appLib.renew(this.areas);
                 this.setLabel("It's your turn!");
             }
             else {
