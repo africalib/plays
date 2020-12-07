@@ -1342,24 +1342,22 @@ let app = new Vue({
                 });
             }
             else if (targetArea.status === 'enter') {
-                if (this.isUnitSettable(t.grabbed.name)) {
-                    this.active.idx = idx;
-                    this.setUnit(t.status.turn, t.grabbed.name, idx);
-                    this.checkBuff();
-                    this.rotateAuto();
-                    this.initActive();
+                if (t.isUnitSettable(t.grabbed.name)) {
+                    t.active.idx = idx;
+                    t.setUnit(t.status.turn, t.grabbed.name, idx);
+                    t.checkBuff();
+                    t.rotateAuto();
+                    t.initActive();
                 }
                 else {
-                    this.initAreas();
-                    this.initGrab();
+                    t.initAreas();
+                    t.initGrab();
                 }
             }
-            else if (t.grabbed.name) {
-                if (t.status.turn === t.my.player)
-                    t.setMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.base.time.message);
-                return;
-            }
             else {
+                if (t.grabbed.name && t.status.turn === t.my.player)
+                    t.setMessage(t.my.player, '해당 위치에 배치할 수 없습니다.', t.base.time.message);
+
                 t.initAreas();
                 t.initActive();
                 t.initGrab();
