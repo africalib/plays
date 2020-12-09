@@ -550,10 +550,12 @@ let app = new Vue({
                     t.modal.info.player = t.my.player;
                 }
 
+                clearTimeout(t.timer['progressBar']);
+
                 if (t.modal.info.hp !== undefined) {
                     let hp = t.modal.info.hp;
                     t.modal.info.hp = 0;
-                    setTimeout(function () {
+                    t.timer['progressBar'] = setTimeout(function () {
                         t.modal.info.hp = hp;
                     });
                 }
@@ -561,7 +563,7 @@ let app = new Vue({
                 if (t.modal.info.exp !== undefined) {
                     let exp = t.modal.info.exp;
                     t.modal.info.exp = 0;
-                    setTimeout(function () {
+                    t.timer['progressBar'] = setTimeout(function () {
                         t.modal.info.exp = exp;
                     });
                 }
@@ -569,7 +571,7 @@ let app = new Vue({
                 if (t.modal.info.power !== undefined) {
                     let power = t.modal.info.power;
                     t.modal.info.power = 0;
-                    setTimeout(function () {
+                    t.timer['progressBar'] = setTimeout(function () {
                         t.modal.info.power = power;
                     });
                 }
