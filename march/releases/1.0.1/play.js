@@ -1916,7 +1916,7 @@ let app = new Vue({
                         t.checkFinished();
                     }, t.time.animate);
 
-                    if (!alive && t.my.player !== renewedTargetUnit.player)
+                    if (!alive && t.status.turn !== renewedTargetUnit.player)
                         t.showUnitForSeconds(targetIdx, renewedTargetUnit);
                 }
             }
