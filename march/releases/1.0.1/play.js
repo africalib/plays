@@ -735,6 +735,7 @@ let app = new Vue({
             else
                 this.user.losses += 1;
 
+            this.user.lastGameDate = appLib.now('yyyy-MM-dd HH:mm:ss');
             localStorage.setItem('user', JSON.stringify(this.user));
         },
         saveReplay: function () {
