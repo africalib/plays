@@ -735,6 +735,9 @@ let app = new Vue({
             else
                 this.user.losses += 1;
 
+            if (!this.user.firstGameDate)
+                this.user.firstGameDate = appLib.now('yyyy-MM-dd HH:mm:ss');
+
             this.user.lastGameDate = appLib.now('yyyy-MM-dd HH:mm:ss');
             localStorage.setItem('user', JSON.stringify(this.user));
         },
@@ -1917,7 +1920,7 @@ let app = new Vue({
                         t.checkFinished();
                     }, t.time.animate);
 
-                    if (!alive && t.status.turn !== renewedTargetUnit.player)
+                    if (!alive && t.my.player !== renewedTargetUnit.player)
                         t.showUnitForSeconds(targetIdx, renewedTargetUnit);
                 }
             }
