@@ -50,7 +50,7 @@ let app = new Vue({
                 name: 'elephant',
                 title: '상병(Elephant)',
                 rotate: true,
-                desc: '액셀(accel) 공격이 가능한 유닛입니다. 악셀 공격은 먼 거리에서 달려와 상대편을 공격하면 공격 데미지를 증폭시킬 수 있는 능력입니다.'
+                desc: '액셀(accel) 공격이 가능한 유닛입니다. 액셀 공격은 먼 거리에서 달려와 상대편을 공격하면 공격 데미지를 증폭시킬 수 있는 능력입니다.'
             },
             {
                 name: 'cannon',
