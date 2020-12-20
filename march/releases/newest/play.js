@@ -735,6 +735,9 @@ let app = new Vue({
             else
                 this.user.losses += 1;
 
+            if (!this.user.firstGameDate)
+                this.user.firstGameDate = appLib.now('yyyy-MM-dd HH:mm:ss');
+
             this.user.lastGameDate = appLib.now('yyyy-MM-dd HH:mm:ss');
             localStorage.setItem('user', JSON.stringify(this.user));
         },

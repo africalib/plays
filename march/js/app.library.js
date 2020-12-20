@@ -234,11 +234,9 @@
         else {
             let alphabets = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
             let name = null;
-            let names = ['Peter', 'Andrew', 'James', 'John', 'Philip', 'Bartholomew', 'Matthew', 'Thomas', 'Simon', 'Paul', 'Timothy', 'Barnabas', 'David', 'Joshua', 'Caleb', 'Solomon', 'Noah', 'Enoch', 'Abraham', 'Isaac', 'Jacob', 'Joseph', 'Moses', 'Aaron', 'Jonathan', 'Mark', 'Luke', 'Isaiah', 'Samuel', 'Nehemiah', 'Micah', 'Jeremiah', 'Elijah', 'Elisha', 'Asa', 'Jehoshaphat', 'Hezekiah', 'Phinehas', 'Lazarus', 'Joel', 'Amos', 'Samson'];
+            let names = ['Peter', 'Andrew', 'James', 'John', 'Philip', 'Bartholomew', 'Nathaniel', 'Matthew', 'Thomas', 'Simon', 'Paul', 'Timothy', 'Barnabas', 'David', 'Joshua', 'Caleb', 'Solomon', 'Noah', 'Enoch', 'Abraham', 'Isaac', 'Jacob', 'Joseph', 'Moses', 'Aaron', 'Jonathan', 'Mark', 'Luke', 'Isaiah', 'Samuel', 'Nehemiah', 'Micah', 'Jeremiah', 'Elijah', 'Elisha', 'Asa', 'Jehoshaphat', 'Hezekiah', 'Phinehas', 'Lazarus', 'Joel', 'Amos', 'Samson'];
             let nameArr = [];
-            let now = appLib.now('yyyy-MM-dd HH:mm:ss');
 
-            nameArr.push(alphabets[Math.floor(Math.random() * alphabets.length)]);
             nameArr.push(alphabets[Math.floor(Math.random() * alphabets.length)]);
             nameArr.push(names[Math.floor(Math.random() * names.length)]);
             name = nameArr.join('. ');
@@ -247,8 +245,8 @@
                 name: name,
                 wins: 0,
                 losses: 0,
-                firstGameDate: now,
-                lastGameDate: now
+                firstGameDate: null,
+                lastGameDate: null
             }
 
             localStorage.setItem('user', JSON.stringify(user));
