@@ -568,7 +568,9 @@ let app = new Vue({
                         date: appLib.now('HH:mm:ss')
                     });
 
-                    t.swiper = new Swiper(t.$refs.swiper);
+                    t.swiper = new Swiper(t.$refs.swiper, {
+                        allowTouchMove: false
+                    });
 
                     t.swiper.on('slideChange', function () {
                         $(t.$refs.input).blur();
