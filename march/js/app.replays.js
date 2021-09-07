@@ -16,16 +16,6 @@
                 localStorage.setItem('replays', JSON.stringify(this.replay.list));
                 this.set();
             }
-            else {
-                $.ajax({
-                    url: global.baseUrl + '/save/',
-                    type: 'POST',
-                    data: { replay: JSON.stringify(this.replay.list[idx]) },
-                    success: function (res) {
-                        console.log(res);
-                    }
-                });
-            }
         },
         reset: function () {
             if (confirm('리플레이를 모두 삭제하시겠습니까?')) {
