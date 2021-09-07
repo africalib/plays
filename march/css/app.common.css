@@ -286,8 +286,10 @@ button {
     display: inline-block;
     margin: 0 5px;
     cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
+    user-select: none; /* standerd */
+    -moz-user-select: none; /* firefox specific */
+    -webkit-user-select: none; /* Chrome, Opera and Safari*/
+    -ms-user-select: none; /* IE, ms-edge */
 }
 
 .run > .contents .anchors hr {
