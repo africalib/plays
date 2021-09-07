@@ -61,6 +61,7 @@ button {
     border-radius: 50%;
     border-top-color: #298fd8;
     margin-top: -15px;
+    margin-left: -15px;
     -webkit-animation: rotating 1s ease-in-out infinite;
     -moz-animation: rotating 1s ease-in-out infinite;
     -ms-animation: rotating 1s ease-in-out infinite;
