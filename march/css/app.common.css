@@ -286,6 +286,7 @@ button {
     display: inline-block;
     margin: 0 5px;
     cursor: pointer;
+    -webkit-user-select: none;
 }
 
 .run > .contents .anchors hr {
