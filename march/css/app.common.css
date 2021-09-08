@@ -75,6 +75,10 @@ button {
 
 .pointer {
     cursor: pointer;
+    user-select: none; /* standerd */
+    -moz-user-select: none; /* firefox specific */
+    -webkit-user-select: none; /* Chrome, Opera and Safari*/
+    -ms-user-select: none; /* IE, ms-edge */
 }
 
 .shake {
@@ -286,11 +290,6 @@ button {
 .run > .contents .anchors > a {
     display: inline-block;
     margin: 0 5px;
-    cursor: pointer;
-    user-select: none; /* standerd */
-    -moz-user-select: none; /* firefox specific */
-    -webkit-user-select: none; /* Chrome, Opera and Safari*/
-    -ms-user-select: none; /* IE, ms-edge */
 }
 
 .run > .contents .anchors hr {

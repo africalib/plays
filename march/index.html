@@ -7,7 +7,7 @@
     <meta property="og:image" content="img/common/home.cavalry.preview.png">
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
-    <link href="css/app.common.css?8" rel="stylesheet" />
+    <link href="css/app.common.css?9" rel="stylesheet" />
     <link href="css/app.index.css?6" rel="stylesheet" />
 </head>
 <body>
@@ -39,7 +39,7 @@
                     <template v-if="room.list && room.list.length">
                         <div class="title">대기 중인 방 목록</div>
                         <ul class="list-group">
-                            <li class="list-group-item" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
+                            <li class="list-group-item pointer" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
                                 <span>{{ r.name }}</span>
                                 <span class="label label-danger">Go !</span>
                             </li>
