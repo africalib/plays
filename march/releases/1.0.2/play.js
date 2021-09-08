@@ -551,10 +551,10 @@ let app = new Vue({
                 }
             });
 
-            t.setLabel((t.my.player === 'white' ? '🤖' : '🐱‍👤') + " You are the " + t.my.player, 2500);
+            t.setLabel("You are the " + t.my.player, 2500);
 
             setTimeout(function () {
-                t.setLabel("🕺 Let's march", 2000);
+                t.setLabel("Let's march", 2000);
             }, 2500);
 
             if (!t.status.replay) {
@@ -2067,10 +2067,10 @@ let app = new Vue({
 
             if (player === this.my.player) {
                 this.prevAreas = appLib.renew(this.areas);
-                this.setLabel((this.my.player === 'white' ? '🤖' : '🐱‍👤') + " It's your turn!");
+                this.setLabel("It's your turn!");
             }
             else {
-                this.setLabel((player === 'white' ? '🤖' : '🐱‍👤') + " It's " + player + "'s turn");
+                this.setLabel("It's " + player + "'s turn");
             }
 
             for (let i in this.areas) {

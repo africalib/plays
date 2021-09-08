@@ -62,6 +62,7 @@
                     </template>
                     <div class="hide">
                         <img src="../../img/common/play.bg.sand.jpg" />
+                        <img src="../../img/common/play.clock.svg" />
                         <img src="../../img/common/play.flag.png" />
                         <img src="../../img/common/play.gradient00.png" />
                         <img src="../../img/common/play.gradient4d33.png" />
@@ -89,16 +90,18 @@
                 <div class="ground swiper-slide">
                     <div class="top" v-if="status.started">
                         <span class="turn">
-                            <span v-if="status.turn">{{ status.turn === 'white' ? '🤖' : '🐱‍👤' }} {{ status.turn }}'s
-                                turn</span>
-                            <span v-else>🏁 ready</span>
+                            <span v-if="status.turn">{{ status.turn }} turn</span>
+                            <span v-else>ready</span>
                         </span>
                         <template v-if="!status.replay">
                             <span class="time">
-                                ⌛ {{ status.time }} / {{ base.time.turn }}
+                                <img src="../../img/common/play.clock.svg" />
+                                <span>{{ status.time }} / {{ base.time.turn }}</span>
                             </span>
                             <div class="right" v-on:click.stop="goMessages()">
-                                <span>💬</span>
+                                <i class="fa fa-envelope-o" v-bind:class="{ 'shake' : message.count }"
+                                    aria-hidden="true"></i>
+                                <span class="latest">{{ message.latest }}</span>
                                 <span class="count" v-if="message.count">{{ message.count }}</span>
                             </div>
                         </template>
@@ -148,8 +151,8 @@
                     </div>
                     <div class="bottom" v-if="status.started">
                         <div class="status">
-                            <span>⚔️ units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
-                            <span class="pull-right">🌾 crop : {{ status[my.player].crop }} /
+                            <span>units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
+                            <span class="pull-right">crop : {{ status[my.player].crop }} /
                                 {{ status[my.player].maxCrop }}</span>
                         </div>
                         <div class="controls replay" v-if="status.replay">
@@ -167,8 +170,8 @@
                             <div class="action">
                                 <button type="button" class="home" v-on:click="goHome()"
                                     v-if="status.finished">home</button>
-                                <button type="button" class="speed" v-on:click="speed()" v-else>&times;{{ replay.speed
-                                    }}</button>
+                                <button type="button" class="speed" v-on:click="speed()"
+                                    v-else>&times;{{ replay.speed }}</button>
                             </div>
                         </div>
                         <div class="controls play" v-else>
@@ -186,9 +189,7 @@
                                 <button type="button" v-on:click="goHome()" v-if="status.finished">home</button>
                                 <button type="button"
                                     v-on:click="request('pass', my.player === 'black' ? 'white' : 'black')"
-                                    v-bind:disabled="!status.started || status.turn !== my.player">
-                                    ✔️
-                                    </button>
+                                    v-bind:disabled="!status.started || status.turn !== my.player">pass</button>
                             </div>
                         </div>
                     </div>
