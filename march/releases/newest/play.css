@@ -1127,36 +1127,6 @@ button {
     display: none;
 }
 
-.app[data-device=mobile] > .landscape {
-    display: none;
-    background: #fff;
-    text-align: center;
-    width: 100%;
-    position: fixed;
-    left: 0;
-    top: 0;
-    height: 100%;
-    z-index: 1000;
-}
-
-.app[data-device=mobile] > .landscape > .wrapper {
-    display: table-row;
-}
-
-.app[data-device=mobile] > .landscape > .wrapper > .wrapper {
-    display: table-cell;
-    vertical-align: middle;
-}
-
-.app[data-device=mobile] > .landscape > .wrapper > .wrapper > p > i {
-    font-size: 90px;
-    margin-bottom: 30px;
-}
-
-.app[data-device=mobile] > .landscape > .wrapper .wrapper > span {
-    font-size: 20px;
-}
-
 .app .swiper-container {
     width: 100%;
     height: 100%;
@@ -1200,15 +1170,5 @@ div[data-name=mojs-shape] {
 
     .app > .play > .wrapper > .ground > .bottom > .controls.replay > div {
         height: 100%;
-    }
-}
-
-@media (orientation: landscape) {
-    .app[data-device=mobile] > .play {
-        display: none;
-    }
-
-    .app[data-device=mobile] > .landscape {
-        display: table;
     }
 }
