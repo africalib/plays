@@ -301,6 +301,12 @@ button {
     width: 210px;
 }
 
+.run > .contents .actions button:hover,
+.run > .contents .actions button:focus {
+    box-shadow: none;
+    background: #eee;
+}
+
 .run > .contents .anchors {
     text-align: center;
     font-size: 13px;

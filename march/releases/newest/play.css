@@ -650,7 +650,7 @@ button {
 }
 
 .app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit.active {
-    background: #b3b3b3;
+    background: #a18e67;
 }
 
 .app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit * {
