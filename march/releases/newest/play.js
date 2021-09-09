@@ -515,6 +515,7 @@ let app = new Vue({
         start: function () {
             let t = this;
             let mc = new Hammer(document.querySelector('body'));
+
             t.init();
 
             mc.on('press', function (e) {
@@ -598,6 +599,28 @@ let app = new Vue({
                             t.swiper.slideTo(0);
                         else
                             t.swiper.slideTo(1);
+                    }
+                });
+            }
+
+            if ($(t.$el).width() < $(t.$el).height()) {
+                t.$nextTick(function () {
+                    let $refArea = $(t.$refs.area);
+                    let $eachArea = $(t.$el).find('.each-area[data-idx=0]');
+                    let height = $eachArea.height();
+                    let width = $eachArea.width();
+
+                    if (height < width) {
+                        const widthSum = height * t.base.columnNum;
+
+                        if ($refArea.width() > widthSum)
+                            $refArea.css('max-width', widthSum);
+                    }
+                    else {
+                        const heightSum = width * t.base.rowNum;
+
+                        if ($refArea.height() > heightSum)
+                            $refArea.css('max-height', heightSum);
                     }
                 });
             }

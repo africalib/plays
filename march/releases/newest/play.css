@@ -52,6 +52,7 @@ button {
     height: 100%;
     position: relative;
     margin: 0 auto;
+    background: #3e382f;
     font-family: 'Orbitron', sans-serif;
 }
 
@@ -59,7 +60,6 @@ button {
     position: absolute;
     top: 0;
     left: 0;
-    background: #3e382f;
     color: #fff;
     font-size: 14px;
     letter-spacing: 1px;
@@ -183,6 +183,11 @@ button {
     z-index: 10;
 }
 
+.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit,
+.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .shelter{
+    border-radius: 50%;
+}
+
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit {
     transition: margin 0.1s;
     -webkit-transition: margin 0.1s;
@@ -210,6 +215,7 @@ button {
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .shelter img {
     padding: 2.5px;
     width: 100%;
+    height: 100%;
 }
 
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit .power,
@@ -587,7 +593,6 @@ button {
 }
 
 .app > .play > .wrapper > .ground > .bottom {
-    background: #3e382f;
     color: #fff;
 }
 
