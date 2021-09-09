@@ -39,7 +39,8 @@
                     <template v-if="room.list && room.list.length">
                         <div class="title">대기 중인 방 목록</div>
                         <ul class="list-group">
-                            <li class="list-group-item pointer" v-for="(r, idx) in room.list" v-on:click="enter(r.name)">
+                            <li class="list-group-item pointer" v-for="(r, idx) in room.list"
+                                v-on:click="enter(r.name)">
                                 <span>{{ r.name }}</span>
                                 <span class="label label-danger">Go !</span>
                             </li>
@@ -47,14 +48,16 @@
                     </template>
                     <div class="no-data" v-else-if="room.loaded">
                         <p>대기 상태인 방이 없습니다.</p>
-                        <p>
-                            <span class="pointer" v-on:click="enter()">생성하기</span>
+                        <div>
+                            <span class="pointer" v-on:click="enter()">방 만들기</span>
                             <span>버튼을 터치해주세요.</span>
-                        </p>
+                        </div>
+                    </div>
+                    <div class="actions">
+                        <button type="button" class="btn" v-on:click="enter()">🚪 방 만들기</button>
                     </div>
                     <div class="anchors">
-                        <a class="pointer" v-on:click="enter()">생성하기</a>
-                        <a class="pointer" v-on:click="refresh()">새로고침</a>
+                        <a class="pointer" v-on:click="refresh()">🔁 새로고침</a>
                     </div>
                 </div>
             </div>

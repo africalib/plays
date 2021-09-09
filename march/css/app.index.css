@@ -25,6 +25,10 @@
     font-weight: bold;
 }
 
+.app .run .rooms .list-group {
+    margin-bottom: 0;
+}
+
 .app .run .rooms .list-group > .list-group-item > .label {
     float: right;
 }

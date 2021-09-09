@@ -49,15 +49,17 @@
                             </template>
                             <div class="loading" v-else></div>
                             <hr />
-                            <a class="pointer" v-on:click="refresh()">다시 만들기</a>
-                            <a class="pointer" v-on:click="goHome()">홈으로</a>
+                            <a class="pointer" v-on:click="refresh()">🔁 다시 만들기</a>
+                            <a class="pointer" v-on:click="goHome()">🏠 홈으로</a>
                         </div>
                     </template>
                     <template v-else>
-                        <div class="text">게임을 시작하시려면 아래 버튼을 눌러주세요.</div>
-                        <button class="btn-block btn" type="button" v-on:click="enter()">시작하기</button>
+                        <div class="text">게임에 입장하시려면 시작하기 버튼을 눌러주세요.</div>
+                        <div class="actions">
+                            <button class="btn" type="button" v-on:click="enter()">🕺 시작하기</button>
+                        </div>
                         <div class="anchors">
-                            <a class="pointer" v-on:click="goHome()">홈으로</a>
+                            <a class="pointer" v-on:click="goHome()">🏠 홈으로</a>
                         </div>
                     </template>
                     <div class="hide">
@@ -149,7 +151,8 @@
                     </div>
                     <div class="bottom" v-if="status.started">
                         <div class="status">
-                            <span>{{ my.player === 'black' ? '🛡️' : '⚔️' }} units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
+                            <span>{{ my.player === 'black' ? '🛡️' : '⚔️' }} units : {{ status[my.player].units }} / {{
+                                status[my.player].maxUnit }}</span>
                             <span class="pull-right">🌾 crop : {{ status[my.player].crop }} /
                                 {{ status[my.player].maxCrop }}</span>
                         </div>
@@ -298,9 +301,10 @@
                         </ul>
                     </div>
                     <div class="bottom">
-                        <input type="text" class="form-control" :placeholder="(my.player === 'black' ? '🛡️' : '⚔️') + ' Type your message here.'" maxlength="255"
-                            v-on:keyup.enter="tell()" v-on:focus="scrollToEnd()" ref="input" />
-                        <span  v-on:click="tell()">📢</span>
+                        <input type="text" class="form-control"
+                            :placeholder="(my.player === 'black' ? '🛡️' : '⚔️') + ' Type your message here.'"
+                            maxlength="255" v-on:keyup.enter="tell()" v-on:focus="scrollToEnd()" ref="input" />
+                        <span v-on:click="tell()">📢</span>
                     </div>
                 </div>
             </div>

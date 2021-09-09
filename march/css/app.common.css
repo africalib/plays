@@ -249,7 +249,6 @@ button {
 
 .run > .top {
     position: fixed;
-    background: #fff;
     padding: 15px;
     width: 100%;
     top: 0;
@@ -283,6 +282,23 @@ button {
 .run > .contents {
     max-width: 768px;
     margin: 0 auto;
+}
+
+.run > .contents .actions {
+    padding-top: 30px;
+    text-align: center;
+}
+
+.run > .contents .actions button {
+    border-radius: 0;
+    padding: 0;
+    height: 50px;
+    line-height: 50px;
+    background-color: #f7f7f7;
+    border: 1px solid #ddd;
+    color: #33260e;
+    font-size: 13px;
+    width: 210px;
 }
 
 .run > .contents .anchors {
