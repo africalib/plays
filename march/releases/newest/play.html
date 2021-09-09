@@ -89,7 +89,7 @@
                 <div class="ground swiper-slide">
                     <div class="top" v-if="status.started">
                         <span class="turn">
-                            <span v-if="status.turn">{{ status.turn === 'white' ? '🧐' : '😎' }} {{ status.turn
+                            <span v-if="status.turn">{{ status.turn === 'white' ? '⚔️' : '🛡️' }} {{ status.turn
                                 }}'s
                                 turn</span>
                             <span v-else>🏁 ready</span>
@@ -149,7 +149,7 @@
                     </div>
                     <div class="bottom" v-if="status.started">
                         <div class="status">
-                            <span>⚔️ units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
+                            <span>{{ my.player === 'black' ? '🛡️' : '⚔️' }} units : {{ status[my.player].units }} / {{ status[my.player].maxUnit }}</span>
                             <span class="pull-right">🌾 crop : {{ status[my.player].crop }} /
                                 {{ status[my.player].maxCrop }}</span>
                         </div>
@@ -285,8 +285,8 @@
                                 <div class="wrapper">
                                     <span class="ico">
                                         <span v-if="m.player === 'gray'">🏁</span>
-                                        <span v-else-if="m.player === 'white'">🧐</span>
-                                        <span v-else>😎</span>
+                                        <span v-else-if="m.player === 'white'">⚔️</span>
+                                        <span v-else>🛡️</span>
                                     </span>
                                     <span class="txt">{{ m.text }}</span>
                                 </div>
@@ -298,7 +298,7 @@
                         </ul>
                     </div>
                     <div class="bottom">
-                        <input type="text" class="form-control" :placeholder="(my.player === 'black' ? '😎' : '🧐') + ' Type your message here.'" maxlength="255"
+                        <input type="text" class="form-control" :placeholder="(my.player === 'black' ? '🛡️' : '⚔️') + ' Type your message here.'" maxlength="255"
                             v-on:keyup.enter="tell()" v-on:focus="scrollToEnd()" ref="input" />
                         <span  v-on:click="tell()">📢</span>
                     </div>
