@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>March of the King</title>
-    <meta property="og:image" content="../../img/common/home.cavalry.preview.png">
+    <meta property="og:image" content="../../img/common/home.king.preview.jpg">
     <link href="../../css/bootstrap.min.css" rel="stylesheet" />
     <link href="../../css/swiper-bundle.min.css" rel="stylesheet" />
     <link href="../../css/font-awesome.min.css" rel="stylesheet" />
@@ -17,13 +17,13 @@
         v-bind:data-replay="status.replay ? 'Y' : 'N'" v-bind:data-finished="status.finished ? 'Y' : 'N'"
         v-bind:data-player="my.player" v-bind:data-turn="status.turn" v-cloak>
         <div class="run" v-if="my.room && !status.started">
-            <!-- <div class="top">
+            <div class="top">
                 <a class="home" href="../../index.html">
                     <i class="fa fa-arrow-left" aria-hidden="true"></i>
                 </a>
-            </div> -->
+            </div>
             <div class="title">
-                <img src="../../img/common/home.cavalry.png" />
+                <img src="../../img/common/home.king.svg" />
                 <br />
                 <div>Waiting for Player</div>
             </div>
