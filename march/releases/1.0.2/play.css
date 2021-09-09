@@ -997,18 +997,6 @@ button {
     margin: 10px 0;
 }
 
-.app .run .contents > button {
-    border-radius: 0;
-    margin-top: 30px;
-    padding: 0;
-    height: 42px;
-    line-height: 42px;
-    background-color: rgba(0, 0, 0, 0.9);
-    border: 0;
-    color: #fff;
-    font-size: 13px;
-}
-
 .app .modal-area {
     position: absolute;
     top: 0;

@@ -77,4 +77,5 @@
 
 .app .run > .contents .tab-content .panel .panel-body img {
     height: 76px;
+    transform: rotate(90deg);
 }

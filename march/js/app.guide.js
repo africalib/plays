@@ -6,7 +6,7 @@ let app = new Vue({
         units: [
             {
                 name: 'king',
-                title: '왕(king)',
+                title: '왕(King)',
                 rotate: false,
                 desc: '이 게임에서 가장 중요하고 중심이 되며 승패의 기준이 되는 유일한 유닛입니다.'
             },
@@ -48,7 +48,7 @@ let app = new Vue({
             },
             {
                 name: 'elephant',
-                title: '상병(Elephant)',
+                title: '코끼리병(Elephant)',
                 rotate: true,
                 desc: '액셀(accel) 공격이 가능한 유닛입니다. 액셀 공격은 먼 거리에서 달려와 상대편을 공격하면 공격 데미지를 증폭시킬 수 있는 능력입니다.'
             },
