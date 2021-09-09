@@ -127,6 +127,9 @@ button {
     height: 100%;
     position: relative;
     font-size: 0;
+    background-color: #c19253;
+    background-image: url(../../img/common/play.background.png);
+    background-size: 100% 100%;
 
     /* overflow: hidden; */
 }
@@ -141,15 +144,16 @@ button {
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area {
     display: inline-block;
     width: calc(100%/9);
-    outline: 1px solid rgba(0, 0, 0, 0.06);
+    outline: 1px solid rgb(121 121 121 / 10%);
     height: calc(100%/16);
     position: relative;
     cursor: pointer;
-    background: rgb(204 189 160 / 70%);
+    background: rgb(144 144 144 / 10%);
 }
 
-.app > .play > .wrapper > .ground > .area .area-wrapper .each-area:nth-child(even) {
-    background: rgb(222 206 178 / 70%);
+.app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area:nth-child(even),
+.app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area:nth-child(odd) {
+    background: rgb(208 208 208 / 10%);
 }
 
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area:after {
@@ -174,6 +178,7 @@ button {
     top: 0;
     display: inline-block;
     text-align: center;
+    border-radius: 50%;
     width: 100%;
     height: 100%;
     z-index: 10;
@@ -188,7 +193,7 @@ button {
     display: none;
 }
 
-.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-hidden=Y] > img {
+.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-hidden=Y] img {
     opacity: 0.5;
 }
 
@@ -204,12 +209,8 @@ button {
 
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit img,
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .shelter img {
-    padding: 7px;
-}
-
-.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .shelter img {
-    -webkit-filter: invert(76%);
-    filter: invert(76%);
+    padding: 2.5px;
+    width: 100%;
 }
 
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit .power,
@@ -283,7 +284,7 @@ button {
 
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=white],
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .flag {
@@ -370,7 +371,6 @@ button {
 }
 
 .app[data-started=Y] > .play > .wrapper > .ground {
-    background: url(../../img/common/play.bg.sand.jpg) 100% 100%;
     padding: 42px 0 75px 0;
 }
 
@@ -386,14 +386,12 @@ button {
     transform: rotate(180deg);
 }
 
-.app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
-    opacity: 0.5;
+.app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=white] + .shelter img {
+    opacity: 0.75;
 }
 
-.app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
-    -webkit-filter: invert(100%);
-    filter: invert(100%);
-    opacity: 0.5;
+.app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black] + .shelter img {
+    opacity: 0.75;
 }
 
 .app[data-replay=N] > .play > .wrapper > .ground > .top .turn {
@@ -424,7 +422,7 @@ button {
 }
 
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=white] .level {
-    background: rgba(255, 255, 255, 0.75);
+    background: rgba(255, 255, 255, 0.5);
 }
 
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit .exp {
@@ -451,17 +449,12 @@ button {
     transform: rotate(90deg) scaleX(-1);
 }
 
-.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=white] + .shelter > img {
-    -webkit-filter: invert(100%);
-    filter: invert(100%);
-}
-
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black],
 .app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
-    background: rgba(0, 0, 0, 0.75);
+    background: #3e382f;
 }
 
-.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black] + .shelter > img {
+.app > .play > .wrapper > .ground > .area .area-wrapper .each-area .unit[data-player=black] + .shelter img {
     -webkit-filter: invert(0);
     filter: invert(0);
 }
@@ -535,7 +528,7 @@ button {
 .app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-status=enter],
 .app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-hidden=Y],
 .app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=black]) {
-    background: rgba(246, 255, 228, 0.75);
+    background: rgba(246, 255, 228, 0.25);
 }
 
 .app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
@@ -611,7 +604,7 @@ button {
     left: 0;
     height: 50px;
     bottom: 0;
-    border-top: 1px solid #ddd;
+    border-top: 1px solid rgb(121 121 121 / 50%);
 }
 
 .app > .play > .wrapper > .ground > .bottom > .controls .action {
@@ -648,8 +641,8 @@ button {
     float: left;
     overflow: hidden;
     width: calc(100%/9);
-    padding: 6px 8px 24px 8px;
-    border-right: 1px solid #ddd;
+    padding: 5px;
+    border-right: 1px solid rgb(121 121 121 / 50%);
 }
 
 .app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit.active {
@@ -664,22 +657,33 @@ button {
     user-select: none;
 }
 
-.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit img[data-rotate='90'] {
+.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit img[data-rotate='90'],
+.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit img[data-rotate-info='90'] {
     transform: rotate(90deg);
 }
 
-.app[data-player=white] > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit img {
-    filter: invert(1);
+.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit[data-name="cannon"] img {
+    margin-top: -2.5px;
 }
 
-.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit div {
-    text-align: center;
+.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit span {
+    position: absolute;
     font-size: 9px;
     line-height: 1;
-    position: absolute;
-    left: 0;
-    width: 100%;
-    bottom: 3px;
+    padding: 1px 3px;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit span.crop {
+    top: 0;
+    right: 0;
+}
+
+.app > .play > .wrapper > .ground > .bottom > .controls.play .units .each-unit span.name {
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .app > .play > .wrapper > .ground > .bottom > .controls.replay {
@@ -751,7 +755,7 @@ button {
 .app > .play > .wrapper > .chat {
     background: #fff;
     height: 100%;
-    padding: 25px 0 50px 0;
+    padding: 42px 0 50px 0;
     position: relative;
 }
 
@@ -761,10 +765,10 @@ button {
     left: 0;
     background: #152e3f;
     color: #fff;
-    font-size: 10px;
+    font-size: 14px;
     width: 100%;
-    height: 25px;
-    padding: 0 8px;
+    height: 42px;
+    padding: 7px 12px;
     line-height: 25px;
     font-family: 'Orbitron', sans-serif;
 }
@@ -774,7 +778,6 @@ button {
 }
 
 .app > .play > .wrapper > .chat > .messages {
-    background: #f7f7f7;
     height: 100%;
     width: 100%;
     overflow: auto;
@@ -810,7 +813,7 @@ button {
     position: relative;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li > .wrapper .img {
+.app > .play > .wrapper > .chat > .messages ul > li > .wrapper .ico {
     border-radius: 50%;
     display: inline-block;
     width: 33px;
@@ -831,30 +834,26 @@ button {
     padding-right: 37px;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.left > .wrapper .img {
+.app > .play > .wrapper > .chat > .messages ul > li.left > .wrapper .ico {
     left: 0;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.right > .wrapper .img {
+.app > .play > .wrapper > .chat > .messages ul > li.right > .wrapper .ico {
     right: 0;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.black > .wrapper .img {
+.app > .play > .wrapper > .chat > .messages ul > li.black > .wrapper .ico {
     background: #000;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .img,
-.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .img {
+.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .ico {
     border-color: #aaa;
     background: #fff;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li > .wrapper .img > img {
-    height: 20px;
-}
-
-.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .img > img {
-    height: 10px;
+.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .ico {
+    border-color: #aaa;
+    background: #eee;
 }
 
 .app > .play > .wrapper > .chat > .messages ul > li > .wrapper .txt {
@@ -873,9 +872,12 @@ button {
     color: #fff;
 }
 
-.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .txt,
-.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .txt {
+.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .txt {
     background: #fff;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .txt {
+    background: #eee;
 }
 
 .app > .play > .wrapper > .chat > .messages ul > li .bottom {
@@ -903,7 +905,7 @@ button {
     width: 100%;
     height: 50px;
     font-size: 10px;
-    padding-right: 42px;
+    padding-right: 54px;
     border-top: 1px solid #ddd;
     color: #3a3a3a;
 }
@@ -912,6 +914,7 @@ button {
     height: 100%;
     border: 0;
     border-radius: 0;
+    border-right: 1px solid #ddd;
     box-shadow: none;
     font-size: 12px;
     font-family: initial;
@@ -921,10 +924,10 @@ button {
     font-family: 'Orbitron', sans-serif;
 }
 
-.app > .play > .wrapper > .chat > .bottom i {
+.app > .play > .wrapper > .chat > .bottom span {
     position: absolute;
     right: 12px;
-    top: 16px;
+    top: 9px;
     font-size: 21px;
 }
 
@@ -1021,7 +1024,7 @@ button {
 }
 
 .app .modal-area .img-part span {
-    padding: 30px;
+    padding: 25px;
     display: inline-block;
     border-radius: 50%;
     width: 120px;
@@ -1029,14 +1032,15 @@ button {
 }
 
 .app .modal-area[data-player=white] .img-part span {
-    background: rgba(255, 255, 255, 0.85);
+    background: white;
 }
 
 .app .modal-area[data-player=black] .img-part span {
-    background: rgba(0, 0, 0, 0.76);
+    background: black;
 }
 
-.app .modal-area .img-part span img[data-rotate='90'] {
+.app .modal-area .img-part span img[data-rotate='90'],
+.app .modal-area .img-part span img[data-rotate-info='90'] {
     transform: rotate(90deg);
 }
 

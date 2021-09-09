@@ -3,7 +3,7 @@
 let app = new Vue({
     el: '#app',
     data: {
-        version: '1.0.1',
+        version: '1.0.2',
         base: {
             time: {
                 turn: 120,
@@ -81,6 +81,7 @@ let app = new Vue({
                     weapon: null,
                     destory: 0,
                     rotate: 0,
+                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -114,6 +115,7 @@ let app = new Vue({
                     weapon: null,
                     destory: 0,
                     rotate: 0,
+                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -147,6 +149,7 @@ let app = new Vue({
                     weapon: 'arrow',
                     destory: 0,
                     rotate: 0,
+                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -179,7 +182,8 @@ let app = new Vue({
                     status: null,
                     weapon: 'spear',
                     destory: 0,
-                    rotate: 90,
+                    rotate: 0,
+                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -212,7 +216,8 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 90,
+                    rotate: 0,
+                    rotateInfo: 90,
                     hidden: true,
                     style: {}
                 },
@@ -246,6 +251,7 @@ let app = new Vue({
                     weapon: null,
                     destory: 0,
                     rotate: 90,
+                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -278,7 +284,8 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 90,
+                    rotate: 0,
+                    rotateInfo: 0,
                     hidden: false,
                     style: {}
                 },
@@ -312,6 +319,7 @@ let app = new Vue({
                     weapon: 'ball',
                     destory: 0,
                     rotate: 90,
+                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -344,7 +352,8 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 0,
+                    rotate: 90,
+                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 }
@@ -551,7 +560,7 @@ let app = new Vue({
                 }
             });
 
-            t.setLabel((t.my.player === 'white' ? '🦸‍♂️' : '🦸‍♂️') + " You are the " + t.my.player, 2500);
+            t.setLabel((t.my.player === 'white' ? '🧐' : '😎') + " You are the " + t.my.player, 2500);
 
             setTimeout(function () {
                 t.setLabel("🕺 Let's march", 2000);
@@ -608,7 +617,7 @@ let app = new Vue({
                 if (t.status.started) {
                     socket.disconnect();
                     t.closeRoom();
-                    alert('네트워크 문제가 발생하였습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                    alert('네트워크 문제가 발생하였습니다.\n처음 화면으로 가시려면 우측 하단의 🏠 버튼을 눌러주세요.');
                 }
                 else {
                     socket.emit('enter', t.my.room.name ? t.my.room.name : '');
@@ -647,7 +656,7 @@ let app = new Vue({
                             if (!t.status.replay) {
                                 setTimeout(function () {
                                     t.closeRoom();
-                                    alert('경기 시작 후 한 시간이 지나 무승부 처리되었습니다. \n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                                    alert('경기 시작 후 한 시간이 지나 무승부 처리되었습니다. \n처음 화면으로 가시려면 우측 하단의 🏠 버튼을 눌러주세요.');
 
                                     setTimeout(function () {
                                         socket.disconnect();
@@ -661,7 +670,7 @@ let app = new Vue({
                                 socket.disconnect();
                                 t.saveUser(true);
                                 t.closeRoom();
-                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 home 버튼을 눌러주세요.');
+                                alert('상대방이 경기에서 나갔습니다.\n처음 화면으로 가시려면 우측 하단의 🏠 버튼을 눌러주세요.');
                             }
                             break;
 
@@ -1625,18 +1634,8 @@ let app = new Vue({
             if (startIdx !== endIdx) {
                 let startArea = t.areas[startIdx];
                 let endArea = t.areas[endIdx];
-                let unit = null;
+                let unit = type === 'weapon' ? t.areas[endIdx].weapon : t.areas[endIdx].unit;
                 let $startArea = $('#app .each-area[data-idx=' + startIdx + ']');
-
-                switch (type) {
-                    case 'weapon':
-                        unit = t.areas[endIdx].weapon;
-                        break;
-
-                    default:
-                        unit = t.areas[endIdx].unit;
-                        break;
-                }
 
                 unit.status = 'move';
                 t.$set(unit, 'style', { top: 0, left: 0 });
@@ -1931,7 +1930,7 @@ let app = new Vue({
         },
         showUnitForSeconds: function (idx, unit) {
             let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
-            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="../../img/' + unit.player + '/' + unit.name + '.png"></div>');
+            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="../../img/common/unit.' + unit.name + '.svg"></div>');
             let delay = unit.status === 'move';
 
             if (delay) {
@@ -2067,10 +2066,10 @@ let app = new Vue({
 
             if (player === this.my.player) {
                 this.prevAreas = appLib.renew(this.areas);
-                this.setLabel((this.my.player === 'white' ? '🦸‍♂️' : '🦸‍♂️') + " It's your turn!");
+                this.setLabel((this.my.player === 'white' ? '🧐' : '😎') + " It's your turn!");
             }
             else {
-                this.setLabel((player === 'white' ? '🦸‍♂️' : '🦸‍♂️') + " It's " + player + "'s turn");
+                this.setLabel((player === 'white' ? '🧐' : '😎') + " It's " + player + "'s turn");
             }
 
             for (let i in this.areas) {
@@ -2355,7 +2354,7 @@ let app = new Vue({
                 if (!king.white || !king.black) {
                     let winner = !king.white ? 'black' : 'white';
                     t.setLabel(appLib.getFirstUpperCase(winner) + ' player won', 0);
-                    t.setMessage(t.my.player, t.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 홈(home) 버튼을 터치해주세요.', 0);
+                    t.setMessage(t.my.player, t.getLang('ko', winner) + ' 플레이어가 승리하였습니다. 우측 하단의 🏠 버튼을 터치해주세요.', 0);
                     t.closeRoom();
 
                     for (let i in t.areas)
