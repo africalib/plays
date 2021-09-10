@@ -1869,6 +1869,9 @@ let app = new Vue({
                         if (distance)
                             demage += distance;
                     }
+                        
+                    if (activeArea.unit.distance > 1)
+                        t.showUnitForSeconds(t.active.idx, activeArea.unit);
 
                     if (t.isShelterInArea(targetIdx)) {
                         if (activeArea.unit.bomb)
@@ -1928,9 +1931,6 @@ let app = new Vue({
                                 }
                             }
                         }
-
-                        if (activeArea.unit.distance > 1)
-                            t.showUnitForSeconds(t.active.idx, activeArea.unit);
 
                         setTimeout(function () {
                             t.showUp('attack', targetIdx, demage, true);
