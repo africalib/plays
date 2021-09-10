@@ -452,7 +452,7 @@ button {
     background: #000;
 }
 
-.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white][data-direction='3'][data-rotate='90'] img {
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white][data-direction='3'] img {
     transform: rotate(90deg) scaleX(-1);
 }
 
@@ -505,7 +505,7 @@ button {
     bottom: 0;
 }
 
-.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black][data-direction='9'][data-rotate='90'] img {
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black][data-direction='9'] img {
     transform: rotate(270deg) scaleX(-1);
 }
 
@@ -663,8 +663,8 @@ button {
     user-select: none;
 }
 
-.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit img[data-rotate='90'],
-.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit img[data-rotate-info='90'] {
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit img,
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit img {
     transform: rotate(90deg);
 }
 
@@ -1046,8 +1046,8 @@ button {
     background: black;
 }
 
-.app .modal-area .img-part span img[data-rotate='90'],
-.app .modal-area .img-part span img[data-rotate-info='90'] {
+.app .modal-area .img-part span img,
+.app .modal-area .img-part span img {
     transform: rotate(90deg);
 }
 

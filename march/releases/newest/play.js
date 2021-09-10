@@ -71,7 +71,7 @@ let app = new Vue({
                     subHp: 0,
                     crop: 2,
                     power: 1,
-                    restorePower: 1,
+                    restorePower: 11,
                     maxPower: 1,
                     farm: 0.25,
                     restoreHp: 1,
@@ -80,8 +80,6 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 0,
-                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -105,7 +103,7 @@ let app = new Vue({
                     subHp: 0,
                     crop: 3,
                     power: 1,
-                    restorePower: 1,
+                    restorePower: 11,
                     maxPower: 5,
                     farm: 0,
                     restoreHp: 1,
@@ -114,8 +112,6 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 0,
-                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -139,7 +135,7 @@ let app = new Vue({
                     subHp: 0,
                     crop: 4,
                     power: 1,
-                    restorePower: 1,
+                    restorePower: 11,
                     maxPower: 5,
                     farm: 0,
                     restoreHp: 1,
@@ -148,8 +144,6 @@ let app = new Vue({
                     status: null,
                     weapon: 'arrow',
                     destory: 0,
-                    rotate: 0,
-                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -173,7 +167,7 @@ let app = new Vue({
                     subHp: 0,
                     crop: 5,
                     power: 1,
-                    restorePower: 1,
+                    restorePower: 11,
                     maxPower: 5,
                     farm: 0,
                     restoreHp: 1,
@@ -182,8 +176,6 @@ let app = new Vue({
                     status: null,
                     weapon: 'spear',
                     destory: 0,
-                    rotate: 0,
-                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -216,8 +208,6 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 0,
-                    rotateInfo: 90,
                     hidden: true,
                     style: {}
                 },
@@ -250,8 +240,6 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 90,
-                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -284,8 +272,6 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 90,
-                    rotateInfo: 0,
                     hidden: false,
                     style: {}
                 },
@@ -318,8 +304,6 @@ let app = new Vue({
                     status: null,
                     weapon: 'ball',
                     destory: 0,
-                    rotate: 90,
-                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 },
@@ -343,7 +327,7 @@ let app = new Vue({
                     subHp: 0,
                     crop: null,
                     power: 1,
-                    restorePower: 1,
+                    restorePower: 11,
                     maxPower: 10,
                     farm: 0,
                     restoreHp: 0,
@@ -352,8 +336,6 @@ let app = new Vue({
                     status: null,
                     weapon: null,
                     destory: 0,
-                    rotate: 90,
-                    rotateInfo: 90,
                     hidden: false,
                     style: {}
                 }
@@ -1557,10 +1539,10 @@ let app = new Vue({
             let t = this;
             let $refArea = $(t.$refs.area);
             let $eachArea = $(t.$el).find('.each-area[data-idx=0]');
-            
+
             $refArea.css('max-height', 'none');
             $refArea.css('max-width', 'none');
-            
+
             let height = $eachArea.height();
             let width = $eachArea.width();
 
@@ -1805,21 +1787,37 @@ let app = new Vue({
 
                             for (let x = 0; x < unit.distance + unit.buffed['distance']; x += 1) {
                                 switch (unit.direction) {
-                                    case 12:
-                                        attackArr.push(idx - (t.base.columnNum * (x + 1)));
-                                        break;
+                                    case 12: {
+                                        let attackIdx = idx - (t.base.columnNum * (x + 1));
 
-                                    case 6:
-                                        attackArr.push(idx + (t.base.columnNum * (x + 1)));
+                                        if (attackIdx >= targetIdx)
+                                            attackArr.push(attackIdx);
                                         break;
+                                    }
 
-                                    case 3:
-                                        attackArr.push(idx + x + 1);
-                                        break;
+                                    case 6: {
+                                        let attackIdx = idx + (t.base.columnNum * (x + 1));
 
-                                    case 9:
-                                        attackArr.push(idx - (x + 1));
+                                        if (attackIdx <= targetIdx)
+                                            attackArr.push(attackIdx);
                                         break;
+                                    }
+
+                                    case 3: {
+                                        let attackIdx = idx + x + 1;
+
+                                        if (attackIdx <= targetIdx)
+                                            attackArr.push(attackIdx);
+                                        break;
+                                    }
+
+                                    case 9: {
+                                        let attackIdx = idx - (x + 1);
+
+                                        if (attackIdx >= targetIdx)
+                                            attackArr.push(attackIdx);
+                                        break;
+                                    }
                                 }
                             }
 
@@ -1960,7 +1958,7 @@ let app = new Vue({
         },
         showUnitForSeconds: function (idx, unit) {
             let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
-            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="./img/unit.' + unit.name + '.svg"></div>');
+            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" class="unit z-0 d-iblock"><img src="./img/unit.' + unit.name + '.svg"></div>');
             let delay = unit.status === 'move';
 
             if (delay) {
@@ -2111,10 +2109,15 @@ let app = new Vue({
                         let restoreHp = 0;
                         let inShelterOrArea = this.isInShelterOrArea(i);
 
-                        for (let j in buffArr) {
-                            if (Number(i) === Number(buffArr[j].idx) && unit.player === buffArr[j].player) {
-                                inInBuffArr = true;
-                                break;
+                        if (unit.name === 'king') {
+                            inInBuffArr = true;
+                        }
+                        else {
+                            for (let j in buffArr) {
+                                if (Number(i) === Number(buffArr[j].idx) && unit.player === buffArr[j].player) {
+                                    inInBuffArr = true;
+                                    break;
+                                }
                             }
                         }
 

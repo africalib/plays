@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html translate="no">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -118,7 +118,7 @@
                                     <div class="unit"
                                         v-bind:class="{ 'hide' : a.unit.hidden && a.unit.player !== my.player }"
                                         v-bind:data-player="a.unit.player" v-bind:data-name="a.unit.name"
-                                        v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
+                                        v-bind:data-direction="a.unit.direction"
                                         v-bind:data-hidden="a.unit.hidden ? 'Y' : 'N'"
                                         v-bind:data-status="a.unit.status" v-if="a.unit.name"
                                         v-bind:style="a.unit.style">
@@ -153,7 +153,7 @@
                         </div>
                         <div class="bottom" v-if="status.started">
                             <div class="status">
-                                <span>{{ my.player === 'black' ? '🛡️' : '⚔️' }} units : {{ status[my.player].units }} /
+                                <span>{{ my.player === 'black' ? '🛡️' : '⚔️' }} {{ my.player }} units : {{ status[my.player].units }} /
                                     {{
                                     status[my.player].maxUnit }}</span>
                                 <span class="pull-right">🌾 crop : {{ status[my.player].crop }} /
@@ -185,8 +185,7 @@
                                         v-bind:class="{ 'active' : status.turn === my.player && u.name === grabbed.name }"
                                         v-for="u in base.units" v-bind:key="u.name"
                                         v-on:click="touchable() && request('grab', u.name)" v-if="u.crop">
-                                        <img v-bind:src="'./img/unit.' + u.name + '.svg'" v-bind:data-rotate="u.rotate"
-                                            v-bind:data-rotate-info="u.rotateInfo" />
+                                        <img v-bind:src="'./img/unit.' + u.name + '.svg'" />
                                         <span class="crop">{{ u.crop }}</span>
                                         <span class="name">{{ u.name.substring(0, 3) }}</span>
                                     </div>
@@ -204,8 +203,7 @@
                             <div class="img-part">
                                 <span>
                                     <img v-bind:src="'./img/' + modal.type + '.' + modal.info.name + '.svg'"
-                                        v-bind:data-name="modal.info.name" v-bind:data-rotate="modal.info.rotate"
-                                        v-bind:data-rotate-info="modal.info.rotateInfo" />
+                                        v-bind:data-name="modal.info.name" />
                                 </span>
                             </div>
                             <div class="info-part">

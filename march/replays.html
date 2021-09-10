@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html translate="no">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -27,7 +27,7 @@
                 <div class="line">-----</div>
                 <div class="replays">
                     <ul class="list-group mb-0" v-if="replay.list.length">
-                        <li class="list-group-item" v-for="(r, idx) in replay.list" v-on:click="view(r)">
+                        <li class="list-group-item pointer" v-for="(r, idx) in replay.list" v-on:click="view(r)">
                             <p>
                                 <span class="label" v-bind:class="[ 'label-' + r.player ]">{{ r.player }}
                                     player</span>
