@@ -41,7 +41,6 @@ button {
 
 .app > .play {
     max-width: 768px;
-    outline: 1px solid rgb(121 121 121 / 50%);
     margin: 0 auto;
     height: 100%;
 }
@@ -316,7 +315,7 @@ button {
 }
 
 .app[data-started=Y] {
-    background: #3e382f;
+    background: #f7f7f7;
     overflow: visible;
 }
 
