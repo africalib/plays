@@ -1,0 +1,1173 @@
+﻿html, body {
+    height: 100%;
+    overflow: hidden;
+    touch-action: manipulation;
+}
+
+body {
+    position: relative;
+    overflow: hidden;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+button {
+    outline: 0 !important;
+    box-shadow: none;
+    background: none;
+    border: 0;
+}
+
+.hided {
+    display: none;
+}
+
+.gravity-center {
+    position: absolute;
+    top: 50%;
+    margin-top: -10px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+.app {
+    height: 100%;
+    overflow: auto;
+}
+
+.app > .play {
+    max-width: 768px;
+    margin: 0 auto;
+    height: 100%;
+}
+
+.app > .play > .wrapper {
+    height: 100%;
+}
+
+.app > .play > .wrapper > .ground {
+    height: 100%;
+    background: #3e382f;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.app > .play > .wrapper > .ground > .inner {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #fff;
+    font-size: 12px;
+    letter-spacing: 1px;
+    width: 100%;
+    height: 42px;
+    padding: 7px 12px;
+    line-height: 25px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top i {
+    margin-right: 2.5px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top i.fa-flag {
+    font-size: 10px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top .turn {
+    vertical-align: middle;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top .time {
+    margin-left: 7px;
+    vertical-align: middle;
+    display: inline-block;
+    text-align: center;
+    line-height: 15px;
+    position: relative;
+    white-space: nowrap;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top .right {
+    cursor: pointer;
+    float: right;
+    white-space: nowrap;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top .right > span {
+    display: inline-block;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top .right > span.count {
+    background: #d82916;
+    color: #fff;
+    vertical-align: middle;
+    width: 15px;
+    text-align: center;
+    line-height: 15px;
+    height: 15px;
+    margin-left: -2px;
+    border-radius: 50%;
+    font-size: 10px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .top .right > span.latest {
+    max-width: 120px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    font-size: 0;
+    background-color: #c19253;
+    background-image: url(./img/ground.background.png);
+    background-size: 100% 100%;
+    margin: 0 auto;
+
+    /* overflow: hidden; */
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper {
+    position: relative;
+    height: 100%;
+
+    /* overflow: hidden; */
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area {
+    display: inline-block;
+    width: calc(100%/9);
+    outline: 1px solid rgb(121 121 121 / 10%);
+    height: calc(100%/16);
+    position: relative;
+    cursor: pointer;
+    background: rgb(144 144 144 / 10%);
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:nth-child(even),
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:nth-child(odd) {
+    background: rgb(208 208 208 / 10%);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:after {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    content: '';
+    z-index: 50;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area.nature {
+    background: none;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .weapon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    display: inline-block;
+    text-align: center;
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter {
+    border-radius: 50%;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit {
+    transition: margin 0.1s;
+    -webkit-transition: margin 0.1s;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit + .unit {
+    display: none;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-hidden=Y] img {
+    opacity: 0.5;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-status=move],
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .weapon[data-status=move] {
+    transition: top 0.37s, left 0.37s;
+    -webkit-transition: top 0.37s, left 0.37s;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .weapon[data-status=move] {
+    z-index: 50;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit img,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter img {
+    padding: 2.5px;
+    width: 100%;
+    height: 100%;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .power,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .level {
+    position: absolute;
+    padding: 0 2px;
+    font-size: 10px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .exp {
+    position: absolute;
+    height: 100%;
+    width: 5px;
+    padding-bottom: 5px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .exp .exp-wrapper {
+    height: 100%;
+    position: relative;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .exp .status {
+    width: 100%;
+    max-height: 100%;
+    background-color: #215da9;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .level:before {
+    content: 'L';
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .hp {
+    position: absolute;
+    width: 100%;
+    height: 5px;
+    overflow: hidden;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .hp {
+    left: 0;
+    bottom: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .hp .remain {
+    background-color: #d82916;
+    height: 100%;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-direction='3'] img,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .weapon[data-direction='3'] img {
+    transform: rotate(90deg);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-direction='6'] img,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .weapon[data-direction='6'] img {
+    transform: rotate(180deg);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-direction='9'] img,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .weapon[data-direction='9'] img {
+    transform: rotate(270deg);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-direction='12'] img,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .weapon[data-direction='12'] img {
+    transform: rotate(0);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white],
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .flag {
+    position: absolute;
+    right: 7px;
+    top: 10px;
+    width: 7px;
+    opacity: 0.75;
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .flag {
+    transform: rotate(180deg);
+    right: auto;
+    left: 7px;
+    top: auto;
+    bottom: 7px;
+}
+
+.app[data-started=Y] {
+    background: #f7f7f7;
+    overflow: visible;
+}
+
+.app[data-started=Y][data-device=desktop] > .play > .wrapper > .ground {
+    max-width: 100%;
+    text-align: left;
+}
+
+.app[data-player] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:after {
+    background-image: url(./img/ground.gradient66.png);
+    background-size: 100% 100%;
+    transition: background-image 0.5s;
+    -webkit-transition: background-image 0.5s;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:not([data-watchers*=black]) > .unit,
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:not([data-watchers*=black]) > .shelter,
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:not([data-watchers*=white]) > .unit,
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:not([data-watchers*=white]) > .shelter {
+    display: none;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area > .unit[data-player=black],
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area > .unit[data-player=white] {
+    display: inline-block;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="black:0.3"]:after {
+    background-image: url(./img/ground.gradient664d.png);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="white:0.3"]:after {
+    background-image: url(./img/ground.gradient664d-180.png);
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="black:0.2"]:after {
+    background-image: url(./img/ground.gradient4d33.png);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="white:0.2"]:after {
+    background-image: url(./img/ground.gradient4d33-180.png);
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="black:0.1"]:after {
+    background-image: url(./img/ground.gradient3300.png);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="white:0.1"]:after {
+    background-image: url(./img/ground.gradient3300-180.png);
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="black:0.0"]:after,
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-watchers*="white:0.0"]:after {
+    background-image: url(./img/ground.gradient00.png);
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]),
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=white]) {
+    display: none;
+}
+
+.app[data-started=Y] > .play > .wrapper > .ground > .inner {
+    padding: 42px 0 75px 0;
+}
+
+.app[data-started=Y][data-player=black] > .play > .wrapper > .ground > .inner > .area {
+    padding: 0;
+}
+
+.app[data-started=Y][data-player=white] > .play > .wrapper > .ground > .inner > .area {
+    padding: 0;
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter img {
+    transform: rotate(180deg);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white] + .shelter img {
+    opacity: 0.75;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] + .shelter img {
+    opacity: 0.75;
+}
+
+.app[data-replay=N] > .play > .wrapper > .ground > .inner > .top .turn {
+    border-right: 1px solid #aaa;
+    padding-right: 15px;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] + .shelter,
+.app[data-player=white][data-replay=Y] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
+    background: rgba(0, 0, 0, 0.25);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white] + .shelter,
+.app[data-player=black][data-replay=Y] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white] + .shelter {
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .power {
+    bottom: 0;
+    left: 0;
+    transform: rotate(180deg);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .level {
+    top: 5px;
+    right: 0;
+    transform: rotate(180deg);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white] .level {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .exp {
+    right: 0;
+    top: 0;
+    padding-top: 0;
+    padding-bottom: 5px;
+    transform: rotate(180deg);
+}
+
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .hp,
+.app[data-player=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter .hp {
+    top: 0;
+    right: 0;
+    transform: rotate(180deg);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white] .hp,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter[data-player=white] .hp {
+    background: #000;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white][data-direction='3'] img {
+    transform: rotate(90deg) scaleX(-1);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black],
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] + .shelter {
+    background: #3e382f;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] + .shelter img {
+    -webkit-filter: invert(0);
+    filter: invert(0);
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .power {
+    top: 0;
+    right: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] .power {
+    color: #fff;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=white] .power {
+    background: rgba(255, 255, 255, 0.75);
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .level {
+    bottom: 5px;
+    left: 0px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] .level {
+    background: rgba(0, 0, 0, 0.5);
+    color: #fff;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .exp {
+    left: 0;
+    bottom: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black] .hp,
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter[data-player=black] .hp {
+    background: #fff;
+}
+
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit .hp,
+.app[data-player=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .shelter .hp {
+    bottom: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .unit[data-player=black][data-direction='9'] img {
+    transform: rotate(270deg) scaleX(-1);
+}
+
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack] .unit,
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack] .shelter,
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack] .unit,
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack] .shelter {
+    background: rgba(255, 203, 109, 76%);
+}
+
+.app[data-replay=Y][data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit[data-player=white],
+.app[data-replay=Y][data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter[data-player=white],
+.app[data-replay=Y][data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .unit[data-player=white],
+.app[data-replay=Y][data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .shelter[data-player=white],
+.app[data-replay=Y][data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit[data-player=black],
+.app[data-replay=Y][data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .shelter[data-player=black],
+.app[data-replay=Y][data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .unit[data-player=black],
+.app[data-replay=Y][data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move][data-hidden=Y] .shelter[data-player=black] {
+    background: none !important;
+}
+
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move],
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=enter],
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-hidden=Y],
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=white]),
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move],
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=enter],
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-hidden=Y],
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=black]) {
+    background: rgba(246, 255, 228, 0.25);
+}
+
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=white] {
+    background: #dcecb7;
+}
+
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=black],
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=enter] .shelter[data-player=black] {
+    background: #546f18;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .show-up {
+    position: absolute;
+    display: inline-block;
+    font-size: 9px;
+    color: #fff;
+    padding: 1px 3px;
+    z-index: 50;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .show-up[data-act=attack] {
+    background: #ff4141;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .show-up[data-act=restoreHp] {
+    background: yellowgreen;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .show-up[data-act=levelUp] {
+    background: #215da9;
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .show-up[data-player=white] {
+    bottom: 0;
+    right: 0;
+    transform: rotate(180deg);
+}
+
+.app > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area .show-up[data-player=black] {
+    top: 0;
+    left: 0;
+}
+
+.app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area.active .unit,
+.app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area.active .unit {
+    background: #b3b3b3;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 75px;
+    font-size: 10px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom {
+    color: #fff;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .status {
+    padding: 0 8px;
+    height: 25px;
+    line-height: 25px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    height: 50px;
+    bottom: 0;
+    border-top: 1px solid rgb(121 121 121 / 50%);
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls .action {
+    font-size: 12px;
+    display: inline-block;
+    height: 100%;
+    width: calc(100%/9*1);
+    position: relative;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls .action > button {
+    width: 100%;
+    height: 100%;
+    font-weight: bold;
+    letter-spacing: 1px;
+    border: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units {
+    width: 100%;
+    position: absolute;
+    white-space: nowrap;
+    overflow: auto;
+    height: 100%;
+    -webkit-overflow-scrolling: touch;
+    left: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit {
+    cursor: pointer;
+    height: 100%;
+    position: relative;
+    text-align: center;
+    float: left;
+    overflow: hidden;
+    width: calc(100%/9);
+    padding: 5px;
+    border-right: 1px solid rgb(121 121 121 / 50%);
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit.active {
+    background: #a18e67;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit * {
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -o-user-select: none;
+    user-select: none;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit img,
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit img {
+    transform: rotate(90deg);
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit[data-name="stone"] img {
+    margin-top: -2.5px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit span {
+    position: absolute;
+    font-size: 9px;
+    line-height: 1;
+    padding: 1px 3px;
+    display: inline-block;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit span.crop {
+    top: 0;
+    right: 0;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit span.name {
+    bottom: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay {
+    text-align: center;
+    font-size: 20px;
+    position: relative;
+    padding-right: calc(100%/9*6);
+    line-height: 50px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay .icos {
+    position: relative;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay .icos i {
+    cursor: pointer;
+    margin: 0 15px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay .flow {
+    position: absolute;
+    right: calc(100%/9*2);
+    top: 0;
+    text-align: center;
+    width: calc(100%/9*4);
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0 10px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay .action {
+    width: calc(100%/9*2);
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay .action button {
+    width: 100%;
+    height: 100%;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay .action > button.home {
+    font-size: 15px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.replay .action > button.speed {
+    font-size: 20px;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls .action {
+    float: right;
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls .action button {
+    width: 100%;
+    height: 100%;
+    font-size: 25px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0;
+}
+
+.app > .play > .wrapper > .ground > .info {
+    display: none;
+    color: #fff;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+}
+
+.app > .play > .wrapper > .ground > .info > div {
+    display: table-cell;
+    vertical-align: middle;
+}
+
+.app > .play > .wrapper > .chat {
+    background: #fff;
+    height: 100%;
+    padding: 42px 0 50px 0;
+    position: relative;
+}
+
+.app > .play > .wrapper > .chat > .top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: #152e3f;
+    color: #fff;
+    font-size: 12px;
+    width: 100%;
+    height: 42px;
+    padding: 7px 12px;
+    line-height: 25px;
+    font-family: 'Orbitron', sans-serif;
+}
+
+.app > .play > .wrapper > .chat > .top > span {
+    cursor: pointer;
+}
+
+.app > .play > .wrapper > .chat > .messages {
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+}
+
+.app > .play > .wrapper > .chat > .messages ul {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li {
+    padding: 10px;
+    margin: 0;
+    display: inline-block;
+    width: 100%;
+    position: relative;
+    font-size: 12px;
+    font-family: initial;
+    color: #000;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.left {
+    padding-right: 50px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.right {
+    text-align: right;
+    padding-left: 50px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li > .wrapper {
+    position: relative;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li > .wrapper .ico {
+    border-radius: 50%;
+    display: inline-block;
+    width: 33px;
+    height: 33px;
+    text-align: center;
+    line-height: 29px;
+    border: 1px solid transparent;
+    vertical-align: middle;
+    position: absolute;
+    top: 0;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.left > .wrapper {
+    padding-left: 37px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.right > .wrapper {
+    padding-right: 37px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.left > .wrapper .ico {
+    left: 0;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.right > .wrapper .ico {
+    right: 0;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.black > .wrapper .ico {
+    background: #000;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .ico {
+    border-color: #aaa;
+    background: #fff;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .ico {
+    border-color: #aaa;
+    background: #eee;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li > .wrapper .txt {
+    display: inline-block;
+    border: 1px solid #aaa;
+    padding: 7px;
+    min-height: 33px;
+    text-align: left;
+    max-width: 100%;
+    line-break: anywhere;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.black > .wrapper .txt {
+    background: #000;
+    border-color: #000;
+    color: #fff;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.white > .wrapper .txt {
+    background: #fff;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.gray > .wrapper .txt {
+    background: #eee;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li .bottom {
+    margin-top: 5px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li .bottom .user {
+    font-weight: bold;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.left .bottom .user {
+    float: left;
+    margin-right: 5px;
+}
+
+.app > .play > .wrapper > .chat > .messages ul > li.right .bottom .user {
+    float: right;
+    margin-left: 5px;
+}
+
+.app > .play > .wrapper > .chat > .bottom {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 50px;
+    font-size: 10px;
+    padding-right: 54px;
+    border-top: 1px solid #ddd;
+    color: #3a3a3a;
+}
+
+.app > .play > .wrapper > .chat > .bottom input {
+    height: 100%;
+    border: 0;
+    border-radius: 0;
+    border-right: 1px solid #ddd;
+    box-shadow: none;
+    font-size: 12px;
+    font-family: initial;
+}
+
+.app > .play > .wrapper > .chat > .bottom input::placeholder {
+    font-family: 'Orbitron', sans-serif;
+}
+
+.app > .play > .wrapper > .chat > .bottom span {
+    position: absolute;
+    right: 12px;
+    top: 9px;
+    font-size: 21px;
+}
+
+.app .label-area {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.76);
+    border: 1px solid rgba(0, 0, 0, 0.76);
+    font-size: 16px;
+    color: #fff;
+    text-align: center;
+    top: 50%;
+    font-weight: 600;
+    margin-top: -31px;
+    height: 62px;
+    padding: 20px 0;
+    font-family: 'Orbitron', sans-serif;
+    z-index: 100;
+}
+
+.app .label-area[data-player=white] {
+    background: rgba(255, 255, 255, 0.9);
+    border-color: #ddd;
+    color: #333;
+}
+
+.app .run {
+    height: 100%;
+    background: #fff;
+}
+
+.app .run .title p {
+    font-size: 25px;
+    margin: 10px 0;
+}
+
+.app .run .contents {
+    text-align: center;
+}
+
+.app .run .contents .text {
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+.app .run .input-group {
+    margin-top: 30px;
+}
+
+.app .run .input-group input {
+    outline: 0 !important;
+    background: #fff;
+    box-shadow: none;
+}
+
+.app .run .input-group input:focus {
+    border-color: #ccc;
+}
+
+.app .run .room {
+    font-size: 14px;
+    margin: 10px 0;
+}
+
+.app .modal-area {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    z-index: 100;
+    overflow: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+.app .modal-area .img-part {
+    margin: 70px 0 10px 0;
+    text-align: center;
+}
+
+.app .modal-area .img-part span {
+    padding: 25px;
+    display: inline-block;
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+}
+
+.app .modal-area[data-player=white] .img-part span {
+    background: white;
+}
+
+.app .modal-area[data-player=black] .img-part span {
+    background: black;
+}
+
+.app .modal-area .img-part span img,
+.app .modal-area .img-part span img {
+    transform: rotate(90deg);
+}
+
+.app .modal-area .info-part {
+    color: #fff;
+}
+
+.app .modal-area .info-part > .name {
+    padding: 7px 0 20px 0;
+    text-align: center;
+}
+
+.app .modal-area .info-part > .name > .name {
+    font-size: 21px;
+    display: inline-block;
+    margin-right: 12px;
+}
+
+.app .modal-area .info-part table {
+    border-bottom: 1px solid #ddd;
+    table-layout: fixed;
+}
+
+.app .modal-area .info-part table th, .app .modal-area .info-part table td {
+    font-size: 11px;
+    color: #fff;
+    text-align: center;
+    padding: 10px 5px;
+}
+
+.app .modal-area .info-part table th {
+    text-align: right;
+    font-weight: 600;
+    width: 70px;
+}
+
+.app .modal-area .info-part > .bar {
+    margin-bottom: 10px;
+}
+
+.app .modal-area .info-part > .bar table {
+    border: 0;
+    margin-bottom: 25px;
+    width: 100%;
+}
+
+.app .modal-area .info-part > .bar table td {
+    border: 0;
+    padding: 5px 10px;
+}
+
+.app .modal-area .info-part > .bar table td .progress-bar {
+    height: 10px;
+    min-width: 20px;
+}
+
+.app .modal-area .info-part > .bar table td.text {
+    width: 110px;
+    text-align: right;
+}
+
+.app .modal-area .close-btn {
+    position: absolute;
+    top: 0;
+    color: #fff;
+    right: 10px;
+    font-size: 50px;
+    font-family: initial;
+    line-height: 0.9;
+}
+
+.app[data-started=Y][data-player=white] > .play > .wrapper > .ground > .inner > .area {
+    transform: rotate(180deg);
+}
+
+.app[data-finished=Y] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area:after {
+    content: none !important;
+}
+
+.app[data-replay=Y] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area > *,
+.app[data-finished=Y] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area > * {
+    display: inline-block !important;
+}
+
+.app[v-cloak] {
+    display: none;
+}
+
+.app .swiper-container {
+    width: 100%;
+    height: 100%;
+}
+
+.app .swiper-slide {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+div[data-name=mojs-shape] {
+    z-index: 75;
+}
+
+@media (max-width: 1024px) {
+    @media screen and (orientation: landscape) {
+        .app > .play > .wrapper > .ground > .inner {
+            display: none;
+        }
+
+        .app > .play > .wrapper > .ground > .info {
+            display: table;
+        }
+    }
+}
