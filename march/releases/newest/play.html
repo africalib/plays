@@ -9,7 +9,7 @@
     <link href="../../css/swiper-bundle.min.css" rel="stylesheet" />
     <link href="../../css/font-awesome.min.css" rel="stylesheet" />
     <link href="../../css/app.common.css?3" rel="stylesheet" />
-    <link href="play.css?27" rel="stylesheet" />
+    <link href="play.css?28" rel="stylesheet" />
     <script src="https://africalib.gabia.io/socket.io/socket.io.js"></script>
 </head>
 <body>
@@ -173,7 +173,7 @@
                                 </div>
                                 <div class="action">
                                     <button type="button" class="home" v-on:click="goHome()"
-                                        v-if="status.finished">home</button>
+                                        v-if="status.finished">🏠</button>
                                     <button type="button" class="speed" v-on:click="speed()" v-else>&times;{{
                                         replay.speed
                                         }}</button>
@@ -194,7 +194,9 @@
                                     <button type="button" v-on:click="goHome()" v-if="status.finished">🏠</button>
                                     <button type="button"
                                         v-on:click="request('pass', my.player === 'black' ? 'white' : 'black')"
-                                        v-bind:disabled="!status.started || status.turn !== my.player">🆗</button>
+                                        v-bind:disabled="!status.started || status.turn !== my.player">
+                                        {{ !status.started || status.turn !== my.player ? '⏳' : '🆗' }}
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -334,6 +336,6 @@
     <script src="../../js/swiper-bundle.min.js"></script>
     <script src="../../js/app.global.js"></script>
     <script src="../../js/app.library.js"></script>
-    <script src="play.js?27"></script>
+    <script src="play.js?28"></script>
 </body>
 </html>
