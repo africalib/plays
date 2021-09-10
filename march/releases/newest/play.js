@@ -3,7 +3,7 @@
 let app = new Vue({
     el: '#app',
     data: {
-        version: '1.0.2',
+        version: '1.0.3',
         base: {
             time: {
                 turn: 120,
@@ -289,8 +289,8 @@ let app = new Vue({
                     hidden: false,
                     style: {}
                 },
-                cannon: {
-                    name: 'cannon',
+                stone: {
+                    name: 'stone',
                     level: 1,
                     maxLevel: 9,
                     exp: 0,
@@ -603,27 +603,10 @@ let app = new Vue({
                 });
             }
 
-            if ($(t.$el).width() < $(t.$el).height()) {
-                t.$nextTick(function () {
-                    let $refArea = $(t.$refs.area);
-                    let $eachArea = $(t.$el).find('.each-area[data-idx=0]');
-                    let height = $eachArea.height();
-                    let width = $eachArea.width();
 
-                    if (height < width) {
-                        const widthSum = height * t.base.columnNum;
-
-                        if ($refArea.width() > widthSum)
-                            $refArea.css('max-width', widthSum);
-                    }
-                    else {
-                        const heightSum = width * t.base.rowNum;
-
-                        if ($refArea.height() > heightSum)
-                            $refArea.css('max-height', heightSum);
-                    }
-                });
-            }
+            t.$nextTick(function () {
+                t.setSize();
+            });
         },
         enter: function () {
             let t = this;
@@ -1570,6 +1553,30 @@ let app = new Vue({
             for (let i in indexes)
                 this.setShelter('gray', 'fortress', indexes[i]);
         },
+        setSize: function () {
+            let t = this;
+            let $refArea = $(t.$refs.area);
+            let $eachArea = $(t.$el).find('.each-area[data-idx=0]');
+            
+            $refArea.css('max-height', 'none');
+            $refArea.css('max-width', 'none');
+            
+            let height = $eachArea.height();
+            let width = $eachArea.width();
+
+            if (height < width) {
+                let widthSum = height * t.base.columnNum;
+
+                if ($refArea.width() > widthSum)
+                    $refArea.css('max-width', widthSum);
+            }
+            else {
+                let heightSum = width * t.base.rowNum;
+
+                if ($refArea.height() > heightSum)
+                    $refArea.css('max-height', heightSum);
+            }
+        },
         getRandomShelterIndexes: function () {
             let t = this;
             let shelterCount = 1;
@@ -1953,7 +1960,7 @@ let app = new Vue({
         },
         showUnitForSeconds: function (idx, unit) {
             let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
-            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="../../img/common/unit.' + unit.name + '.svg"></div>');
+            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="./img/unit.' + unit.name + '.svg"></div>');
             let delay = unit.status === 'move';
 
             if (delay) {
@@ -2500,5 +2507,9 @@ let app = new Vue({
                     break;
             }
         });
+
+        window.onresize = function () {
+            t.setSize();
+        }
     }
 });

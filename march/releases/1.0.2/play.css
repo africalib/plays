@@ -128,7 +128,7 @@ button {
     position: relative;
     font-size: 0;
     background-color: #c19253;
-    background-image: url(../../img/common/play.background.png);
+    background-image: url(./img/play.background.png);
     background-size: 100% 100%;
 
     /* overflow: hidden; */
@@ -323,7 +323,7 @@ button {
 }
 
 .app[data-player] > .play > .wrapper > .ground > .area .area-wrapper .each-area:after {
-    background-image: url(../../img/common/play.gradient66.png);
+    background-image: url(./img/play.gradient66.png);
     background-size: 100% 100%;
     transition: background-image 0.5s;
     -webkit-transition: background-image 0.5s;
@@ -342,32 +342,32 @@ button {
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.3"]:after {
-    background-image: url(../../img/common/play.gradient664d.png);
+    background-image: url(./img/play.gradient664d.png);
 }
 
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.3"]:after {
-    background-image: url(../../img/common/play.gradient664d-180.png);
+    background-image: url(./img/play.gradient664d-180.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.2"]:after {
-    background-image: url(../../img/common/play.gradient4d33.png);
+    background-image: url(./img/play.gradient4d33.png);
 }
 
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.2"]:after {
-    background-image: url(../../img/common/play.gradient4d33-180.png);
+    background-image: url(./img/play.gradient4d33-180.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.1"]:after {
-    background-image: url(../../img/common/play.gradient3300.png);
+    background-image: url(./img/play.gradient3300.png);
 }
 
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.1"]:after {
-    background-image: url(../../img/common/play.gradient3300-180.png);
+    background-image: url(./img/play.gradient3300-180.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="black:0.0"]:after,
 .app[data-player=white] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-watchers*="white:0.0"]:after {
-    background-image: url(../../img/common/play.gradient00.png);
+    background-image: url(./img/play.gradient00.png);
 }
 
 .app[data-player=black] > .play > .wrapper > .ground > .area .area-wrapper .each-area[data-shelter] .unit:not([data-player=black]),

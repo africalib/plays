@@ -1953,7 +1953,7 @@ let app = new Vue({
         },
         showUnitForSeconds: function (idx, unit) {
             let $area = $(this.$el).find('.each-area[data-idx=' + idx + ']');
-            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="../../img/common/unit.' + unit.name + '.svg"></div>');
+            let $clone = $('<div data-player="' + unit.player + '" data-name="' + unit.name + '" data-direction="' + unit.direction + '" data-rotate="' + unit.rotate + '" class="unit z-0 d-iblock"><img src="./img/unit.' + unit.name + '.svg"></div>');
             let delay = unit.status === 'move';
 
             if (delay) {

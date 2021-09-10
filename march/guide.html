@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>March of the King</title>
-    <meta property="og:image" content="img/common/home.king.preview.jpg">
+    <meta property="og:image" content="img/home.king.preview.jpg">
     <link href="css/bootstrap.min.css" rel="stylesheet" />
     <link href="css/font-awesome.min.css" rel="stylesheet" />
     <link href="css/app.common.css?3" rel="stylesheet" />
@@ -19,7 +19,7 @@
                 </a>
             </div>
             <div class="title">
-                <img src="img/common/home.king.svg" />
+                <img src="img/home.king.svg" />
                 <br />
                 <div>Guide</div>
             </div>
@@ -116,7 +116,7 @@
                             <div class="panel panel-default" v-for="u in units">
                                 <div class="panel-heading">{{ u.title }}</div>
                                 <div class="panel-body">
-                                    <img v-bind:src="'img/common/unit.' + u.name + '.svg'"
+                                    <img v-bind:src="'img/unit.' + u.name + '.svg'"
                                         v-bind:style="{ transform: u.rotate ? 'rotate(90deg)' : '' }" />
                                 </div>
                                 <div class="panel-footer">{{ u.desc }}</div>
@@ -137,19 +137,19 @@
                     <div id="menu6" class="tab-pane fade">
                         <label class="label label-black">방패 전진 일자진</label>
                         <p>
-                            <img src="img/common/guide.formation1.png" />
+                            <img src="img/guide.formation1.png" />
                         </p>
                         <p>방패병을 가장 앞 상단에 일렬로 배치하여 적이 나의 진영으로 들어오는 것을 막는 일반적인 진형입니다. 이 방어 진형이 뚫릴 경우, 후방 공격을 받가 쉽습니다.</p>
                         <br />
                         <label class="label label-black">방패 후진 일자진</label>
                         <p>
-                            <img src="img/common/guide.formation2.png" />
+                            <img src="img/guide.formation2.png" />
                         </p>
                         <p>상대방이 검병 등으로 급하게 몰아부치는 공격이 예상될 경우, 방패병을 가장 후방에 배치하여 방어하는 진형입니다. 상대편이 나의 후방을 공격할 여지가 줄어듭니다.</p>
                         <br />
                         <label class="label label-black">방패 삼각진</label>
                         <p>
-                            <img src="img/common/guide.formation3.png" />
+                            <img src="img/guide.formation3.png" />
                         </p>
                         <p>상대방이 검병 등으로 급하게 몰아부치는 공격이 예상될 경우, 앞이 뾰족한 정삼각형의 진형을 만들어 방어하는 진형입니다. 왕은 중앙에 있어 방패병에게 방어 버프 효과를
                             줄 수 있고 양 측면의 방패병은 거리가 멀어 공격하기 까다롭게 만드는 진형입니다.</p>

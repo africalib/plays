@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>March of the King</title>
-    <meta property="og:image" content="../../img/common/home.king.preview.jpg">
+    <meta property="og:image" content="../../img/home.king.preview.jpg">
     <link href="../../css/bootstrap.min.css" rel="stylesheet" />
     <link href="../../css/swiper-bundle.min.css" rel="stylesheet" />
     <link href="../../css/font-awesome.min.css" rel="stylesheet" />
@@ -23,7 +23,7 @@
                 </a>
             </div>
             <div class="title">
-                <img src="../../img/common/home.king.svg" />
+                <img src="../../img/home.king.svg" />
                 <br />
                 <div>Waiting for Player</div>
             </div>
@@ -44,7 +44,7 @@
                         <div class="anchors">
                             <template v-if="share.loaded">
                                 <button v-bind:class="s" type="button" v-on:click="shareSns(s)" v-for="s in share.list">
-                                    <img v-bind:src="'../../img/common/play.' + s + '.png'" />
+                                    <img v-bind:src="'./img/play.' + s + '.png'" />
                                 </button>
                             </template>
                             <div class="loading" v-else></div>
@@ -61,20 +61,20 @@
                         </div>
                     </template>
                     <div class="hide">
-                        <img src="../../img/common/play.bg.sand.jpg" />
-                        <img src="../../img/common/play.clock.svg" />
-                        <img src="../../img/common/play.flag.png" />
-                        <img src="../../img/common/play.gradient00.png" />
-                        <img src="../../img/common/play.gradient4d33.png" />
-                        <img src="../../img/common/play.gradient4d33-180.png" />
-                        <img src="../../img/common/play.gradient66.png" />
-                        <img src="../../img/common/play.gradient664d.png" />
-                        <img src="../../img/common/play.gradient664d-180.png" />
-                        <img src="../../img/common/play.gradient3300.png" />
-                        <img src="../../img/common/play.gradient3300-180.png" />
-                        <img src="../../img/common/play.weapon.arrow.png" />
-                        <img src="../../img/common/play.weapon.ball.png" />
-                        <img src="../../img/common/play.weapon.spear.png" />
+                        <img src="./img/play.bg.sand.jpg" />
+                        <img src="./img/play.clock.svg" />
+                        <img src="./img/play.flag.png" />
+                        <img src="./img/play.gradient00.png" />
+                        <img src="./img/play.gradient4d33.png" />
+                        <img src="./img/play.gradient4d33-180.png" />
+                        <img src="./img/play.gradient66.png" />
+                        <img src="./img/play.gradient664d.png" />
+                        <img src="./img/play.gradient664d-180.png" />
+                        <img src="./img/play.gradient3300.png" />
+                        <img src="./img/play.gradient3300-180.png" />
+                        <img src="./img/play.weapon.arrow.png" />
+                        <img src="./img/play.weapon.ball.png" />
+                        <img src="./img/play.weapon.spear.png" />
                     </div>
                 </template>
                 <template v-else-if="my.room.loaded">
@@ -95,7 +95,7 @@
                         </span>
                         <template v-if="!status.replay">
                             <span class="time">
-                                <img src="../../img/common/play.clock.svg" />
+                                <img src="./img/play.clock.svg" />
                                 <span>{{ status.time }} / {{ base.time.turn }}</span>
                             </span>
                             <div class="right" v-on:click.stop="goMessages()">
@@ -120,7 +120,7 @@
                                     v-bind:data-direction="a.unit.direction" v-bind:data-rotate="a.unit.rotate"
                                     v-bind:data-hidden="a.unit.hidden ? 'Y' : 'N'" v-bind:data-status="a.unit.status"
                                     v-if="a.unit.name" v-bind:style="a.unit.style">
-                                    <img v-bind:src="'../../img/' + a.unit.player + '/' + a.unit.name + '.png'" />
+                                    <img v-bind:src="'./img/' + a.unit.player + '/' + a.unit.name + '.png'" />
                                     <div class="power">{{ a.unit.power }}</div>
                                     <div class="exp" v-if="a.unit.level">
                                         <div class="exp-wrapper">
@@ -138,14 +138,14 @@
                                 </div>
                                 <div class="shelter" v-bind:data-player="a.shelter.player"
                                     v-bind:data-name="a.shelter.name" v-if="a.shelter.name">
-                                    <img v-bind:src="'../../img/gray/' + a.shelter.name + '.png'" />
+                                    <img v-bind:src="'./img/gray/' + a.shelter.name + '.png'" />
                                 </div>
                                 <div class="weapon" v-bind:data-direction="a.weapon.direction"
                                     v-bind:data-status="a.weapon.status" v-bind:data-name="a.weapon.name"
                                     v-if="a.weapon && a.weapon.name" v-bind:style="a.weapon.style">
-                                    <img v-bind:src="'../../img/common/play.weapon.' + a.weapon.name + '.png'" />
+                                    <img v-bind:src="'./img/play.weapon.' + a.weapon.name + '.png'" />
                                 </div>
-                                <img src="../../img/common/play.flag.png" class="flag" v-if="a.owner === my.player" />
+                                <img src="./img/play.flag.png" class="flag" v-if="a.owner === my.player" />
                             </div>
                         </div>
                     </div>
@@ -181,7 +181,7 @@
                                     v-for="u in base.units" v-bind:key="u.name"
                                     v-on:click="touchable() && request('grab', u.name)" v-if="u.crop">
                                     <div>{{ u.name.substring(0, 3) }}<br />{{ u.crop }}</div>
-                                    <img v-bind:src="'../../img/' + my.player + '/' + u.name + '.png'"
+                                    <img v-bind:src="'./img/' + my.player + '/' + u.name + '.png'"
                                         v-bind:data-rotate="u.rotate" />
                                 </div>
                             </div>
@@ -197,7 +197,7 @@
                         v-if="modal.info.name">
                         <div class="img-part">
                             <span>
-                                <img v-bind:src="'../../img/' + modal.info.player + '/' + modal.info.name + '.png'"
+                                <img v-bind:src="'./img/' + modal.info.player + '/' + modal.info.name + '.png'"
                                     v-bind:data-rotate="modal.info.rotate" />
                             </span>
                         </div>
@@ -286,9 +286,9 @@
                                 v-bind:class="[ m.player, m.player === my.player ? 'right' : 'left' ]">
                                 <div class="wrapper">
                                     <span class="img">
-                                        <img v-bind:src="'../../img/' + m.player + '/king.png'"
+                                        <img v-bind:src="'./img/' + m.player + '/king.png'"
                                             v-if="m.player !== 'gray'" />
-                                        <img src="../../img/common/play.flag.png" v-else />
+                                        <img src="./img/play.flag.png" v-else />
                                     </span>
                                     <span class="txt">{{ m.text }}</span>
                                 </div>
