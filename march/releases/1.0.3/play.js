@@ -398,7 +398,8 @@ let app = new Vue({
                 url: null,
                 host: false,
                 loaded: false
-            }
+            },
+            networkErrCount: 0
         },
         modal: {
             idx: null,
@@ -583,8 +584,10 @@ let app = new Vue({
                             t.swiper.slideTo(1);
                     }
                 });
-            }
 
+                t.checkConnected();
+                t.checkNetwork();
+            }
 
             t.$nextTick(function () {
                 t.setSize();
@@ -603,9 +606,7 @@ let app = new Vue({
 
             socket.on('connect', function () {
                 if (t.status.started) {
-                    socket.disconnect();
-                    t.closeRoom();
-                    alert('네트워크 문제가 발생하였습니다.\n처음 화면으로 가시려면 우측 하단의 🏠 버튼을 눌러주세요.');
+                    socket.emit('reconnect', t.my.room.name);
                 }
                 else {
                     socket.emit('enter', t.my.room.name ? t.my.room.name : '');
@@ -623,6 +624,10 @@ let app = new Vue({
                                 t.my.room.url = window.location.href + '#/' + res.room;
                                 t.my.room.loaded = true;
                             }
+                            break;
+
+                        case 'warn':
+                            t.setMessage(t.my.player, '서버 접속에 문제가 있는 것 같습니다.', t.base.time.message);
                             break;
 
                         case 'start':
@@ -643,17 +648,17 @@ let app = new Vue({
 
                             if (!t.status.replay) {
                                 setTimeout(function () {
+                                    socket.disconnect();
                                     t.closeRoom();
-                                    alert('경기 시작 후 한 시간이 지나 무승부 처리되었습니다. \n처음 화면으로 가시려면 우측 하단의 🏠 버튼을 눌러주세요.');
 
                                     setTimeout(function () {
-                                        socket.disconnect();
+                                        alert('경기 시작 후 한 시간이 지나 무승부 처리되었습니다. \n처음 화면으로 가시려면 우측 하단의 🏠 버튼을 눌러주세요.');
                                     }, 1000 * 30);
                                 }, 1000 * 60 * 60);
                             }
                             break;
 
-                        case 'disconnect':
+                        case 'exit':
                             if (t.status.started && !t.status.finished) {
                                 socket.disconnect();
                                 t.saveUser(true);
@@ -663,6 +668,11 @@ let app = new Vue({
                             break;
 
                         default:
+                            if (!res || !res.value) {
+                                console.log(res);
+                                return;
+                            }
+
                             if (res.value.name === 'message') {
                                 let user = res.value.val1;
                                 let text = res.value.val2;
@@ -1859,6 +1869,9 @@ let app = new Vue({
                         if (distance)
                             demage += distance;
                     }
+                        
+                    if (activeArea.unit.distance > 1)
+                        t.showUnitForSeconds(t.active.idx, activeArea.unit);
 
                     if (t.isShelterInArea(targetIdx)) {
                         if (activeArea.unit.bomb)
@@ -1918,9 +1931,6 @@ let app = new Vue({
                                 }
                             }
                         }
-
-                        if (activeArea.unit.distance > 1)
-                            t.showUnitForSeconds(t.active.idx, activeArea.unit);
 
                         setTimeout(function () {
                             t.showUp('attack', targetIdx, demage, true);
@@ -2171,8 +2181,9 @@ let app = new Vue({
             this.initActive();
             this.initGrab();
 
-            if (!this.status.replay)
+            if (!this.status.replay) {
                 this.setTimer();
+            }
         },
         rotateAuto: function () {
             if (this.active.idx === undefined || this.active.idx === null)
@@ -2234,6 +2245,25 @@ let app = new Vue({
                     }
                 }
             }, 1000);
+        },
+        checkConnected: function () {
+            setInterval(() => {
+                socket.emit('check');
+            }, 5000);
+        },
+        checkNetwork: function () {
+            let t = this;
+
+            t.interval['network'] = setInterval(function () {
+                $.get(global.baseUrl).catch(() => {
+                    if (++t.my.networkErrCount > 3) {
+                        clearInterval(t.interval['network']);
+                        alert('네트워크 문제가 발생하였습니다.\n처음 화면으로 가시려면 우측 하단의 🏠 버튼을 눌러주세요.');
+                        socket.disconnect();
+                        t.closeRoom();
+                    }
+                });
+            }, 5000)
         },
         checkOwn: function (idx, runned) {
             if (this.isUnitInArea(idx) && this.areas[idx].unit.name === 'king') {
@@ -2472,8 +2502,8 @@ let app = new Vue({
         }, 250);
 
         if (name) {
-            $.get(global.baseUrl + '/valid?name=' + name, function (res) {
-                if (res === 'valid') {
+            $.get(global.baseUrl + '/status?name=' + name, function (res) {
+                if (res === 'ready') {
                     t.my.room.name = name;
                     t.my.room.loaded = true;
                 }

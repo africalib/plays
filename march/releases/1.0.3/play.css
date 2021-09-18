@@ -514,6 +514,7 @@ button {
 .app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack] .unit,
 .app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack] .shelter {
     background: rgba(255, 203, 109, 76%);
+    border-radius: 0;
 }
 
 .app[data-replay=Y][data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack][data-hidden=Y] .unit[data-player=white],
@@ -535,7 +536,7 @@ button {
 .app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=enter],
 .app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-hidden=Y],
 .app[data-player=black][data-turn=black] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=attack]:not([data-watchers*=black]) {
-    background: rgba(246, 255, 228, 0.25);
+    background: rgba(246, 255, 228, 0.5);
 }
 
 .app[data-player=white][data-turn=white] > .play > .wrapper > .ground > .inner > .area .area-wrapper .each-area[data-status=move] .shelter[data-player=white],
@@ -649,6 +650,10 @@ button {
     width: calc(100%/9);
     padding: 5px;
     border-right: 1px solid rgb(121 121 121 / 50%);
+}
+
+.app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit[data-name="horse"] {
+    padding: 0;
 }
 
 .app > .play > .wrapper > .ground > .inner > .bottom > .controls.play .units .each-unit.active {
