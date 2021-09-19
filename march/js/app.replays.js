@@ -31,14 +31,6 @@
 
             if (replays) {
                 t.replay.list = JSON.parse(replays);
-                t.replay.list.sort(function (a, b) {
-                    if (a.date < b.date)
-                        return 1;
-                    else if (a.date === b.date)
-                        return 0;
-                    else if (a.date > b.date)
-                        return -1;
-                });
             }
 
             for (let i in t.replay.list) {
@@ -50,10 +42,9 @@
 
             $.get('./data/replay.json').then(function (res) {
                 t.replay.loaded = true;
-                t.replay.list.push(res);
+                t.replay.list.unshift(res);
                 localStorage.setItem('replays', JSON.stringify(t.replay.list));
-            }, function () {
-                t.replay.loaded = true;
+                t.replay.list.reverse();
             });
         }
     },
